@@ -2,15 +2,19 @@
 
 version: '3.8'
 services:
-  mongodb:
-    build: ./mongo
+  db:
+    image: postgres
     restart: always
-    ports:
-      - '27017:27017'
     environment:
-      # - MONGO_INITDB_ROOT_USERNAME=admin
-      # - MONGO_INITDB_ROOT_PASSWORD=password
-      - MONGO_INITDB_DATABASE=Thoth
+      - DATABASE_HOST: 127.0.0.1
+      - POSTGRES_USER: admin
+      - POSTGRES_PASSWORD: admin
+      - POSTGRES_PORT: 5432
+      - POSTGRES_DB: Aircraft
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdatasource:/var/lib/postgresql/data
 
   server:
     build: ./server
