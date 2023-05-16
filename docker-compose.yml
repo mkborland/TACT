@@ -10,33 +10,34 @@ services:
       POSTGRES_DB: TACT_DB
       ports: "5432:5432"
       volumes: "pgdatasource:/var/lib/postgresql/data"
-      # server:
-      #   build: ./server
-      #   restart: always
-      #   ports:
-      #     - 8080:8080
-      #   environment:
-      #     - SERVER_APP_PORT=8080
-      #     - NODE_ENV=development
-      #     - DATABASE_HOST=db
-      #     - POSTGRES_USER=admin
-      #     - POSTGRES_PASSWORD=admin
-      #     - POSTGRES_PORT=5432
-      #     - POSTGRES_DB=Aircraft
-      #   volumes:
-      #     - ./server:/app/TACT_Server
-      #   command: npm run start
-
-      # client:
-      #   build: ./client
-      #   restart: always
-      #   environment:
-      #     - REACT_APP_PORT=3000
-      #   ports:
-      #     - 3000:3000
-      #   volumes:
-      #     - ./client/src:/app/software_mil-client/src
-      #     - ./client/public:/app/software_mil-client/public
-      #   links:
-      #     - server
-      #   command: npm run start
+  server:
+    build: ./server
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      - SERVER_APP_PORT=8080
+      - NODE_ENV=development
+      - DATABASE_HOST=db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=Aircraft
+    volumes:
+      - ./server:/app/TACT_Server
+    command: npm run start
+  client:
+    build:
+      context: ./Client
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - REACT_APP_PORT=3000
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client/src:/app/src
+      - ./client/public:/app/public
+    # links:
+    #   - server
+    command: npm run start
