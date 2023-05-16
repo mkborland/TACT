@@ -1,5 +1,5 @@
 import knex from "knex";
-import configuration from "./knexSetting.js";
+import configuration from "../knexfile.js";
 
 const env = process.env.NODE_ENV || "development";
 

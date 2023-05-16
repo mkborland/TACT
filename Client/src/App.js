@@ -1,3 +1,6 @@
+import './App.css';
+import LoginCard from './LoginCard.js';
+import SearchRoot from "./pages/search-root";
 import "./App.css";
 import LoginCard from "./components/LoginCard/LoginCard.js";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -6,6 +9,10 @@ import SignUp from "./components/SignUp/SignUp.js";
 function App() {
   return (
     <div className="App">
+      <header className="App-header">
+        <LoginCard/>
+      </header>
+      <SearchRoot />
       <div className="App-header">
         <BrowserRouter>
           <Routes>
