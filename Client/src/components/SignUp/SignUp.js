@@ -83,9 +83,6 @@ const SignUp = () => {
               passwordOne === passwordTwo
                 ? trySignUp(userName, passwordOne)
                 : setDisplayMessage(true);
-              if (validatePass(passwordOne, passwordTwo)) {
-                trySignUp(userName, passwordOne);
-              }
             }}
           >
             SUBMIT
