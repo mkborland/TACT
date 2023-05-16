@@ -3,7 +3,6 @@ import chalk from "chalk";
 import { buildTables, seedDb } from "./db/dbRefresh.js";
 
 const PORT = process.env.PORT || 8080;
-
 await Promise.all(
   process.argv.map(async (arg) => {
     if (arg.toLowerCase() === "build") {
@@ -15,12 +14,6 @@ await Promise.all(
   })
 );
 
-console.log("?");
-
 server.listen(PORT, () => {
-  console.log(
-    chalk.green(
-      `Server running in ${process.env.NODE_ENV} mode and listening on ${PORT}`
-    )
-  );
+  console.log(chalk.green(`Server running in  mode and listening on ${PORT}`));
 });
