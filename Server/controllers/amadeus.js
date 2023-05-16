@@ -1,9 +1,16 @@
 import Amadeus from "amadeus"
 
-var amadeus = new Amadeus({
-  clientId: 'bDfd8aWbh5FM5U3u6XATzYf4jG2IWT7b',
-  clientSecret: 'lSXjU1GstFcGZ0ia'
+const { CLIENT_ID, CLIENT_SECRET } = require('../config');
+
+const amadeus = new Amadeus({
+  clientId: CLIENT_ID,
+  clientSecret: CLIENT_SECRET
 });
+
+// var amadeus = new Amadeus({
+//   clientId: 'bDfd8aWbh5FM5U3u6XATzYf4jG2IWT7b',
+//   clientSecret: 'lSXjU1GstFcGZ0ia'
+// });
 
 const location = async (req, res) => {
   // Airports and City Search (autocomplete)
