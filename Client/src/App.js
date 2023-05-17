@@ -3,6 +3,7 @@ import LoginCard from "./components/LoginCard/LoginCard.js";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignUp from "./components/SignUp/SignUp.js";
 import PersistentDrawerLeft from "./components/MainPage/MainPage.js";
+import EditTables from "./components/EditTablesPage/EditTablesPage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
             <Route path="/" element={<PersistentDrawerLeft />}>
               <Route path="test" element={<LoginCard />} />
               <Route path="signup" element={<SignUp />} />
+              <Route path="EditTablesPage" element={<EditTables/>}/>
             </Route>
           </Routes>
         </BrowserRouter>
