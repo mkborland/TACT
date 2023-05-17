@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from "react";
-// import Autocomplete from "@material-ui/lab/Autocomplete";
-// import TextField from "@material-ui/core/TextField";
-// import CircularProgress from "@material-ui/core/CircularProgress";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import CircularProgress from "@mui/material/CircularProgress";
 import axios from 'axios'
 import { getAmadeusData } from "../../api/amadeus.api";
 import { debounce } from "lodash"
