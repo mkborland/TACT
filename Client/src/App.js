@@ -7,6 +7,7 @@ import PersistentDrawerLeft from "./components/MainPage/MainPage.js";
 import LocationField from "./components/LocationField/LocationField.js";
 import EditTables from "./components/EditTablesPage/EditTablesPage";
 import ManageUsers from "./components/ManageUsersPage/ManageUsersPage";
+import HistoryPage from "./pages/HistoryPage";
 
 function App() {
   return (
@@ -19,10 +20,10 @@ function App() {
           <Routes>
             <Route path="/" element={<LoginCard />} />
             <Route path="/signup" element={<SignUp />} />
-            {/* <Route path="/mainpage" element={<MainPage />}/> */}
             <Route path="/locationfield" element={<LocationField />} />
-            <Route path="/" element={<PersistentDrawerLeft />}>
-              <Route path="EditTablesPage" element={<EditTables />} />
+            <Route path="/Dashboard" element={<PersistentDrawerLeft />}>
+              <Route path="NewExercisePage" element={<LoginCard />} />
+              <Route path="History" element={<HistoryPage />} />
               <Route path="EditTablesPage" element={<EditTables />} />
               <Route path="ManageUsersPage" element={<ManageUsers />} />
             </Route>
