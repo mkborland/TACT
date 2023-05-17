@@ -1,10 +1,12 @@
 import express from "express";
-const aircraftroutes = express.Router();
+const router = express.Router();
 
-import { requestAircraft, requestAllAircraft } from "../controllers/aircraftController.js";
+import { requestAircraft, requestAllAircraft, updateAircraft } from "../controllers/aircraftController.js";
 
-aircraftroutes.route("/get_aircraft").get(requestAircraft);
+router.route("/get_aircraft").get(requestAircraft);
 
-aircraftroutes.route("/get_all_aircraft").get(requestAllAircraft);
+router.route("/get_all_aircraft").get(requestAllAircraft);
 
-export default aircraftroutes;
+router.route("/update_aircraft").post(updateAircraft);
+
+export default router;

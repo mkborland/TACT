@@ -1,6 +1,6 @@
 import Amadeus from "amadeus"
 
-import {CLIENT_ID, CLIENT_SECRET} from '../config.js'
+import { CLIENT_ID, CLIENT_SECRET } from '../config.js'
 
 const amadeus = new Amadeus({
   clientId: CLIENT_ID,
@@ -10,12 +10,12 @@ const amadeus = new Amadeus({
 const location = async (req, res) => {
   // Airports and City Search (autocomplete)
   amadeus.referenceData.locations.get({
-    keyword : req.params['keyword'],
-    subType : Amadeus.location.any
-  }).then(function(response){
+    keyword: req.params['keyword'],
+    subType: Amadeus.location.any
+  }).then(function (response) {
     console.log(response.data);
     res.send(response.data)
-  }).catch(function(responseError){
+  }).catch(function (responseError) {
     console.log(responseError.code);
   });
 
@@ -44,14 +44,14 @@ const flights = async (req, res) => {
     destinationLocationCode: 'SAN',
     departureDate: '2023-06-25',
     adults: '2'
-  }).then(function(response){
+  }).then(function (response) {
     console.log(response.data);
     res.send(response.data)
-  }).catch(function(responseError){
+  }).catch(function (responseError) {
     console.log(responseError.code);
   });
 
 }
 
 
-export {location, flights, airports};
+export { location, flights, airports };
