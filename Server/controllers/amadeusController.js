@@ -9,12 +9,12 @@ const location = async (req, res) => {
   // Airports and City Search (autocomplete)
   // Find all the cities and airports starting by 'LON'
   amadeus.referenceData.locations.get({
-    keyword : 'LON',
-    subType : Amadeus.location.any
-  }).then(function(response){
+    keyword: 'LON',
+    subType: Amadeus.location.any
+  }).then(function (response) {
     console.log(response.data);
     res.send(response.data)
-  }).catch(function(responseError){
+  }).catch(function (responseError) {
     console.log(responseError.code);
   });
 
@@ -31,4 +31,4 @@ const location = async (req, res) => {
 //   console.log(responseError.code);
 // });
 
-export {location};
+export { location };
