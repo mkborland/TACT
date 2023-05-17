@@ -10,5 +10,4 @@ const config = {
   },
 };
 
-export const baseApiUrl =
-  config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
+export default config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
