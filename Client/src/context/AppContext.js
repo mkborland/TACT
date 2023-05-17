@@ -3,7 +3,10 @@ import React, { useContext, useState } from "react";
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
-  const [UserInfo, setUser] = useState({});
+  const [UserInfo, setUser] = useState({
+    name: "bob",
+    access: "user",
+  });
 
   const tryLogin = (userName, password) => {
     // Make a API request to see if this is a good account.
