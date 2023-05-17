@@ -98,7 +98,7 @@ const CurrentHeader = [
   "Author",
 ];
 const headCells = [];
-console.log(TactApi.getAExercises("Test Exercise"));
+//console.log(TactApi.getAExercises("Test Exercise"));
 
 CurrentHeader.forEach((value) => {
   headCells.push({
