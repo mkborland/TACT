@@ -13,7 +13,8 @@ export function up(knex) {
         table.date("exerciseDateStart");
         table.date("exerciseDateEnd");
         table.integer("personnelNumber");
-        table.string("airfareType");
+        table.integer("commercialAirfare");
+        table.integer("governmentAirfare");
         table.decimal("airfareCost");
         table.integer("kc135Num");
         table.integer("c130Num");
