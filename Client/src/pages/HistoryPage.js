@@ -19,6 +19,7 @@ import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
+import TactApi from "../api/TactApi";
 
 const HistoryPage = () => {
   return <EnhancedTable />;
@@ -97,6 +98,7 @@ const CurrentHeader = [
   "Author",
 ];
 const headCells = [];
+console.log(TactApi.getAExercises("Test Exercise"));
 
 CurrentHeader.forEach((value) => {
   headCells.push({
