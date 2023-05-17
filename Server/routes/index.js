@@ -1,5 +1,5 @@
 import express, { response } from "express";
-import { location } from "../controllers/amadeus.js";
+import { location, flights, airports } from "../controllers/amadeus.js";
 const router = express.Router();
 
 const base = async (req, res) => {
@@ -8,6 +8,12 @@ const base = async (req, res) => {
 
 router.route("/").get(base);
 
-router.route("/location").get(location);
+router.route("/location/:keyword").get(location);
+
+const API = `api`;
+
+router.route(`/${API}/airports`).get(airports);
+
+// router.route("/flight/:keyword").get(location);
 
 export default router;
