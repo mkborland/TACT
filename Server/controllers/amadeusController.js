@@ -39,11 +39,11 @@ const airports = async (req, res) => {
 
 
 const flights = async (req, res) => {
-  console.log(req.body);
-  departureDate = req.body.departureDate;
-  returnDate = req.body.returnDate;
-  locationDeparture = req.body.locationDeparture;
-  locationArrival = req.body.locationArrival;
+  const { departureDate, returnDate, locationDeparture, locationArrival } = req.query;
+  // departureDate = req.body.departureDate;
+  // returnDate = req.body.returnDate;
+  // locationDeparture = req.body.locationDeparture;
+  // locationArrival = req.body.locationArrival;
   amadeus.shopping.flightOffersSearch.get({
     // originLocationCode: 'SJC',
     // destinationLocationCode: 'SAN',
@@ -53,9 +53,10 @@ const flights = async (req, res) => {
     destinationLocationCode: locationArrival,
     departureDate: departureDate,
     returnDate: returnDate,
-    adults: '1'
+    adults: '1',
+    currencyCode: 'USD'
   }).then(function(response){
-    console.log(response.data);
+    // console.log(response.data);
     res.send(response.data)
   }).catch(function (responseError) {
     console.log(responseError.code);

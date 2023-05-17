@@ -6,4 +6,6 @@ router.route("/location/:keyword").get(location);
 
 router.route("/airports").get(airports);
 
+router.route("/flights").get(flights);
+
 export default router
