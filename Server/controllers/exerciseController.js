@@ -1,7 +1,7 @@
 import knex from "../db/db.js";
 
 const requestExercise = async (req, res) => {
-    const { name } = req.body
+    const name = req.query.name
     const exerciseobj = await knex('exercises')
         .select("*")
         .where({ exerciseName: name })

@@ -1,8 +1,8 @@
 import knex from "../db/db.js";
 
 const requestAircraft = async (req, res) => {
-    const { aircraftname, aircraftnumber } = req.body
-
+    const aircraftname = req.query.aircraftname
+    const aircraftnumber = req.query.aircraftnumber
     return knex('aircrafttype')
         .select('*')
         .where({

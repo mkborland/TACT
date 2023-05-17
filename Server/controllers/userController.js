@@ -36,7 +36,7 @@ const addUser = async (req, res) => {
 };
 
 const requestUser = (req, res) => {
-    const { name } = req.body
+    const name = req.query.name
     knex("users")
         .select("*")
         .where({ userName: name })
