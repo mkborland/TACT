@@ -8,10 +8,14 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: TACT_DB
-      ports: "5432:5432"
-      volumes: "pgdatasource:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+    volumes:
+      - "./db_data_volume:/var/lib/postgresql/data"
+    links:
+      - server
   server:
-    build: ./server
+    build: ./Server
     restart: always
     ports:
       - 8080:8080
@@ -22,9 +26,9 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
       - POSTGRES_PORT=5432
-      - POSTGRES_DB=Aircraft
+      - POSTGRES_DB=TACT_DB
     volumes:
-      - ./server:/app/TACT_Server
+      - ./Server:/app/TACT_Server
     command: npm run start
   client:
     build:
@@ -36,8 +40,8 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./client/src:/app/src
-      - ./client/public:/app/public
+      - ./Client/src:/app/src
+      - ./Client/public:/app/public
     # links:
     #   - server
     command: npm run start
