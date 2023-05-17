@@ -19,7 +19,6 @@ import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
-import { MockExercisesType } from "../mock/mockExercises";
 
 const HistoryPage = () => {
   return <EnhancedTable />;
@@ -85,54 +84,28 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const CurrentHeader = MockExercisesType(
-  "",
+const CurrentHeader = [
   "Exercise",
   "Date Created",
-  "Starting Locations",
-  "Ending Locations",
-  "Unit",
+  "Total Personal Count",
+  "Total Exercise Cost",
   "STARTEX",
   "ENDEX",
-  "Total Personal Count",
-  "Single Airfare Cost",
-  "Amount of KC-135",
-  "Amount of C-130",
-  "Amount of C-17",
-  "Amount of C-5",
-  "Amount of F-22",
-  "Amount of F-35",
-  "Amount of A10",
-  "Amount of F15",
-  "Personal Count for KC-135",
-  "Personal Count For C-130",
-  "Personal Count For C-17",
-  "Personal Count for C-5",
-  "Personal Count for F-22",
-  "Personal Count for F-35",
-  "Personal Count For A-10",
-  "Personal Count for F-15",
-  "Amount Authorized for Government Lodging",
-  "Cost Per Government Lodging",
-  "Amount Authorized for Commercial Hotel",
-  "Cost Per Commercial Hotel",
-  "Amount Authorized For Field Conditions",
-  "PerDiem per Day",
-  "Amount of Meals Provided",
-  "Meals PerDiem",
-  "Author"
-);
-
+  "Starting Location",
+  "Ending Location",
+  "Unit",
+  "Author",
+];
 const headCells = [];
 
-for (let [key, value] of Object.entries(CurrentHeader)) {
+CurrentHeader.forEach((value) => {
   headCells.push({
-    id: key,
+    id: value,
     numeric: false,
     disablePadding: true,
     label: value,
   });
-}
+});
 
 function EnhancedTableHead(props) {
   const {
