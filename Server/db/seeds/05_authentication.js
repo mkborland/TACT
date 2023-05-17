@@ -4,16 +4,10 @@
  */
 export async function seed(knex) {
   // Deletes ALL existing entries
-  await knex('roles').del()
-  await knex('roles').insert([
+  await knex('authentication').del()
+  await knex('authentication').insert([
     {
-      roleName: 'admin',
-      authKey: '12345'
-    }
-  ]);
-  await knex('roles').insert([
-    {
-      roleName: 'general',
+      userID: '2',
       authKey: '54321'
     }
   ]);
