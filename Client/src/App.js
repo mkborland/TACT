@@ -5,6 +5,7 @@ import SignUp from "./components/SignUp/SignUp.js";
 import PersistentDrawerLeft from "./components/MainPage/MainPage.js";
 import LocationField from "./components/LocationField/LocationField.js"
 import EditTables from "./components/EditTablesPage/EditTablesPage";
+import FlightSearch from './components/FlightSearch/FlightSearch';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path="/" element={<PersistentDrawerLeft />}>
               <Route path="EditTablesPage" element={<EditTables />} />
             </Route>
+            <Route path="/flightsearch" element={<FlightSearch />} />
           </Routes>
         </BrowserRouter>
       </div>
