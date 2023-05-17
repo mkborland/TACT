@@ -17,4 +17,10 @@ export async function seed(knex) {
       authKey: '54321'
     }
   ]);
+  await knex('roles').insert([
+    {
+      roleName: 'pending',
+      authKey: '11111'
+    }
+  ]);
 };
