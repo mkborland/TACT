@@ -1,24 +1,24 @@
 import './App.css';
-import LoginCard from './LoginCard.js';
-import SearchRoot from "./pages/search-root";
-import "./App.css";
-import LoginCard from "./components/LoginCard/LoginCard.js";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LoginCard from "./components/LoginCard/LoginCard.js";
 import SignUp from "./components/SignUp/SignUp.js";
+import SearchRoot from "./pages/search-root";
+import LocationField from "./components/LocationField/LocationField.js"
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
+      {/* <header className="App-header">
         <LoginCard/>
-      </header>
-      <SearchRoot />
+      </header> */}
       <div className="App-header">
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LoginCard />} />
             <Route path="/signup" element={<SignUp />} />
             {/* <Route path="/mainpage" element={<MainPage />}/> */}
+            <Route path="/searchroot" element={<SearchRoot />} />
+            <Route path="/locationfield" element={<LocationField />} />
           </Routes>
         </BrowserRouter>
       </div>

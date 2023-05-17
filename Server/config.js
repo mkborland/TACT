@@ -1,8 +1,12 @@
-const dotenv = require('dotenv');
-dotenv.config();
+// const dotenv = require('dotenv');
+// dotenv.config();
 
-// Exporting env variable
-module.exports = {
-  CLIENT_ID: process.env.CLIENT_ID,
-  CLIENT_SECRET: process.env.CLIENT_SECRET,
-};
+import 'dotenv/config'
+
+// // Exporting env variable
+// module.exports = {
+const CLIENT_ID = process.env.CLIENT_ID
+const CLIENT_SECRET = process.env.CLIENT_SECRET
+// };
+
+export {CLIENT_ID, CLIENT_SECRET}
