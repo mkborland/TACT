@@ -8,14 +8,12 @@ export async function seed(knex) {
   await knex('users').insert([
     {
       userName: 'admin',
-      userID: '1',
       userPass: 'admin'
     }
   ]);
   await knex('users').insert([
     {
       userName: 'test',
-      userID: '2',
       userPass: 'test'
     }
   ]);

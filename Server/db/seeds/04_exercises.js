@@ -9,7 +9,8 @@ export async function seed(knex) {
     {
       exerciseName: 'Test Exercise',
       dateCreated: '15 May 2023',
-      location: 'Tucsan, AZ',
+      locationStart: 'Tucsan, AZ',
+      locationEnd: 'Scott AFB, IL',
       unit: '375 CSPTS',
       exerciseDateStart: '15 May 2023',
       exerciseDateEnd: '20 May 2023',

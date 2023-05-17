@@ -1,13 +1,24 @@
-import express, { response } from "express";
+import aircraftRoutes from "./aircraftRoutes.js";
+import userRoutes from "./userRoutes.js";
+import exerciseRoutes from "./exerciseRoutes.js";
+
 import { location } from "../controllers/amadeus.js";
-const router = express.Router();
+// import express, { response } from "express";
 
-const base = async (req, res) => {
-  res.send("Hello");
-};
+// const router = express.Router();
 
-router.route("/").get(base);
+// const base = async (req, res) => {
+//   res.send("Hello");
+// };
 
-router.route("/location").get(location);
+// const tester = async (req, res) => {
+//   res.send("Test");
+// };
 
-export default router;
+// router.route("/test").get(tester);
+
+// router.route("/").get(base);
+
+// router.route("/location").get(location);
+
+export { aircraftRoutes, userRoutes, exerciseRoutes };
