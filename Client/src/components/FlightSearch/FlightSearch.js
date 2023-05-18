@@ -3,6 +3,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import { useState, useEffect } from 'react';
 import FlightTable from "../FlightTable/FlightTable";
 import { getFlightOffers } from "../../api/amadeus.api.js"
@@ -20,15 +21,17 @@ const FlightSearch = () => {
     // const [inputs, setInputs] = useState({ departureDate: '2023-06-25', returnDate: '2023-06-30', locationDeparture: 'SJC', locationArrival: 'SAN' });
     const [inputs, setInputs] = useState({});
     const [travelmethod, setTravelMethod] = useState('');
-    const [flightdisable, setFlightDisable] = useState('');
+    const [flightdisable, setFlightDisable] = useState(true);
+    const [flightsloading, setFlightsLoading] = useState(false);
+    
     
 
     const handleChange = (event) => {
         setTravelMethod(event.target.value);
-        if (event.target.value === "Military Air") {
-            setFlightDisable(true)
-        }else{
+        if (event.target.value === "Commercial Air") {
             setFlightDisable(false)
+        }else{
+            setFlightDisable(true)
         }
     };
 
@@ -40,19 +43,17 @@ const FlightSearch = () => {
     useEffect(() => {
         console.log(count)
         if(count>0){
-            // setLoading(true)
+            setFlightsLoading(true)
             const { out, source } = getFlightOffers(inputs);
 
             out.then(res => {
             if (!res.data.code) {
-                // setOptions(res.data.data);
                 setData(res.data);
             }
-            //   setLoading(false)
+              setFlightsLoading(false)
             }).catch(err => {
             axios.isCancel(err);
-            //   setOptions([]);
-            //   setLoading(false)
+            setFlightsLoading(false)
         
             });
         
@@ -89,9 +90,11 @@ const FlightSearch = () => {
                     </FormControl>
                     <LocationField disabled={flightdisable} chooseInputs={chooseInputs} label='To:' name='locationDeparture'/>
                     <LocationField disabled={flightdisable} chooseInputs={chooseInputs} label='From:' name='locationArrival'/>
-                    <Button disabled={flightdisable} variant="contained" onClick={() => setCount(count + 1)}>
-                        Find Flights
-                    </Button>
+                    <LoadingButton loading={flightsloading} variant="contained" loadingPosition="end"
+                    disabled={flightdisable} onClick={() => setCount(count + 1)}
+                    >
+                        <span>Find Flights</span>
+                    </LoadingButton>
                     <FlightTable disabled={flightdisable} data={data}/>
                 </LocalizationProvider>
         </Box>
