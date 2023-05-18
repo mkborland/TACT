@@ -4,8 +4,14 @@ import CreateIcon from "@mui/icons-material/Create";
 import HistoryIcon from "@mui/icons-material/History";
 import AddIcon from "@mui/icons-material/Add";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import { useNavigate } from "react-router-dom";
+
+
 
 const NewExercisePage = () => {};
+const HistoryPage = () => {};
+const EditTablesPage = () => {};
+const ManageUsersPage = () => {};
 
 const ActionObject = [
   {
@@ -13,12 +19,12 @@ const ActionObject = [
     icon: <AddIcon />,
     onClick: NewExercisePage,
   },
-  { text: "History", icon: <HistoryIcon />, onClick: NewExercisePage },
-  { text: "Edit Data Table", icon: <CreateIcon />, onClick: NewExercisePage },
+  { text: "History", icon: <HistoryIcon />, onClick: HistoryPage },
+  { text: "Edit Data Table", icon: <CreateIcon />, onClick: EditTablesPage },
   {
     text: "Manage Users",
     icon: <ManageAccountsIcon />,
-    onClick: NewExercisePage,
+    onClick: ManageUsersPage,
   },
 ];
 
