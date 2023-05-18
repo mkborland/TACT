@@ -7,8 +7,8 @@ import LocationField from "./components/LocationField/LocationField.js";
 import EditTables from "./components/EditTablesPage/EditTablesPage";
 import ManageUsers from "./components/ManageUsersPage/ManageUsersPage";
 import HistoryPage from "./pages/HistoryPage";
-import FlightSearch from './components/FlightSearch/FlightSearch';
-
+import FlightSearch from "./components/FlightSearch/FlightSearch";
+import NewExercisePage from "./pages/NewExercisePage";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/locationfield" element={<LocationField />} />
             <Route path="/Dashboard" element={<PersistentDrawerLeft />}>
-              <Route path="NewExercisePage" element={<LoginCard />} />
+              <Route path="NewExercisePage" element={<NewExercisePage />} />
               <Route path="History" element={<HistoryPage />} />
               <Route path="EditTablesPage" element={<EditTables />} />
               <Route path="ManageUsersPage" element={<ManageUsers />} />
