@@ -1,23 +1,23 @@
 import baseApiUrl from "../../TactApiConfig";
 const GetExercises = async (body, token = "") => {
   const endPoint = "/get_exercise";
-  const response = await fetch(`${baseApiUrl}${endPoint}`, {
+  const response = await fetch(`${baseApiUrl}${endPoint}?name=${body}`, {
     method: "GET",
     headers: {
       "Content-type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(body),
   });
 
   if (!response.ok) {
     console.log("error");
   } else {
     const result = await response.json();
-    return ExerciseObjectFormat(result);
+    return ExerciseObjectFormat(...Object.values(result));
   }
 };
-const ExerciseObjectFormat = (
+
+export const ExerciseObjectFormat = (
   index,
   exerciseName,
   dateCreated,
@@ -27,10 +27,9 @@ const ExerciseObjectFormat = (
   exerciseDateStart,
   exerciseDateEnd,
   personnelNumber,
-  comAirFareCost,
   comAirFareOccupancy,
-  airfareCostGov = 0,
   govAirFareOccupancy,
+  comAirFareCost,
   KC135Num,
   C130Num,
   C17Num,
@@ -52,13 +51,14 @@ const ExerciseObjectFormat = (
   commercialHotel,
   commercialHotelCost,
   fieldConditions,
-  ratePerFieldConditions = 0,
-  perDiem, // What is this one? total?
+  perDiem, // Total
   mealsProvided,
   foodPerDiem,
-  incidentalExpenses = 5,
   userID,
-  userName
+  userName,
+  ratePerFieldConditions = 0,
+  airfareCostGov = 0,
+  incidentalExpenses = 5
 ) => {
   return {
     id: index,
