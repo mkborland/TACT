@@ -87,12 +87,12 @@ const EditTables =() => {
       }
       //the on save :( {aircraftname: "", aircraftnumber: "", newPersonnel: ""}
       const HandleSave = () => {
-        
-          //TactApi.updateAircraft({aircraftname:"F-35",aircraftnumber:"8",newPersonnel:"200"});
-        
+        //todo fix
+          // airframeList.forEach(cell => {
+          //   TactApi.updateAircraft({aircraftName:cell.aircraftName, aircraftNumber:cell.aircraftNumber, newPersonnel:cell.personnelReq})
+          // })
       }
       const handleTextChange = (e) => {
-             console.log(e.target.value)
              airframeList[e.target.name].personnelReq = e.target.value
              console.log(airframeList[e.target.name])
       }
