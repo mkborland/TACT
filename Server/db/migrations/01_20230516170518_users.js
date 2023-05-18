@@ -15,10 +15,11 @@ export function up(knex) {
  * @returns { Promise<void> }
  */
 export function down(knex) {
-    return knex.schema.alterTable("users", (table) => {
-        table.dropPrimary("userID");
-    })
-        .then(() => {
-            return knex.schema.dropTableIfExists("users");
-        });
+    // i dont think i need this but leaving just in case
+    // return knex.schema.alterTable("users", (table) => {
+    //     table.dropPrimary("userID");
+    // })
+    //     .then(() => {
+    return knex.schema.dropTableIfExists("users");
+    // });
 };

@@ -18,9 +18,10 @@ export function up(knex) {
  * @returns { Promise<void> }
  */
 export function down(knex) {
-    return knex.schema.alterTable("roles", (table) => {
-        table.dropPrimary("authKey");
-    }).then(() => {
-        return knex.schema.dropTableIfExists("roles");
-    });
+    // i dont think i need this but leaving just in case
+    // return knex.schema.alterTable("roles", (table) => {
+    //     table.dropPrimary("authKey");
+    // }).then(() => {
+    return knex.schema.dropTableIfExists("roles");
+    // });
 };

@@ -39,7 +39,7 @@ export async function seed(knex) {
       commercialHotel: '3',
       commercialHotelCost: '150.00',
       fieldConditions: '0',
-      perDiem: '100.00',
+      perDiem: '220.00',
       mealsProvided: '0',
       foodPerDiem: '70.00',
       userID: '2'
