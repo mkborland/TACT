@@ -64,6 +64,7 @@ const FlightTable = (props) => {
             <TableRow
               key={offer.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              onClick={(e) => alert(offer.cost)}
             >
               <TableCell component="th" scope="offer">
                 {offer.id}
