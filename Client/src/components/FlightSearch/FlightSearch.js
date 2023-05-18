@@ -5,15 +5,32 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import Button from '@mui/material/Button';
 import { useState, useEffect } from 'react';
 import FlightTable from "../FlightTable/FlightTable";
-// import data from "./rawdata.json";
 import { getFlightOffers } from "../../api/amadeus.api.js"
 import axios from 'axios'
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+import Box from '@mui/material/Box';
 
 
 const FlightSearch = () => {
     const [count, setCount] = useState(0)
     const [data, setData] = useState([]);
-    const [inputs, setInputs] = useState({ departureDate: '2023-06-25', returnDate: '2023-06-30', locationDeparture: 'SJC', locationArrival: 'SAN' });
+    // const [inputs, setInputs] = useState({ departureDate: '2023-06-25', returnDate: '2023-06-30', locationDeparture: 'SJC', locationArrival: 'SAN' });
+    const [inputs, setInputs] = useState({});
+    const [travelmethod, setTravelMethod] = useState('');
+    const [flightdisable, setFlightDisable] = useState('');
+    
+
+    const handleChange = (event) => {
+        setTravelMethod(event.target.value);
+        if (event.target.value === "Military Air") {
+            setFlightDisable(true)
+        }else{
+            setFlightDisable(false)
+        }
+    };
 
     const chooseInputs = (name, value) => {
         inputs[name] = value
@@ -49,20 +66,36 @@ const FlightSearch = () => {
 
 
     return(
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <LocationField chooseInputs={chooseInputs} label='To:' name='locationDeparture'/>
-            <LocationField chooseInputs={chooseInputs} label='From:' name='locationArrival'/>
-            <DatePicker label="Depart" onChange={newValue =>{
-                chooseInputs('departureDate', newValue.format('YYYY-MM-DD'))
-            }}/>
-            <DatePicker label="Return" onChange={newValue =>{
-                chooseInputs('returnDate', newValue.format('YYYY-MM-DD'))
-            }}/>
-            <Button variant="contained" onClick={() => setCount(count + 1)}>
-                Find Flights
-            </Button>
-            <FlightTable data={data}/>
-        </LocalizationProvider>
+        <Box style={{backgroundColor: "#FFFFFF"}} sx={{ minWidth: 120 }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker label="Depart" onChange={newValue =>{
+                            chooseInputs('departureDate', newValue.format('YYYY-MM-DD'))
+                        }}/>
+                    <DatePicker label="Return" onChange={newValue =>{
+                        chooseInputs('returnDate', newValue.format('YYYY-MM-DD'))
+                    }}/>
+                    <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Travel Method</InputLabel>
+                    <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={travelmethod}
+                    label="Travel Method"
+                    onChange={handleChange}
+                    >
+                        <MenuItem value="Military Air">Military Air</MenuItem>
+                        <MenuItem value="Commercial Air">Commercial Air</MenuItem>
+                    </Select>
+                    </FormControl>
+                    <LocationField disabled={flightdisable} chooseInputs={chooseInputs} label='To:' name='locationDeparture'/>
+                    <LocationField disabled={flightdisable} chooseInputs={chooseInputs} label='From:' name='locationArrival'/>
+                    <Button disabled={flightdisable} variant="contained" onClick={() => setCount(count + 1)}>
+                        Find Flights
+                    </Button>
+                    <FlightTable disabled={flightdisable} data={data}/>
+                </LocalizationProvider>
+        </Box>
+
 
 
     )

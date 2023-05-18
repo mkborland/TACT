@@ -15,13 +15,13 @@ class simpleflightoffer{
         this.departureStartTime = offer.itineraries[0].segments[0].departure.at
         this.departureEndAirport = offer.itineraries[0].segments.slice(-1)[0].arrival.iataCode
         this.departureEndTime = offer.itineraries[0].segments.slice(-1)[0].arrival.at
-        this.departureStopovers = offer.itineraries[0].segments.length
+        this.departureStopovers = offer.itineraries[0].segments.length - 1
 
         this.returnStartAirport = offer.itineraries[1].segments[0].departure.iataCode
         this.returnStartTime = offer.itineraries[1].segments[0].departure.at
         this.returnEndAirport = offer.itineraries[1].segments.slice(-1)[0].arrival.iataCode
         this.returnEndTime = offer.itineraries[1].segments.slice(-1)[0].arrival.at
-        this.returnStopovers = offer.itineraries[1].segments.length
+        this.returnStopovers = offer.itineraries[1].segments.length - 1
 
         this.cost = offer.price.total
 

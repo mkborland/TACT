@@ -74,6 +74,7 @@ const LocationField = (props) => {
     <>
       <Autocomplete
         id="asynchronous-demo"
+        disabled={props.disabled}
         style={{ width: 300, marginBottom: "1rem" }}
         open={open}
         onOpen={() => {
@@ -104,6 +105,7 @@ const LocationField = (props) => {
         renderInput={params => {
           return (
             <TextField
+              disabled={props.disabled}
               label={label}
               fullWidth
               onChange={e => {
