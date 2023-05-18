@@ -13,9 +13,13 @@ import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import Box from '@mui/material/Box';
+import { useAppContext } from '../../context/AppContext'
 
 
 const FlightSearch = () => {
+    const {newExerciseObject, setNewExerciseObject} = useAppContext()
+    const newExerciseObject2 = newExerciseObject
+
     const [count, setCount] = useState(0)
     const [data, setData] = useState([]);
     // const [inputs, setInputs] = useState({ departureDate: '2023-06-25', returnDate: '2023-06-30', locationDeparture: 'SJC', locationArrival: 'SAN' });
@@ -38,6 +42,26 @@ const FlightSearch = () => {
     const chooseInputs = (name, value) => {
         inputs[name] = value
         setInputs(inputs);
+        switch(name){
+            case "departureDate":
+                newExerciseObject2.overView.startEx = value
+                setNewExerciseObject(newExerciseObject2)
+                break;
+            case "returnDate":
+                newExerciseObject2.overView.endEx = value
+                setNewExerciseObject(newExerciseObject2)
+                break;
+            case "locationDepartureObject":
+                newExerciseObject2.overView.startLocation = value.name
+                setNewExerciseObject(newExerciseObject2)
+                break;
+            case "locationArrivalObject":
+                newExerciseObject2.overView.endLocation = value.name
+                setNewExerciseObject(newExerciseObject2)
+                break;
+        }
+        console.log(newExerciseObject)
+
     }
 
     useEffect(() => {
@@ -69,9 +93,9 @@ const FlightSearch = () => {
     return(
         <Box sx={{ backgroundColor: "#FFFFFF", p: 2 }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="Depart" onChange={newValue =>{
-                            chooseInputs('departureDate', newValue.format('YYYY-MM-DD'))
-                        }}/>
+                    <DatePicker label="Depart" onChange={newValue =>{
+                        chooseInputs('departureDate', newValue.format('YYYY-MM-DD'))
+                    }}/>
                     <DatePicker label="Return" onChange={newValue =>{
                         chooseInputs('returnDate', newValue.format('YYYY-MM-DD'))
                     }}/>
@@ -88,8 +112,8 @@ const FlightSearch = () => {
                         <MenuItem value="Commercial Air">Commercial Air</MenuItem>
                     </Select>
                     </FormControl>
-                    <LocationField disabled={flightdisable} chooseInputs={chooseInputs} label='To:' name='locationDeparture'/>
-                    <LocationField disabled={flightdisable} chooseInputs={chooseInputs} label='From:' name='locationArrival'/>
+                    <LocationField chooseInputs={chooseInputs} label='To:' name='locationDeparture'/>
+                    <LocationField chooseInputs={chooseInputs} label='From:' name='locationArrival'/>
                     <LoadingButton loading={flightsloading} variant="contained" loadingPosition="end"
                     disabled={flightdisable} onClick={() => setCount(count + 1)}
                     >
