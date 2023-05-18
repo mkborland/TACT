@@ -25,7 +25,6 @@ function App() {
               <Route path="EditTablesPage" element={<EditTables />} />
               <Route path="ManageUsersPage" element={<ManageUsers />} />
             </Route>
-            <Route path="/flightsearch" element={<FlightSearch />} />
           </Routes>
         </BrowserRouter>
       </div>

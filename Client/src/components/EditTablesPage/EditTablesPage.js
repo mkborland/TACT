@@ -11,7 +11,6 @@ import TactApi from "../../api/TactApi";
 
 const EditTables =() => {
     const[airNum, setAirNum] = useState(16)
-    const[textArray, setTextArray] = useState([])
     const[airframeList, setAirframeList] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     
@@ -38,7 +37,7 @@ const EditTables =() => {
         let counter = 0;
         if(!isLoading){
 
-        airframeList.map(entry => {
+        airframeList.forEach(entry => {
           
         if(name === entry.aircraftName){
             if(counter === 0){
@@ -49,8 +48,19 @@ const EditTables =() => {
                     pain2.push(<TableCell align="center">N/A</TableCell>)
                     counter++
             }
-            textArray.push([entry.id, entry.personnelReq])
-            pain2.push(<TableCell align="right" key={entry.id}><TextField onChange={(e) => handleTextChange(e)}name={entry.id.toString()}inputProps={{min: 0, style: { textAlign: 'center' }}} size="small" variant='standard' defaultValue={textArray[entry.id -1][1]} margin='none'></TextField></TableCell>)
+            const obj = {id:entry.id, pr:entry.personnelReq}
+            pain2.push(
+              <TableCell align="right" key={entry.id}>
+                <TextField 
+                  onChange={(e) => handleTextChange(e)} 
+                  name={entry.id} 
+                  inputProps={{min: 0, style: { textAlign: 'center' }}} 
+                  size="small" 
+                  variant='standard' 
+                  defaultValue={entry.personnelReq} 
+                  margin='none'/>
+              </TableCell>
+            )
             counter++
         } 
            
@@ -66,7 +76,7 @@ const EditTables =() => {
         if(!isLoading){
           console.log("?")
           console.log(airframeList)
-        airframeList.map(entry => {
+        airframeList.forEach(entry => {
             if(currentAirframe !== entry.aircraftName){
                 currentAirframe = entry.aircraftName;
                 pain3.push(<TableRow key={currentAirframe} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>{personelCells(currentAirframe)}</TableRow>)
@@ -77,12 +87,14 @@ const EditTables =() => {
       }
       //the on save :( {aircraftname: "", aircraftnumber: "", newPersonnel: ""}
       const HandleSave = () => {
-        
-          //TactApi.updateAircraft({aircraftname:"F-35",aircraftnumber:"8",newPersonnel:"200"});
-        
+        //todo fix
+          // airframeList.forEach(cell => {
+          //   TactApi.updateAircraft({aircraftName:cell.aircraftName, aircraftNumber:cell.aircraftNumber, newPersonnel:cell.personnelReq})
+          // })
       }
       const handleTextChange = (e) => {
-             textArray[e.target.name -1] = [parseInt(e.target.name),e.target.value]
+             airframeList[e.target.name].personnelReq = e.target.value
+             console.log(airframeList[e.target.name])
       }
 
   return (
