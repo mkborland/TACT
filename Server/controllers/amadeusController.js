@@ -24,28 +24,46 @@ const location = async (req, res) => {
 };
 
 const airports = async (req, res) => {
-  const { page, subType, keyword } = req.query;
-  // API call with params we requested from client app
-  const response = await amadeus.client.get("/v1/reference-data/locations", {
-    keyword,
-    subType,
-    "page[offset]": page * 10,
-  });
-  // Sending response for client
   try {
+    const { page, subType, keyword } = req.query;
+    // API call with params we requested from client app
+    const response = await amadeus.client.get("/v1/reference-data/locations", {
+      keyword,
+      subType,
+      "page[offset]": page * 10,
+    });
+
+  // Sending response for client
+    // console.log('try res.json')
     await res.json(JSON.parse(response.body));
   } catch (err) {
-    await res.json(err);
+    // console.log(err)
+
+    const { page, subType, keyword } = req.query;
+    if (err.response.statusCode == 429) {
+      try {
+        await new Promise(r => setTimeout(r, 200));
+        // API call with params we requested from client app
+        const response2 = await amadeus.client.get("/v1/reference-data/locations", {
+          keyword,
+          subType,
+          "page[offset]": page * 10,
+        });
+
+        await res.json(JSON.parse(response2.body));
+
+      } catch (err2) {
+        await res.json(err2);
+      }
+
+    }
+    // await res.json(err);
   }
 };
 
 const flights = async (req, res) => {
   const { departureDate, returnDate, locationDeparture, locationArrival } =
     req.query;
-  // departureDate = req.body.departureDate;
-  // returnDate = req.body.returnDate;
-  // locationDeparture = req.body.locationDeparture;
-  // locationArrival = req.body.locationArrival;
   amadeus.shopping.flightOffersSearch
     .get({
       // originLocationCode: 'SJC',
