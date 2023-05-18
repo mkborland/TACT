@@ -16,27 +16,29 @@ const FlightSearch = () => {
 
     useEffect(() => {
         console.log(count)
+        if(count>0){
+            // setLoading(true)
+            const { out, source } = getFlightOffers({ departureDate: '2023-06-25', returnDate: '2023-06-30', locationDeparture: 'SJC', locationArrival: 'SAN' });
 
-        // setLoading(true)
-        const { out, source } = getFlightOffers({ departureDate: '2023-06-25', returnDate: '2023-06-30', locationDeparture: 'SJC', locationArrival: 'SAN' });
+            out.then(res => {
+            if (!res.data.code) {
+                // setOptions(res.data.data);
+                setData(res.data);
+            }
+            //   setLoading(false)
+            }).catch(err => {
+            axios.isCancel(err);
+            //   setOptions([]);
+            //   setLoading(false)
+        
+            });
+        
+            return () => {
+            source.cancel()
+            };
 
-    
-        out.then(res => {
-          if (!res.data.code) {
-            // setOptions(res.data.data);
-            setData(res.data);
-          }
-        //   setLoading(false)
-        }).catch(err => {
-          axios.isCancel(err);
-        //   setOptions([]);
-        //   setLoading(false)
-    
-        });
-    
-        return () => {
-          source.cancel()
-        };
+        }
+
       }, [count]);
 
 

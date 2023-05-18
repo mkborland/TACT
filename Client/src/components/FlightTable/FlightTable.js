@@ -70,8 +70,8 @@ const FlightTable = (props) => {
               </TableCell>
               <TableCell align="right">{offer.departureStartAirport}: {offer.departureStartTime} - {offer.departureEndAirport}: {offer.departureEndTime}</TableCell>
               <TableCell align="right">{offer.departureStopovers}</TableCell>
-              <TableCell align="right">Return Trip</TableCell>
               <TableCell align="right">{offer.returnStartAirport}: {offer.returnStartTime} - {offer.returnEndAirport}: {offer.returnEndTime}</TableCell>
+              <TableCell align="right">{offer.returnStopovers}</TableCell>
               <TableCell align="right">${offer.cost}</TableCell>
             </TableRow>
           ))}
