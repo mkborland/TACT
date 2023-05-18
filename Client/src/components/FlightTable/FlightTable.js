@@ -1,4 +1,5 @@
-import * as React from 'react';
+// import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -23,15 +24,27 @@ class simpleflightoffer{
         this.returnStopovers = offer.itineraries[1].segments.length
 
         this.cost = offer.price.total
+
+        this.id = offer.id
     }
 }
 
 const FlightTable = (props) => {
+    const [simple_data, setSimple_Data] = useState([]);
 
-    const simple_data = props.data.map(offer => {
-        // console.log(offer)
-        return new simpleflightoffer(offer)
-    })
+    useEffect(() => {
+        if (props.data === undefined){
+            setSimple_Data([])
+        }else{
+            setSimple_Data( props.data.map(offer => {
+                // console.log(offer)
+                return new simpleflightoffer(offer)
+            })
+            )
+        }
+
+    }, [props.data]);
+
 
   return (
     <TableContainer component={Paper}>

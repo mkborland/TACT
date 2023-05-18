@@ -54,7 +54,8 @@ const flights = async (req, res) => {
     departureDate: departureDate,
     returnDate: returnDate,
     adults: '1',
-    currencyCode: 'USD'
+    currencyCode: 'USD',
+    max: '20'
   }).then(function(response){
     // console.log(response.data);
     res.send(response.data)
