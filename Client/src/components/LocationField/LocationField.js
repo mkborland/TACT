@@ -89,6 +89,7 @@ const LocationField = (props) => {
           if (value && value.name) {
             // props.setSearch((p) => ({ ...p, keyword: value.name, page: 0 }))
             setSearch(value.name + ' (' + value.iataCode + ')')
+            props.chooseInputs(props.name, value.iataCode)
             return;
           }
           setSearch("")
