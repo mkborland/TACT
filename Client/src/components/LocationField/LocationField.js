@@ -9,16 +9,15 @@ import { debounce } from "lodash"
 
 
 
-const LocationField = () => {
-  const props = {}
-  const [psearch, psetSearch] = React.useState({
-    keyword: "",
-    city: true,
-    airport: true,
-    page: 0
-  });
-  props['search'] = psearch
-  props['setSearch'] = psetSearch
+const LocationField = (props) => {
+  // const [psearch, psetSearch] = React.useState({
+  //   keyword: "",
+  //   city: true,
+  //   airport: true,
+  //   page: 0
+  // });
+  // props['search'] = psearch
+  // props['setSearch'] = psetSearch
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const [search, setSearch] = React.useState('')
@@ -39,7 +38,8 @@ const LocationField = () => {
   React.useEffect(() => {
 
     setLoading(true)
-    const { out, source } = getAmadeusData({ ...props.search, page: 0, keyword });
+    // const { out, source } = getAmadeusData({ ...props.search, page: 0, keyword });
+    const { out, source } = getAmadeusData({ ...search, page: 0, keyword });
 
     out.then(res => {
       if (!res.data.code) {
@@ -60,9 +60,14 @@ const LocationField = () => {
   }, [keyword]);
 
   // Desctructuring our props
-  const { city, airport } = props.search
+  // const { city, airport } = props.search
+  const { city, airport } = search
 
-  const label = city && airport ? "City and Airports" : city ? "City" : airport ? "Airports" : ""
+  let label = city && airport ? "City and Airports" : city ? "City" : airport ? "Airports" : ""
+
+  if (props.label){
+      label = props.label
+  }
 
   return (
     // This is Material-UI component that also has it's own props
@@ -82,12 +87,13 @@ const LocationField = () => {
         }
         onChange={(e, value) => {
           if (value && value.name) {
-            props.setSearch((p) => ({ ...p, keyword: value.name, page: 0 }))
-            setSearch(value.name)
+            // props.setSearch((p) => ({ ...p, keyword: value.name, page: 0 }))
+            setSearch(value.name + ' (' + value.iataCode + ')')
+            props.chooseInputs(props.name, value.iataCode)
             return;
           }
           setSearch("")
-          props.setSearch((p) => ({ ...p, keyword: "", page: 0 }))
+          // props.setSearch((p) => ({ ...p, keyword: "", page: 0 }))
 
         }}
         getOptionLabel={option => {

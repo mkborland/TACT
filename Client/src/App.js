@@ -8,6 +8,8 @@ import LocationField from "./components/LocationField/LocationField.js";
 import EditTables from "./components/EditTablesPage/EditTablesPage";
 import ManageUsers from "./components/ManageUsersPage/ManageUsersPage";
 import HistoryPage from "./pages/HistoryPage";
+import FlightSearch from './components/FlightSearch/FlightSearch';
+
 
 function App() {
   return (
@@ -27,6 +29,7 @@ function App() {
               <Route path="EditTablesPage" element={<EditTables />} />
               <Route path="ManageUsersPage" element={<ManageUsers />} />
             </Route>
+            <Route path="/flightsearch" element={<FlightSearch />} />
           </Routes>
         </BrowserRouter>
       </div>

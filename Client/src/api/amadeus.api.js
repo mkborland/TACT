@@ -2,6 +2,35 @@ import axios from "axios";
 
 const CancelToken = axios.CancelToken;
 
+
+
+// This function allow you to make GET request to backend with params we need
+export const getFlightOffers = params => {
+
+  // Destructuring params
+  // const { keyword = "", page = 0, city = true, airport = true } = params;
+  const { departureDate, returnDate, locationDeparture, locationArrival } = params;
+
+  // // Checking for proper subType 
+  // const subTypeCheck = city && airport ? "CITY,AIRPORT" : city ? "CITY" : airport ? "AIRPORT" : ""
+
+  // // Amadeus API require at least 1 character, so with this we can be sure that we can make this request
+  // const searchQuery = keyword ? keyword : "a";
+
+  // This is extra tool for cancelation request, to avoid overload API 
+  const source = CancelToken.source();
+
+  // GET request with all params we need
+  const out = axios.get(
+    `/api/flights/?departureDate=${departureDate}&returnDate=${returnDate}&locationDeparture=${locationDeparture}&locationArrival=${locationArrival}`,
+    {
+      cancelToken: source.token
+    }
+  )
+
+  return { out, source }
+};
+
 // This function allow you to make GET request to backend with params we need
 export const getAmadeusData = params => {
 
