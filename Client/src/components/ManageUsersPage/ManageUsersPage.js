@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
+import TactApi from "../../api/TactApi";
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -12,70 +13,101 @@ import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { Divider, Icon } from '@mui/material';
 import UserInfo from './UserInfoCard';
 
-const ManageUsers = ()  => {
-    const ExpandMoreNew = styled((props) => {
-        const { expand, ...other } = props;
-        return <IconButton {...other} />;
-      })(({ theme, expand }) => ({
-        transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-        marginLeft: 'auto',
-        transition: theme.transitions.create('transform', {
-          duration: theme.transitions.duration.shortest,
-        }),
-      }));
-        const [expandedNew, setExpandedNew] = React.useState(false);
-      
-        const handleExpandClickNew = () => {
-          setExpandedNew(!expandedNew);
-        };
+const ManageUsers = () => {
+  const [userList, setUserList] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
-        const ExpandMoreCurrent = styled((props) => {
-            const { expand, ...other } = props;
-            return <IconButton {...other} />;
-          })(({ theme, expand }) => ({
-            transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-            marginLeft: 'auto',
-            transition: theme.transitions.create('transform', {
-              duration: theme.transitions.duration.shortest,
-            }),
-          }));
-            const [expandedCurrent, setExpandedCurrent] = React.useState(false);
-          
-            const handleExpandClickCurrent = () => {
-              setExpandedCurrent(!expandedCurrent);
-            };
+  useEffect(() => {
+    TactApi.getAllUsers().then(data => {
+      setUserList(data)
+      setIsLoading(false);
+    });
+  }, []);
+
+  const createNewList = (list) => {
+    const pain = [];
+     if(!isLoading){
+      list.forEach(element => {
+        if(element.roleName === "pending")
+        pain.push(UserInfo(element.userName,element.userID,"pending"))
+      });
+   }
+    return pain;
+}
+
+const createCurrentList = (list) => {
+  const pain2 = [];
+   if(!isLoading){
+    list.forEach(element => {
+      if(element.roleName !== "pending")
+      pain2.push(UserInfo(element.userName,element.userID,element.roleName))
+    });
+ }
+  return pain2;
+}
 
 
-    return (
-        <div>
-        <Card sx={{ minWidth: 450 }}>
-          <CardActions>
-          <Icon sx={{margin: 1}}><GroupAddIcon/></Icon>
-            <Typography sx={{marginLeft: 2}} variant="h6" color="text.primary">
-              Account requests
-            </Typography>
-            <ExpandMoreNew
-              expand={expandedNew}
-              onClick={handleExpandClickNew}
-              aria-expanded={expandedNew}
-              aria-label="show more"
-            >
-              <ExpandMoreIcon />
-            </ExpandMoreNew>
-          </CardActions>
-          <Divider/>
-          <Collapse in={expandedNew} timeout="auto" unmountOnExit>
-            <CardContent>
-                
-              {/* add new user requests here */}
-              {UserInfo("Wanna B.","2","pending")}
-            </CardContent>
-          </Collapse>
-        </Card>
-        <Card sx={{ minWidth: 450, marginTop: 3}}>
+  const ExpandMoreNew = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+  })(({ theme, expand }) => ({
+    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  }));
+  const [expandedNew, setExpandedNew] = React.useState(false);
+
+  const handleExpandClickNew = () => {
+    setExpandedNew(!expandedNew);
+  };
+
+  const ExpandMoreCurrent = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+  })(({ theme, expand }) => ({
+    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  }));
+  const [expandedCurrent, setExpandedCurrent] = React.useState(false);
+  const handleExpandClickCurrent = () => {
+    setExpandedCurrent(!expandedCurrent);
+  };
+
+  return (
+    <div>
+      <Card sx={{ minWidth: 450 }}>
         <CardActions>
-        <Icon sx={{margin: 1}}><PersonSearchIcon/></Icon>
-          <Typography sx={{marginLeft: 2}} variant="h6" color="text.primary">
+          <Icon sx={{ margin: 1 }}><GroupAddIcon /></Icon>
+          <Typography sx={{ marginLeft: 2 }} variant="h6" color="text.primary">
+            Account requests
+          </Typography>
+          <ExpandMoreNew
+            expand={expandedNew}
+            onClick={handleExpandClickNew}
+            aria-expanded={expandedNew}
+            aria-label="show more"
+          >
+            <ExpandMoreIcon />
+          </ExpandMoreNew>
+        </CardActions>
+        <Divider />
+        <Collapse in={expandedNew} timeout="auto" unmountOnExit>
+          <CardContent>
+
+            {/* add new user requests here */}
+            {createNewList(userList)}
+          </CardContent>
+        </Collapse>
+      </Card>
+      <Card sx={{ minWidth: 450, marginTop: 3 }}>
+        <CardActions>
+          <Icon sx={{ margin: 1 }}><PersonSearchIcon /></Icon>
+          <Typography sx={{ marginLeft: 2 }} variant="h6" color="text.primary">
             Current Accounts
           </Typography>
           <ExpandMoreCurrent
@@ -87,16 +119,16 @@ const ManageUsers = ()  => {
             <ExpandMoreIcon />
           </ExpandMoreCurrent>
         </CardActions>
-        <Divider/>
+        <Divider />
         <Collapse in={expandedCurrent} timeout="auto" unmountOnExit>
-            <CardContent>
+          <CardContent>
             {/* add current users here */}
-            {UserInfo("Billy Joel","1","Mother")}
-            </CardContent>
+            {createCurrentList(userList)}
+          </CardContent>
         </Collapse>
       </Card>
-      </div>
-      );
+    </div>
+  );
 }
 
 
