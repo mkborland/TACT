@@ -66,7 +66,7 @@ const FlightSearch = () => {
 
 
     return(
-        <Box style={{backgroundColor: "#FFFFFF"}} sx={{ minWidth: 120 }}>
+        <Box sx={{ backgroundColor: "#FFFFFF", p: 2 }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker label="Depart" onChange={newValue =>{
                             chooseInputs('departureDate', newValue.format('YYYY-MM-DD'))
