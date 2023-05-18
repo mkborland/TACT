@@ -4,27 +4,25 @@ import CreateIcon from "@mui/icons-material/Create";
 import HistoryIcon from "@mui/icons-material/History";
 import AddIcon from "@mui/icons-material/Add";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import { useNavigate } from "react-router-dom";
 
 
-
-const NewExercisePage = () => {};
-const HistoryPage = () => {};
-const EditTablesPage = () => {};
-const ManageUsersPage = () => {};
+const NewExercisePage = "/Dashboard/NewExercisePage"
+const HistoryPage = "/Dashboard/History";
+const EditTablesPage = "/Dashboard/EditTablesPage";
+const ManageUsersPage = "/Dashboard/ManageUsersPage";
 
 const ActionObject = [
   {
     text: "New Exercise",
     icon: <AddIcon />,
-    onClick: NewExercisePage,
+    link: NewExercisePage,
   },
-  { text: "History", icon: <HistoryIcon />, onClick: HistoryPage },
-  { text: "Edit Data Table", icon: <CreateIcon />, onClick: EditTablesPage },
+  { text: "History", icon: <HistoryIcon />, link: HistoryPage },
+  { text: "Edit Data Table", icon: <CreateIcon />, link: EditTablesPage },
   {
     text: "Manage Users",
     icon: <ManageAccountsIcon />,
-    onClick: ManageUsersPage,
+    link: ManageUsersPage,
   },
 ];
 
@@ -39,7 +37,7 @@ const UserActionItems = () => {
             <DefinedListItem
               text={items.text}
               icon={items.icon}
-              onClick={items.onClick}
+              link={items.link}
             />
           );
         })}

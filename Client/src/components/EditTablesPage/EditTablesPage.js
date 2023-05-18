@@ -13,9 +13,13 @@ const EditTables =() => {
     const[airNum, setAirNum] = useState(16)
     const[textArray, setTextArray] = useState([])
     const[airframeList, setAirframeList] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
     
     useEffect( () => { 
-      TactApi.getAllAircraft().then(data => setAirframeList(data))
+      TactApi.getAllAircraft().then(data => {
+        setAirframeList(data)
+        setIsLoading(false);
+      });
     },[])
 
     // incoming data => [{key, frame, NumFrame, NumPersonel}{...}.....]
@@ -32,24 +36,26 @@ const EditTables =() => {
       const personelCells = (name) => {
         let pain2 = [];
         let counter = 0;
-        if(airframeList !== []){
-        airframeList.map(cell => {
+        if(!isLoading){
+
+        airframeList.map(entry => {
           
-        if(name === cell.aircraftName){
+        if(name === entry.aircraftName){
             if(counter === 0){
                 pain2.push(<TableCell align='left'>{name}</TableCell>)
                 counter++
             }
-            if(counter !== cell.aircraftNumber){
+            if(counter !== entry.aircraftNumber){
                     pain2.push(<TableCell align="center">N/A</TableCell>)
                     counter++
             }
-            textArray.push([cell.id,cell.personnelReq])
-            pain2.push(<TableCell align="right"><TextField onChange={(e) => handleTextChange(e)}name={cell.id.toString()}inputProps={{min: 0, style: { textAlign: 'center' }}} size="small" variant='standard' defaultValue={textArray[cell.id -1][1]} margin='none'></TextField></TableCell>)
+            textArray.push([entry.id, entry.personnelReq])
+            pain2.push(<TableCell align="right" key={entry.id}><TextField onChange={(e) => handleTextChange(e)}name={entry.id.toString()}inputProps={{min: 0, style: { textAlign: 'center' }}} size="small" variant='standard' defaultValue={textArray[entry.id -1][1]} margin='none'></TextField></TableCell>)
             counter++
         } 
            
-        })
+        }
+        )
       }
         return pain2;
       }
@@ -57,14 +63,15 @@ const EditTables =() => {
       const personelRows = () => {
         let pain3 = []
         let currentAirframe = "";
-        if(airframeList !== []){
+        if(!isLoading){
+          console.log("?")
+          console.log(airframeList)
         airframeList.map(entry => {
             if(currentAirframe !== entry.aircraftName){
                 currentAirframe = entry.aircraftName;
                 pain3.push(<TableRow key={currentAirframe} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>{personelCells(currentAirframe)}</TableRow>)
             }
         })
-        console.log(airframeList)
       }
         return pain3;
       }
