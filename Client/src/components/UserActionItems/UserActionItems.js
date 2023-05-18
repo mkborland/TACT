@@ -5,20 +5,24 @@ import HistoryIcon from "@mui/icons-material/History";
 import AddIcon from "@mui/icons-material/Add";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
-const NewExercisePage = () => {};
+
+const NewExercisePage = "/Dashboard/NewExercisePage"
+const HistoryPage = "/Dashboard/History";
+const EditTablesPage = "/Dashboard/EditTablesPage";
+const ManageUsersPage = "/Dashboard/ManageUsersPage";
 
 const ActionObject = [
   {
     text: "New Exercise",
     icon: <AddIcon />,
-    onClick: NewExercisePage,
+    link: NewExercisePage,
   },
-  { text: "History", icon: <HistoryIcon />, onClick: NewExercisePage },
-  { text: "Edit Data Table", icon: <CreateIcon />, onClick: NewExercisePage },
+  { text: "History", icon: <HistoryIcon />, link: HistoryPage },
+  { text: "Edit Data Table", icon: <CreateIcon />, link: EditTablesPage },
   {
     text: "Manage Users",
     icon: <ManageAccountsIcon />,
-    onClick: NewExercisePage,
+    link: ManageUsersPage,
   },
 ];
 
@@ -33,7 +37,7 @@ const UserActionItems = () => {
             <DefinedListItem
               text={items.text}
               icon={items.icon}
-              onClick={items.onClick}
+              link={items.link}
             />
           );
         })}

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -7,68 +7,23 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Typography, Button, Divider, TextField } from '@mui/material';
+import TactApi from "../../api/TactApi";
 
 const EditTables =() => {
     const[airNum, setAirNum] = useState(16)
     const[textArray, setTextArray] = useState([])
+    const[airframeList, setAirframeList] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+    
+    useEffect( () => { 
+      TactApi.getAllAircraft().then(data => {
+        setAirframeList(data)
+        setIsLoading(false);
+      });
+    },[])
 
     // incoming data => [{key, frame, NumFrame, NumPersonel}{...}.....]
-    const mockData = [{
-        id:1,
-        aircraftName: 'KC-135',
-        aircraftNumber: '1',
-        personnelReq: '85'
-      },{
-        id:2,
-        aircraftName: 'KC-135',
-        aircraftNumber: '2',
-        personnelReq: '145'
-      },{
-        id:3,
-        aircraftName: 'KC-135',
-        aircraftNumber: '3',
-        personnelReq: '200'
-      },{
-        id:4,
-        aircraftName: 'KC-135',
-        aircraftNumber: '4',
-        personnelReq: '225'
-      },{
-        id:5,
-        aircraftName: 'KC-135',
-        aircraftNumber: '5',
-        personnelReq: '240'
-      },{
-        id:6,
-        aircraftName: 'KC-135',
-        aircraftNumber: '6',
-        personnelReq: '245'
-      },{
-        id:7,
-        aircraftName: 'KC-135',
-        aircraftNumber: '7',
-        personnelReq: '250'
-      },{
-        id:8,
-        aircraftName: 'F-22',
-        aircraftNumber: '2',
-        personnelReq: '50'
-      },{
-        id:9,
-        aircraftName: 'F-22',
-        aircraftNumber: '4',
-        personnelReq: '75'
-      },{
-        id:10,
-        aircraftName: 'F-22',
-        aircraftNumber: '6',
-        personnelReq: '90'
-      },{
-        id:11,
-        aircraftName: 'F-22',
-        aircraftNumber: '8',
-        personnelReq: '100'
-      }]
+    
       //create number of columns the dumb way (time and brain power constraint)
       const airNumCells = () => {
         let pain = [];
@@ -81,49 +36,58 @@ const EditTables =() => {
       const personelCells = (name) => {
         let pain2 = [];
         let counter = 0;
-        mockData.map(cell => {
-        if(name === cell.aircraftName){
+        if(!isLoading){
+
+        airframeList.map(entry => {
+          
+        if(name === entry.aircraftName){
             if(counter === 0){
                 pain2.push(<TableCell align='left'>{name}</TableCell>)
                 counter++
             }
-            if(counter.toString() !== cell.aircraftNumber){
+            if(counter !== entry.aircraftNumber){
                     pain2.push(<TableCell align="center">N/A</TableCell>)
                     counter++
             }
-        
-            textArray.push([cell.id,cell.personnelReq])
-            
-            pain2.push(<TableCell align="right"><TextField onChange={(e) => handleTextChange(e)}name={cell.id.toString()}inputProps={{min: 0, style: { textAlign: 'center' }}} size="small" variant='standard' defaultValue={textArray[cell.id -1][1]} margin='none'></TextField></TableCell>)
+            textArray.push([entry.id, entry.personnelReq])
+            pain2.push(<TableCell align="right" key={entry.id}><TextField onChange={(e) => handleTextChange(e)}name={entry.id.toString()}inputProps={{min: 0, style: { textAlign: 'center' }}} size="small" variant='standard' defaultValue={textArray[entry.id -1][1]} margin='none'></TextField></TableCell>)
             counter++
-        }    
-        })
+        } 
+           
+        }
+        )
+      }
         return pain2;
       }
     //create the rows the cells will populate
       const personelRows = () => {
         let pain3 = []
         let currentAirframe = "";
-        mockData.map(entry => {
+        if(!isLoading){
+          console.log("?")
+          console.log(airframeList)
+        airframeList.map(entry => {
             if(currentAirframe !== entry.aircraftName){
                 currentAirframe = entry.aircraftName;
                 pain3.push(<TableRow key={currentAirframe} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>{personelCells(currentAirframe)}</TableRow>)
             }
         })
+      }
         return pain3;
       }
-
-      const handleSave = () => {
-
+      //the on save :( {aircraftname: "", aircraftnumber: "", newPersonnel: ""}
+      const HandleSave = () => {
+        
+          //TactApi.updateAircraft({aircraftname:"F-35",aircraftnumber:"8",newPersonnel:"200"});
+        
       }
       const handleTextChange = (e) => {
              textArray[e.target.name -1] = [parseInt(e.target.name),e.target.value]
-             console.log(textArray)
       }
 
   return (
     <div>
-        <Typography variant="h3" component="div" >Required Personel</Typography>
+        <Typography variant="h3" component="div" >Required Personnel</Typography>
         <Divider/>
     <TableContainer component={Paper} sx={{marginTop:4}}>
         <Typography variant="h6" component="div">Number of Planes</Typography>
@@ -138,7 +102,7 @@ const EditTables =() => {
           {personelRows()}
         </TableBody>
       </Table>
-      <Button type="submit" color="primary" onClick={() => handleSave()}>
+      <Button type="submit" color="primary" onClick={() => HandleSave()}>
             Save Changes
           </Button>
     </TableContainer>

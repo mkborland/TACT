@@ -59,7 +59,8 @@ const LoginCard = () => {
             type="button"
             color="primary"
             variant="outlined"
-            onClick={() => tryLogin(userNameInput, userPasswordInput)}
+            onClick={() => {tryLogin(userNameInput, userPasswordInput)
+              nav("/Dashboard/History")}}
           >
             Log in
           </Button>
