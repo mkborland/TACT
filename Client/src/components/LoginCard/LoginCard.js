@@ -49,6 +49,7 @@ const LoginCard = () => {
             id="standard-basic"
             label="Password"
             variant="standard"
+            type="password"
             onChange={(e) => savePasswordInput(e.target.value)}
           />
         </CardContent>
