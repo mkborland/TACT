@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import TactApi from "../../api/TactApi";
+import TactApi from "../../api/TactApi.js";
+import UserInfo from './UserInfoCard.js';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -11,7 +12,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { Divider, Icon } from '@mui/material';
-import UserInfo from './UserInfoCard';
 
 const ManageUsers = () => {
   const [userList, setUserList] = useState([])
@@ -26,25 +26,25 @@ const ManageUsers = () => {
 
   const createNewList = (list) => {
     const pain = [];
-     if(!isLoading){
+    if (!isLoading) {
       list.forEach(element => {
-        if(element.roleName === "pending")
-        pain.push(UserInfo(element.userName,element.userID,"pending"))
+        if (element.roleName === "pending")
+          pain.push(UserInfo(element.userName, element.userID, "pending"))
       });
-   }
+    }
     return pain;
-}
+  }
 
-const createCurrentList = (list) => {
-  const pain2 = [];
-   if(!isLoading){
-    list.forEach(element => {
-      if(element.roleName !== "pending")
-      pain2.push(UserInfo(element.userName,element.userID,element.roleName))
-    });
- }
-  return pain2;
-}
+  const createCurrentList = (list) => {
+    const pain2 = [];
+    if (!isLoading) {
+      list.forEach(element => {
+        if (element.roleName !== "pending")
+          pain2.push(UserInfo(element.userName, element.userID, element.roleName))
+      });
+    }
+    return pain2;
+  }
 
 
   const ExpandMoreNew = styled((props) => {

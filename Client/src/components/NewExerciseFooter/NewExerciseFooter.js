@@ -1,12 +1,9 @@
-import { Box, Divider } from "@mui/material";
 import { useState } from "react";
-import TactApi from "../../api/TactApi";
-import { useAppContext } from "../../context/AppContext";
-import { MockExercises2 } from "../../mock/mockExercises";
+import TactApi from "../../api/TactApi.js";
+import { useAppContext } from "../../context/AppContext.js";
+import { Box, Divider } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import SendIcon from "@mui/icons-material/Send";
-import { ExerciseObjectFormat } from "../../api/exercises/get/GetExercises";
-import { flatExercises } from "../../api/exercises/post/PostExercises";
 
 const NewExercisePageFooter = () => {
   const [loading, setLoading] = useState(false);

@@ -1,4 +1,5 @@
-import baseApiUrl from "../../TactApiConfig";
+import baseApiUrl from "../../TactApiConfig.js";
+
 const GetUser = async (token = "") => {
   const endPoint = "/get_users";
   const response = await fetch(`${baseApiUrl}${endPoint}`, {

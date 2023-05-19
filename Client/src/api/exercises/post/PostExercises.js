@@ -1,4 +1,4 @@
-import baseApiUrl from "../../TactApiConfig";
+import baseApiUrl from "../../TactApiConfig.js";
 
 const PostExercises = async (body, token = "") => {
   const endPoint = "/add_exercise";

@@ -1,4 +1,3 @@
-
 const requestRates = async (req, res) => {
     const yearIn = req.query.year
     const cityIn = req.query.city

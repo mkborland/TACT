@@ -1,7 +1,7 @@
 import express from "express";
-const router = express.Router();
-
 import { requestAircraft, requestAllAircraft, updateAircraft } from "../controllers/aircraftController.js";
+
+const router = express.Router();
 
 router.route("/get_aircraft").get(requestAircraft);
 

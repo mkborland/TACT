@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../../context/AppContext.js";
 import {
   Box,
   Card,
@@ -9,9 +11,7 @@ import {
   Button,
   Snackbar,
 } from "@mui/material";
-import { useAppContext } from "../../context/AppContext";
 import { Alert } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [userName, setUserName] = useState();
@@ -33,10 +33,10 @@ const SignUp = () => {
   };
 
   const validatePass = (passOne, passTwo) => {
-    if(passOne === passTwo && userName !== "" && passOne !== ""){
+    if (passOne === passTwo && userName !== "" && passOne !== "") {
       setSuccessCode(trySignUp(userName, passOne))
       nav("/")
-    }else{
+    } else {
       setDisplayMessage(true);
     }
   };
@@ -86,7 +86,7 @@ const SignUp = () => {
             color="primary"
             variant="outlined"
             onClick={() => {
-              validatePass(passwordOne,passwordTwo)
+              validatePass(passwordOne, passwordTwo)
             }}
           >
             SUBMIT

@@ -1,12 +1,12 @@
 import * as React from 'react';
+import { useState } from "react";
+import { useAppContext } from "../../context/AppContext.js";
+import baseApiUrl from "../../api/TactApiConfig.js";
 import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
-import { useState } from "react";
-import { useAppContext } from "../../context/AppContext";
-import baseApiUrl from "../../api/TactApiConfig.js";
 
 const Lodging = () => {
     //Initialization

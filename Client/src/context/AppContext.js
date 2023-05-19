@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import TactApi from "../api/TactApi";
+import TactApi from "../api/TactApi.js";
 
 const AppContext = React.createContext();
 
@@ -12,9 +11,9 @@ const AppProvider = ({ children }) => {
 
   const tryLogin = (userName, password) => {
     // Make a API request to see if this is a good account.
-    TactApi.getUser({name:userName}).then(data => {
-      if(data != "error" && data != undefined){
-      setUser({userName: data.userName , access: "admin" })
+    TactApi.getUser({ name: userName }).then(data => {
+      if (data != "error" && data != undefined) {
+        setUser({ userName: data.userName, access: "admin" })
       }
     })
     // YES
@@ -25,10 +24,10 @@ const AppProvider = ({ children }) => {
 
   const trySignUp = (userName, pass) => {
     //check if other inputs
-      TactApi.addUser({name:userName,pass:pass}).then( data => {
-          return data.status
-      }
-      )
+    TactApi.addUser({ name: userName, pass: pass }).then(data => {
+      return data.status
+    }
+    )
     //save to db
     //return action was good
   };

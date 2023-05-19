@@ -1,7 +1,7 @@
 import express from "express";
-const router = express.Router();
-
 import { requestExercise, requestAllExercises, addExercise } from "../controllers/exerciseController.js";
+
+const router = express.Router();
 
 router.route("/get_exercise").get(requestExercise);
 

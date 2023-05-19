@@ -1,9 +1,7 @@
 import axios from "axios";
-import baseApiUrl from "../api/TactApiConfig"
+import baseApiUrl from "../api/TactApiConfig.js"
 
 const CancelToken = axios.CancelToken;
-
-
 
 // This function allow you to make GET request to backend with params we need
 export const getFlightOffers = params => {

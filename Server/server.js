@@ -2,6 +2,7 @@ import express, { json } from "express";
 import cors from "cors";
 import corsSetting from "./middleware/corsSetting.js";
 import { aircraftRoutes, userRoutes, exerciseRoutes, amadeusRoutes, perDiemRoutes } from "./routes/index.js";
+
 const server = express();
 
 //Middleware

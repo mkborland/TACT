@@ -1,12 +1,12 @@
-import GetAllAircraft from "./Airplanes/get/GetAllAircraft";
-import GetExercises from "./exercises/get/GetExercises";
-import UpdateAircraft from "./Airplanes/update/UpdateAircraft";
+import GetAllAircraft from "./Airplanes/get/GetAllAircraft.js";
+import GetExercises from "./exercises/get/GetExercises.js";
+import UpdateAircraft from "./Airplanes/update/UpdateAircraft.js";
 import GetAllExercises from "./exercises/get/GetAllExercises.js";
-import GetAllUsers from "./Users/get/GetAllUsers";
-import AddUser from "./Users/add/AddUser";
+import GetAllUsers from "./Users/get/GetAllUsers.js";
+import AddUser from "./Users/add/AddUser.js";
 import GetUser from "./Users/get/GetUser.js";
-import UpdateUser from "./Users/update/UpdateUser";
-import PostExercises from "./exercises/post/PostExercises";
+import UpdateUser from "./Users/update/UpdateUser.js";
+import PostExercises from "./exercises/post/PostExercises.js";
 
 const TactApi = {
   getExercises: GetExercises,

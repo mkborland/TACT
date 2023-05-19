@@ -1,5 +1,5 @@
-import server from "./server.js";
 import chalk from "chalk";
+import server from "./server.js";
 import { buildTables, seedDb } from "./db/dbRefresh.js";
 
 const PORT = process.env.PORT || 8080;

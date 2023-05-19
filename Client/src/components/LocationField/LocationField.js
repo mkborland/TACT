@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect } from "react";
+import axios from 'axios'
+import { debounce } from "lodash"
+import { getAmadeusData } from "../../api/amadeus.api.js";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
-import axios from 'axios'
-import { getAmadeusData } from "../../api/amadeus.api";
-import { debounce } from "lodash"
 
 
 
@@ -65,8 +65,8 @@ const LocationField = (props) => {
 
   let label = city && airport ? "City and Airports" : city ? "City" : airport ? "Airports" : ""
 
-  if (props.label){
-      label = props.label
+  if (props.label) {
+    label = props.label
   }
 
   return (

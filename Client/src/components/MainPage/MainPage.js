@@ -1,4 +1,7 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
+import UserActionItems from "../UserActionItems/UserActionItems.js";
+import { useAppContext } from "../../context/AppContext.js";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -12,9 +15,6 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import UserActionItems from "../UserActionItems/UserActionItems";
-import { Outlet } from "react-router-dom";
-import { useAppContext } from "../../context/AppContext";
 
 const drawerWidth = 240;
 
@@ -75,7 +75,7 @@ export default function PersistentDrawerLeft() {
     setOpen(false);
   };
 
-  const {UserInfo} = useAppContext()
+  const { UserInfo } = useAppContext()
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -124,8 +124,8 @@ export default function PersistentDrawerLeft() {
         </List>
       </Drawer>
       <MainPage open={open}>
-      <DrawerHeader />
-      <Outlet />
+        <DrawerHeader />
+        <Outlet />
       </MainPage>
     </Box>
   );

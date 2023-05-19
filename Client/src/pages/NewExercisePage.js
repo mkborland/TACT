@@ -1,8 +1,8 @@
-import FlightSearch from "../components/FlightSearch/FlightSearch";
-import AirTypeTable from "../components/NewExerciseAircraftType/AirTypeTable";
-import Lodging from "../components/Lodging/Lodging";
-import NewExercisePageFooter from "../components/NewExerciseFooter/NewExerciseFooter";
-import NewExercisePageHeader from "../components/NewExerciseHeader/NewExerciseHeader";
+import FlightSearch from "../components/FlightSearch/FlightSearch.js";
+import AirTypeTable from "../components/NewExerciseAircraftType/AirTypeTable.js";
+import Lodging from "../components/Lodging/Lodging.js";
+import NewExercisePageFooter from "../components/NewExerciseFooter/NewExerciseFooter.js";
+import NewExercisePageHeader from "../components/NewExerciseHeader/NewExerciseHeader.js";
 
 const NewExercisePage = () => {
   return (

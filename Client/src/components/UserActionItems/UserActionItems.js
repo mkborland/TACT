@@ -1,5 +1,5 @@
-import { useAppContext } from "../../context/AppContext";
-import DefinedListItem from "../Util/DefinedListItem";
+import { useAppContext } from "../../context/AppContext.js";
+import DefinedListItem from "../Util/DefinedListItem.js";
 import CreateIcon from "@mui/icons-material/Create";
 import HistoryIcon from "@mui/icons-material/History";
 import AddIcon from "@mui/icons-material/Add";
@@ -58,7 +58,7 @@ const UserActionItems = () => {
         /> */}
       </>
     );
-  }else if( UserInfo.access === "general" ){
+  } else if (UserInfo.access === "general") {
     return (
       <>
         {ActionObjectGeneral.map((items) => {

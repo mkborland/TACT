@@ -1,4 +1,5 @@
-import { ExerciseObjectFormat } from "../api/exercises/get/GetExercises";
+import { ExerciseObjectFormat } from "../api/exercises/get/GetExercises.js";
+
 export const MockExercises = ExerciseObjectFormat(
   "1",
   "Test",

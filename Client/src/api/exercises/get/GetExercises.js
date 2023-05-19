@@ -1,4 +1,5 @@
-import baseApiUrl from "../../TactApiConfig";
+import baseApiUrl from "../../TactApiConfig.js";
+
 const GetExercises = async (body, token = "") => {
   const endPoint = "/get_exercise";
   const response = await fetch(`${baseApiUrl}${endPoint}?name=${body}`, {

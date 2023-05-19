@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import PropTypes from "prop-types";
+import TactApi from "../api/TactApi.js";
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -19,7 +20,6 @@ import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
-import TactApi from "../api/TactApi";
 
 const HistoryPage = () => {
   const [historyList, setHistoryList] = useState([]);
