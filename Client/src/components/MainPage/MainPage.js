@@ -15,6 +15,9 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { Button } from "@mui/material";
+import {grey} from '@mui/material/colors';
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -75,13 +78,22 @@ export default function PersistentDrawerLeft() {
     setOpen(false);
   };
 
-  const { UserInfo } = useAppContext()
+  const {UserInfo} = useAppContext()
+  const nav = useNavigate()
+
+  const title = () => {
+    if(UserInfo != undefined){
+      return `Name: ${UserInfo.userName} ------------ Role: ${UserInfo.access}`
+    }else{
+      return ""
+    }
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar>
+        <Toolbar justifyContent={'space-between'}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -91,8 +103,10 @@ export default function PersistentDrawerLeft() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Name: {UserInfo.userName} ------------ Role: {UserInfo.access}
+          <Typography justifyContent="space-between" variant="h6" noWrap={true} component="div">
+            {title()}
+            <Divider orientation="horizontal"/>
+            <Button sx={{color: grey[400]}} onClick={() => nav("/")}>Log Out</Button>
           </Typography>
         </Toolbar>
       </AppBar>
