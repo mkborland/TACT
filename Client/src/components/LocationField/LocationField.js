@@ -25,7 +25,7 @@ const LocationField = (props) => {
   const [loading, setLoading] = React.useState(false)
 
   // Configure options format for proper displaying on the UI
-  const names = options.map(i => ({ type: i.subType, name: i.name, iataCode: i.iataCode }));
+  const names = options.map(i => ({ type: i.subType, name: i.name, iataCode: i.iataCode, citystate: i.address.cityName + ', ' + i.address.stateCode }));
 
   // Debounce func prevents extra unwanted keystrokes, when user triggers input events 
   const debounceLoadData = useCallback(debounce(setKeyword, 1000), []);
@@ -84,7 +84,7 @@ const LocationField = (props) => {
           setOpen(false);
         }}
         getOptionSelected={(option, value) =>
-          option.name === value.name && option.type === value.type && option.iataCode === value.iataCode
+          option.name === value.name && option.type === value.type && option.iataCode === value.iataCode && option.citystate === value.citystate
         }
         onChange={(e, value) => {
           if (value && value.name) {

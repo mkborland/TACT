@@ -101,11 +101,11 @@ const FlightSearch = () => {
         setNewExerciseObject(newExerciseObject2);
         break;
       case "locationDepartureObject":
-        newExerciseObject2.overView.startLocation = value.name;
+        newExerciseObject2.overView.startLocation = value.citystate;
         setNewExerciseObject(newExerciseObject2);
         break;
       case "locationArrivalObject":
-        newExerciseObject2.overView.endLocation = value.name;
+        newExerciseObject2.overView.endLocation = value.citystate;
         setNewExerciseObject(newExerciseObject2);
         break;
     }
@@ -202,12 +202,12 @@ const FlightSearch = () => {
         </div>
         <LocationField
           chooseInputs={chooseInputs}
-          label="To:"
+          label="From:"
           name="locationDeparture"
         />
         <LocationField
           chooseInputs={chooseInputs}
-          label="From:"
+          label="To:"
           name="locationArrival"
         />
         <div>
