@@ -4,12 +4,15 @@ import CreateIcon from "@mui/icons-material/Create";
 import HistoryIcon from "@mui/icons-material/History";
 import AddIcon from "@mui/icons-material/Add";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Divider } from "@mui/material";
 
 
 const NewExercisePage = "/Dashboard/NewExercisePage"
 const HistoryPage = "/Dashboard/History";
 const EditTablesPage = "/Dashboard/EditTablesPage";
 const ManageUsersPage = "/Dashboard/ManageUsersPage";
+const LoginPage = "/";
 
 const ActionObject = [
   {
@@ -24,6 +27,11 @@ const ActionObject = [
     icon: <ManageAccountsIcon />,
     link: ManageUsersPage,
   },
+  // {
+  //   text: "Log Out",
+  //   icon: <LogoutIcon/>,
+  //   link: LoginPage
+  // }
 ];
 
 const ActionObjectGeneral = [
@@ -33,6 +41,11 @@ const ActionObjectGeneral = [
     link: NewExercisePage,
   },
   { text: "History", icon: <HistoryIcon />, link: HistoryPage },
+  // {
+  //   text: "Log Out",
+  //   icon: <LogoutIcon/>,
+  //   link: LoginPage
+  // }
 ];
 
 const UserActionItems = () => {
@@ -53,6 +66,8 @@ const UserActionItems = () => {
             />
           );
         })}
+        <Divider />
+        <DefinedListItem text="Log Out" icon={<LogoutIcon/>} link={LoginPage}/>
 
         {/* <DefinedListItem
           text="New Exercise"

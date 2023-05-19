@@ -105,8 +105,8 @@ export default function PersistentDrawerLeft() {
           </IconButton>
           <Typography justifyContent="space-between" variant="h6" noWrap={true} component="div">
             {title()}
-            <Divider orientation="horizontal"/>
-            <Button sx={{color: grey[400]}} onClick={() => nav("/")}>Log Out</Button>
+            {/* <Divider orientation="horizontal"/>
+            <Button sx={{color: grey[400]}} onClick={() => nav("/")}>Log Out</Button> */}
           </Typography>
         </Toolbar>
       </AppBar>
