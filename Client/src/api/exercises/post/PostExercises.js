@@ -59,15 +59,15 @@ export const flatExercises = (Neo) => {
     f35Persons: Neo.airCraftInventory.airCraftDetails[5].airCraftPersonal,
     a10Persons: Neo.airCraftInventory.airCraftDetails[6].airCraftPersonal,
     f15cPersons: Neo.airCraftInventory.airCraftDetails[7].airCraftPersonal,
-    govLodging: Neo.perDiem.lodging.govLodgingInfo.Occupancy,
-    govLodgingCost: Neo.perDiem.lodging.govLodgingInfo.RatePerOccupancy,
+    govLodging: Neo.perDiem.lodging.govLodgingInfo.occupancy,
+    govLodgingCost: Neo.perDiem.lodging.govLodgingInfo.ratePerOccupancy,
     commercialHotel: Neo.perDiem.lodging.comLodgingInfo.occupancy,
     commercialHotelCost: Neo.perDiem.lodging.comLodgingInfo.ratePerOccupancy,
     fieldConditions: Neo.perDiem.lodging.fieLodgingInfo.occupancy,
     perDiem: Neo.perDiem.total,
     mealsProvided: Neo.perDiem.mAndIE.providedAmount,
     foodPerDiem: Neo.perDiem.mAndIE.ratePer,
-    userID: Neo.userId, // this one
+    userID: Neo.userId,
   };
 };
 

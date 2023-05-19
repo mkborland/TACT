@@ -189,7 +189,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          Exercises
         </Typography>
       )}
 
@@ -300,7 +300,7 @@ const EnhancedTable = ({ data }) => {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={data.length} //here
+              rowCount={data.length}
             />
             <TableBody>
               {visibleRows.map((row, index) => {

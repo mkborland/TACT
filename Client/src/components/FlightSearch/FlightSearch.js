@@ -16,6 +16,7 @@ import MuiInput from "@mui/material/Input";
 import { styled } from "@mui/material/styles";
 import { Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Paper } from "@mui/material";
 
 const FlightSearch = () => {
   const nav = useNavigate();
@@ -30,7 +31,9 @@ const FlightSearch = () => {
   const [flightsloading, setFlightsLoading] = useState(false);
   const [currentcost, setCurrentCost] = useState(0);
 
-  const [totalpersonnel, setTotalPersonnel] = useState(newExerciseObject.overView.totalPersonal);
+  const [totalpersonnel, setTotalPersonnel] = useState(
+    newExerciseObject.overView.totalPersonal
+  );
   // const [totalpersonnel, setTotalPersonnel] = useState(100);
   const [value, setValue] = useState({ mil: totalpersonnel, com: 0 });
 
@@ -139,7 +142,8 @@ const FlightSearch = () => {
   }, [count]);
 
   return (
-    <Box sx={{ backgroundColor: "#FFFFFF", p: 2 }}>
+    <Paper elevation={3} sx={{ backgroundColor: "white", p: 3 }}>
+      {/* <Box sx={{ backgroundColor: "#FFFFFF", p: 2 }}> */}
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label="Depart"
@@ -251,7 +255,8 @@ const FlightSearch = () => {
           updateCost={updateCost}
         />
       </LocalizationProvider>
-    </Box>
+      {/* </Box> */}
+    </Paper>
   );
 };
 

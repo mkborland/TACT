@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import baseApiUrl from "../../api/TactApiConfig.js";
 import TactApi from "../../api/TactApi";
+import { useNavigate } from "react-router-dom";
 
 const Lodging = () => {
   //Initialization
@@ -20,11 +21,13 @@ const Lodging = () => {
   const month = date.slice(5, 7);
   const city = location.split(",")[0];
   const state = location.split(",")[1].trim();
+  const nav = useNavigate();
   //Inputs
   const [numGovLodge, setNumGovLodge] = useState(0);
   const [numComLodge, setNumComLodge] = useState(0);
   const [numFieldCon, setNumFieldCon] = useState(0);
   const [numMealsProv, setnumMealsProv] = useState(0);
+  const [nameExercise, setNameExercise] = useState("New Exercise");
   //Calcs
   if (isNaN(parseInt(numGovLodge))) {
     setNumGovLodge(0);
@@ -100,6 +103,16 @@ const Lodging = () => {
             setnumMealsProv(e.target.value);
           }}
         />
+        <br />
+        <TextField
+          id="numMealsProv"
+          label="Exercise Name"
+          variant="outlined"
+          margin="normal"
+          onChange={(e) => {
+            setNameExercise(e.target.value);
+          }}
+        />
       </CardContent>
       <CardActions>
         <Button
@@ -125,10 +138,12 @@ const Lodging = () => {
               copy.perDiem.mAndIE.ratePer = data.mealrate;
               copy.perDiem.mAndIE.total = parseInt(data.mealrate) * mealsReq;
               copy.perDiem.mAndIE.providedAmount = parseInt(numMealsProv);
+              copy.basicInfo.exercise = nameExercise;
               console.log(copy);
               setNewExerciseObject(copy);
               TactApi.postExercises(newExerciseObject).then(() => {
                 setNewExerciseObject(defaultExerciseObject);
+                nav("/Dashboard/History", { replace: true });
               });
             })
           }
