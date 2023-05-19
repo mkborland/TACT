@@ -11,13 +11,16 @@ import {
 } from "@mui/material";
 import { useAppContext } from "../../context/AppContext";
 import { Alert } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [userName, setUserName] = useState();
   const [passwordOne, setPasswordOne] = useState();
   const [passwordTwo, setPasswordTwo] = useState();
   const [displayMessage, setDisplayMessage] = useState(false);
+  const [successCode, setSuccessCode] = useState();
   const { trySignUp } = useAppContext();
+  const nav = useNavigate();
 
   const saveUserName = (value) => {
     setUserName(value.toString());
@@ -28,13 +31,16 @@ const SignUp = () => {
   const savePassTwo = (value) => {
     setPasswordTwo(value.toString());
   };
+
   const validatePass = (passOne, passTwo) => {
-    if (passOne === passTwo) {
-      return true;
-    } else {
-      return false;
+    if(passOne === passTwo && userName !== "" && passOne !== ""){
+      setSuccessCode(trySignUp(userName, passOne))
+      nav("/")
+    }else{
+      setDisplayMessage(true);
     }
   };
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -80,9 +86,7 @@ const SignUp = () => {
             color="primary"
             variant="outlined"
             onClick={() => {
-              passwordOne === passwordTwo
-                ? trySignUp(userName, passwordOne)
-                : setDisplayMessage(true);
+              validatePass(passwordOne,passwordTwo)
             }}
           >
             SUBMIT
@@ -95,7 +99,7 @@ const SignUp = () => {
         onClose={handleClose}
       >
         <Alert onClose={handleClose} severity="error">
-          password mismatch please retry you password
+          password mismatch! please be smarter.
         </Alert>
       </Snackbar>
     </Box>
