@@ -7,21 +7,23 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { Button } from '@mui/material';
+import { useAppContext } from '../../context/AppContext';
 
 class simpleflightoffer{
     constructor(offer){
         // console.log(offer)
         this.departureStartAirport = offer.itineraries[0].segments[0].departure.iataCode
-        this.departureStartTime = offer.itineraries[0].segments[0].departure.at
+        this.departureStartTime = new Date(offer.itineraries[0].segments[0].departure.at).toTimeString().slice(0,5)
         this.departureEndAirport = offer.itineraries[0].segments.slice(-1)[0].arrival.iataCode
-        this.departureEndTime = offer.itineraries[0].segments.slice(-1)[0].arrival.at
-        this.departureStopovers = offer.itineraries[0].segments.length
+        this.departureEndTime = new Date(offer.itineraries[0].segments.slice(-1)[0].arrival.at).toTimeString().slice(0,5)
+        this.departureStopovers = offer.itineraries[0].segments.length - 1
 
         this.returnStartAirport = offer.itineraries[1].segments[0].departure.iataCode
-        this.returnStartTime = offer.itineraries[1].segments[0].departure.at
+        this.returnStartTime = new Date(offer.itineraries[1].segments[0].departure.at).toTimeString().slice(0,5)
         this.returnEndAirport = offer.itineraries[1].segments.slice(-1)[0].arrival.iataCode
-        this.returnEndTime = offer.itineraries[1].segments.slice(-1)[0].arrival.at
-        this.returnStopovers = offer.itineraries[1].segments.length
+        this.returnEndTime = new Date(offer.itineraries[1].segments.slice(-1)[0].arrival.at).toTimeString().slice(0,5)
+        this.returnStopovers = offer.itineraries[1].segments.length - 1
 
         this.cost = offer.price.total
 
@@ -30,7 +32,19 @@ class simpleflightoffer{
 }
 
 const FlightTable = (props) => {
+    const {newExerciseObject, setNewExerciseObject} = useAppContext()
+    const newExerciseObject2 = newExerciseObject
     const [simple_data, setSimple_Data] = useState([]);
+
+
+    const selectButtonClick = (cost) => {
+        props.updateCost(cost)
+        newExerciseObject2.perDiem.airFare.comAirFare.rate = Number(cost)
+        newExerciseObject2.perDiem.airFare.govAirFare.rate = 0
+        setNewExerciseObject(newExerciseObject2)
+        // console.log(newExerciseObject)
+        setSimple_Data([])
+    };
 
     useEffect(() => {
         if (props.data === undefined){
@@ -52,10 +66,10 @@ const FlightTable = (props) => {
         <TableHead>
           <TableRow>
             <TableCell>Flights</TableCell>
-            <TableCell align="right">Departure Trip</TableCell>
-            <TableCell align="right">Departure Stopovers</TableCell>
-            <TableCell align="right">Return Trip</TableCell>
-            <TableCell align="right">Return Stopovers</TableCell>
+            <TableCell align="right">Departure<br />Trip</TableCell>
+            <TableCell align="right">Departure<br />Stopovers</TableCell>
+            <TableCell align="right">Return<br />Trip</TableCell>
+            <TableCell align="right">Return<br />Stopovers</TableCell>
             <TableCell align="right">Cost</TableCell>
           </TableRow>
         </TableHead>
@@ -64,14 +78,14 @@ const FlightTable = (props) => {
             <TableRow
               key={offer.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              onClick={(e) => alert(offer.cost)}
+            //   onClick={(e) => alert(offer.cost)}
             >
               <TableCell component="th" scope="offer">
-                {offer.id}
-              </TableCell>
-              <TableCell align="right">{offer.departureStartAirport}: {offer.departureStartTime} - {offer.departureEndAirport}: {offer.departureEndTime}</TableCell>
+                    <Button variant="contained" onClick={() => selectButtonClick(offer.cost)}>Select</Button>
+                </TableCell>
+              <TableCell align="right">{offer.departureStartAirport}: {offer.departureStartTime}<br />{offer.departureEndAirport}: {offer.departureEndTime}</TableCell>
               <TableCell align="right">{offer.departureStopovers}</TableCell>
-              <TableCell align="right">{offer.returnStartAirport}: {offer.returnStartTime} - {offer.returnEndAirport}: {offer.returnEndTime}</TableCell>
+              <TableCell align="right">{offer.returnStartAirport}: {offer.returnStartTime}<br />{offer.returnEndAirport}: {offer.returnEndTime}</TableCell>
               <TableCell align="right">{offer.returnStopovers}</TableCell>
               <TableCell align="right">${offer.cost}</TableCell>
             </TableRow>

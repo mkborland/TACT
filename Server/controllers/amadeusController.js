@@ -76,7 +76,7 @@ const flights = async (req, res) => {
       returnDate: returnDate,
       adults: "1",
       currencyCode: "USD",
-      max: "20",
+      max: "10",
     })
     .then(function (response) {
       // console.log(response.data);

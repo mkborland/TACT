@@ -74,6 +74,7 @@ const LocationField = (props) => {
     <>
       <Autocomplete
         id="asynchronous-demo"
+        disabled={props.disabled}
         style={{ width: 300, marginBottom: "1rem" }}
         open={open}
         onOpen={() => {
@@ -90,6 +91,7 @@ const LocationField = (props) => {
             // props.setSearch((p) => ({ ...p, keyword: value.name, page: 0 }))
             setSearch(value.name + ' (' + value.iataCode + ')')
             props.chooseInputs(props.name, value.iataCode)
+            props.chooseInputs(props.name + "Object", value)
             return;
           }
           setSearch("")
@@ -104,6 +106,7 @@ const LocationField = (props) => {
         renderInput={params => {
           return (
             <TextField
+              disabled={props.disabled}
               label={label}
               fullWidth
               onChange={e => {
