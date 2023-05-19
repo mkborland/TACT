@@ -296,7 +296,13 @@ const EnhancedTable = ({ data }) => {
       obj.perDiem.lodging.comLodgingInfo.ratePerOccupancy *
       obj.perDiem.lodging.comLodgingInfo.occupancy;
 
-    return totalLodging + totalAirFare + totalMeals;
+    const oneDay = 1000 * 60 * 60 * 24;
+    const start = new Date(obj.overView.startEx);
+    const end = new Date(obj.overView.endEx);
+    const diffInTime = end.getTime() - start.getTime();
+    const diffInDays = Math.round(diffInTime / oneDay);
+
+    return totalLodging * diffInDays + totalAirFare + totalMeals * diffInDays;
   };
 
   return (
