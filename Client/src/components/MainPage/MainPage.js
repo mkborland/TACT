@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useState} from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -20,6 +20,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import UserActionItems from "../UserActionItems/UserActionItems";
 import { Outlet } from "react-router-dom";
+import { useAppContext } from "../../context/AppContext";
 
 const drawerWidth = 240;
 
@@ -80,6 +81,8 @@ export default function PersistentDrawerLeft() {
     setOpen(false);
   };
 
+  const {UserInfo} = useAppContext()
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -95,7 +98,7 @@ export default function PersistentDrawerLeft() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Title:
+            Name: {UserInfo.userName} ------------ Role: {UserInfo.access}
           </Typography>
         </Toolbar>
       </AppBar>

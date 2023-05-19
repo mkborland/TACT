@@ -1,7 +1,6 @@
-import baseApiUrl from "../../TactApiConfig"
-
-const UpdateAircraft =async (body, token = "") => {
-    const endPoint = "/update_aircraft";
+import baseApiUrl from "../../TactApiConfig";
+const UpdateUser =async (body, token = "") => {
+    const endPoint = "/update_user";
     const response = await fetch(`${baseApiUrl}${endPoint}`, {
         method: "POST",
         headers: {
@@ -12,11 +11,11 @@ const UpdateAircraft =async (body, token = "") => {
   });
 
   if(!response.ok){
-    console.log("Failed to connect to airframe db")
+    console.log("Failed to connect to user db")
   } else {
     return response;
   }
 };
 
 
-export default UpdateAircraft;
+export default UpdateUser;
