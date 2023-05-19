@@ -23,7 +23,7 @@ const AppProvider = ({ children }) => {
     //return action was good
   };
 
-  const errorMessage = (message) => {};
+  const errorMessage = (message) => { };
 
   const [newExerciseObject, setNewExerciseObject] = useState({
     id: "",
@@ -35,9 +35,9 @@ const AppProvider = ({ children }) => {
       author: "",
     },
     overView: {
-      startEx: "",
+      startEx: "2022-05-15",
       endEx: "",
-      startLocation: "",
+      startLocation: "Tucsan, AZ",
       endLocation: "",
       totalPersonal: "",
       totalCost: 0,
@@ -92,17 +92,17 @@ const AppProvider = ({ children }) => {
       total: 0,
       mAndIE: {
         total: "",
-        providedAmount: "",
+        providedAmount: "2",
         ratePer: "",
-        incidentalExpenses: "",
+        incidentalExpenses: "0",
       },
       lodging: {
         total: 0,
         govLodgingInfo: {
-          Type: "Government Lodging",
-          RatePerOccupancy: "",
-          Occupancy: "",
-          total: "",
+          type: "Government Lodging",
+          ratePerOccupancy: "0",
+          occupancy: "",
+          total: "0",
         },
         comLodgingInfo: {
           type: "Commercial Lodging",
@@ -112,9 +112,9 @@ const AppProvider = ({ children }) => {
         },
         fieLodgingInfo: {
           type: "Field Conditions",
-          ratePerOccupancy: "",
+          ratePerOccupancy: "0",
           occupancy: "",
-          total: "",
+          total: "0",
         },
       },
       airFare: {
