@@ -1,4 +1,5 @@
 import axios from "axios";
+import baseApiUrl from "../api/TactApiConfig"
 
 const CancelToken = axios.CancelToken;
 
@@ -22,7 +23,7 @@ export const getFlightOffers = params => {
 
   // GET request with all params we need
   const out = axios.get(
-    `/api/flights/?departureDate=${departureDate}&returnDate=${returnDate}&locationDeparture=${locationDeparture}&locationArrival=${locationArrival}`,
+    baseApiUrl + `/flights/?departureDate=${departureDate}&returnDate=${returnDate}&locationDeparture=${locationDeparture}&locationArrival=${locationArrival}`,
     {
       cancelToken: source.token
     }
@@ -48,7 +49,7 @@ export const getAmadeusData = params => {
 
   // GET request with all params we need
   const out = axios.get(
-    `/api/airports/?keyword=${searchQuery}&page=${page}&subType=${subTypeCheck}`,
+    baseApiUrl + `/airports/?keyword=${searchQuery}&page=${page}&subType=${subTypeCheck}`,
     {
       cancelToken: source.token
     }
