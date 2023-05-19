@@ -10,8 +10,10 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button, TextField, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const AirTypeTable = () => {
+  const nav = useNavigate();
   const [airframeList, setAirframeList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalPersonnel, setTotalPersonnel] = useState(0);
@@ -103,6 +105,7 @@ const AirTypeTable = () => {
     obj.airCraftInventory.airCraftDetails = rows;
     obj.overView.totalPersonal = totalPersonnel;
     console.log(newExerciseObject.overView.totalPersonal);
+    nav("/Dashboard/NewExercisePage-pg2", { replace: true });
   };
 
   return (
