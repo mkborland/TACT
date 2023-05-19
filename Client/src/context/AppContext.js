@@ -11,14 +11,18 @@ const AppProvider = ({ children }) => {
 
   const tryLogin = async (userName, password) => {
     // Make a API request to see if this is a good account.
-    await TactApi.getUser(`${userName}`, "").then(data => {
-      if (data != "error" && data != undefined && data[0].userPass === password) {
-        setUser({ userName: userName, access: data[0].roleName })
-        return true
+    await TactApi.getUser(`${userName}`, "").then((data) => {
+      if (
+        data != "error" &&
+        data != undefined &&
+        data[0].userPass === password
+      ) {
+        setUser({ userName: userName, access: data[0].roleName });
+        return true;
       } else {
-        return false
+        return false;
       }
-    })
+    });
   };
 
   const trySignUp = (userName, pass) => {
@@ -30,7 +34,7 @@ const AppProvider = ({ children }) => {
     //return action was good
   };
 
-  const errorMessage = (message) => { };
+  const errorMessage = (message) => {};
 
   const defaultExerciseObject = {
     id: "",
