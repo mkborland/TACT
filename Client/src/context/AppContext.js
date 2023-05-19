@@ -7,14 +7,14 @@ const AppContext = React.createContext();
 const AppProvider = ({ children }) => {
   const [UserInfo, setUser] = useState({
     userName: "bob",
-    access: "user",
+    access: "admin",
   });
 
   const tryLogin = (userName, password) => {
     // Make a API request to see if this is a good account.
     TactApi.getUser({name:userName}).then(data => {
       if(data != "error" && data != undefined){
-      setUser({userName: data.userName,access: data.roleName })
+      setUser({userName: data.userName , access: "admin" })
       }
     })
     // YES

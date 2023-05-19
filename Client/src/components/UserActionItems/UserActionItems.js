@@ -26,13 +26,42 @@ const ActionObject = [
   },
 ];
 
+const ActionObjectGeneral = [
+  {
+    text: "New Exercise",
+    icon: <AddIcon />,
+    link: NewExercisePage,
+  },
+  { text: "History", icon: <HistoryIcon />, link: HistoryPage },
+];
+
 const UserActionItems = () => {
   const { UserInfo } = useAppContext();
   console.log(UserInfo);
-  if (UserInfo.access === "user") {
+  if (UserInfo.access === "admin") {
     return (
       <>
         {ActionObject.map((items) => {
+          return (
+            <DefinedListItem
+              text={items.text}
+              icon={items.icon}
+              link={items.link}
+            />
+          );
+        })}
+
+        {/* <DefinedListItem
+          text="New Exercise"
+          icon={<CreateIcon />}
+          onClick={NewExercisePage}
+        /> */}
+      </>
+    );
+  }else if( UserInfo.access === "general" ){
+    return (
+      <>
+        {ActionObjectGeneral.map((items) => {
           return (
             <DefinedListItem
               text={items.text}
