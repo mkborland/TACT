@@ -105,6 +105,7 @@ const AirTypeTable = () => {
     obj.airCraftInventory.airCraftDetails = rows;
     obj.overView.totalPersonal = totalPersonnel;
     console.log(newExerciseObject.overView.totalPersonal);
+    setNewExerciseObject(obj)
     nav("/Dashboard/NewExercisePage-pg2", { replace: true });
   };
 

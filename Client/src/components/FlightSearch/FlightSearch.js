@@ -30,8 +30,8 @@ const FlightSearch = () => {
   const [flightsloading, setFlightsLoading] = useState(false);
   const [currentcost, setCurrentCost] = useState(0);
 
-  // const [totalpersonnel, setTotalPersonnel] = useState(newExerciseObject.overView.totalPersonal);
-  const [totalpersonnel, setTotalPersonnel] = useState(100);
+  const [totalpersonnel, setTotalPersonnel] = useState(newExerciseObject.overView.totalPersonal);
+  // const [totalpersonnel, setTotalPersonnel] = useState(100);
   const [value, setValue] = useState({ mil: totalpersonnel, com: 0 });
 
   const Input = styled(MuiInput)`
@@ -80,13 +80,13 @@ const FlightSearch = () => {
     );
   };
 
-  const handleBlur = () => {
-    if (value < 0) {
-      setValue(0);
-    } else if (value > 100) {
-      setValue(100);
-    }
-  };
+  // const handleBlur = () => {
+  //   if (value < 0) {
+  //     setValue(0);
+  //   } else if (value > 100) {
+  //     setValue(100);
+  //   }
+  // };
 
   const chooseInputs = (name, value) => {
     inputs[name] = value;
@@ -161,7 +161,7 @@ const FlightSearch = () => {
               value={value.mil}
               size="small"
               onChange={handleMilInputChange}
-              onBlur={handleBlur}
+              // onBlur={handleBlur}
               inputProps={{
                 step: 1,
                 min: 0,
@@ -176,6 +176,8 @@ const FlightSearch = () => {
               value={typeof value.com === "number" ? value.com : 0}
               onChange={handleSliderChange}
               aria-labelledby="input-slider"
+              min={0}
+              max={totalpersonnel}
             />
           </Grid>
           <Grid item>
@@ -184,7 +186,7 @@ const FlightSearch = () => {
               value={value.com}
               size="small"
               onChange={handleComInputChange}
-              onBlur={handleBlur}
+              // onBlur={handleBlur}
               inputProps={{
                 step: 1,
                 min: 0,
