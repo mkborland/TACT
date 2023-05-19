@@ -4,10 +4,12 @@ import LoginCard from "./components/LoginCard/LoginCard.js";
 import SignUp from "./components/SignUp/SignUp.js";
 import PersistentDrawerLeft from "./components/MainPage/MainPage.js";
 import LocationField from "./components/LocationField/LocationField.js";
-import EditTables from "./components/EditTablesPage/EditTablesPage.js";
-import ManageUsers from "./components/ManageUsersPage/ManageUsersPage.js";
-import HistoryPage from "./pages/HistoryPage.js";
-import NewExercisePage from "./pages/NewExercisePage.js";
+import EditTables from "./components/EditTablesPage/EditTablesPage";
+import ManageUsers from "./components/ManageUsersPage/ManageUsersPage";
+import HistoryPage from "./pages/HistoryPage";
+import FlightSearch from "./components/FlightSearch/FlightSearch";
+import AirTypeTable from "./components/NewExerciseAircraftType/AirTypeTable";
+import Lodging from "./components/Lodging/Lodging";
 
 function App() {
   return (
@@ -19,7 +21,9 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/locationfield" element={<LocationField />} />
             <Route path="/Dashboard" element={<PersistentDrawerLeft />}>
-              <Route path="NewExercisePage" element={<NewExercisePage />} />
+              <Route path="NewExercisePage" element={<AirTypeTable />} />
+              <Route path="NewExercisePage-pg2" element={<FlightSearch />} />
+              <Route path="NewExercisePage-pg3" element={<Lodging />} />
               <Route path="History" element={<HistoryPage />} />
               <Route path="EditTablesPage" element={<EditTables />} />
               <Route path="ManageUsersPage" element={<ManageUsers />} />
