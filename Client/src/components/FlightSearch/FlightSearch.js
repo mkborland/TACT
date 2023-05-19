@@ -20,9 +20,7 @@ import Slider from '@mui/material/Slider';
 import MuiInput from '@mui/material/Input';
 import VolumeUp from '@mui/icons-material/VolumeUp';
 import { styled } from '@mui/material/styles';
-
-
-
+import { TextField } from "@mui/material";
 
 
 const FlightSearch = () => {
@@ -35,6 +33,7 @@ const FlightSearch = () => {
     const [inputs, setInputs] = useState({});
     const [flightdisable, setFlightDisable] = useState(true);
     const [flightsloading, setFlightsLoading] = useState(false);
+    const [currentcost, setCurrentCost] = useState(0);
 
     // const [totalpersonnel, setTotalPersonnel] = useState(newExerciseObject.overView.totalPersonal);
     const [totalpersonnel, setTotalPersonnel] = useState(100);
@@ -46,6 +45,10 @@ const FlightSearch = () => {
         `;
 
     useEffect(() => {
+        newExerciseObject2.perDiem.airFare.comAirFare.occupancy = value.com
+        newExerciseObject2.perDiem.airFare.govAirFare.occupancy = value.mil
+        setNewExerciseObject(newExerciseObject2)
+
         if (value.com > 0) {
             setFlightDisable(false)
         }else{
@@ -54,7 +57,9 @@ const FlightSearch = () => {
 
       }, [value]);
 
-
+    const updateCost = (cost) => {
+        setCurrentCost(cost)
+    };
 
     const handleSliderChange = (event, newValue) => {
         setValue({com: newValue, mil: totalpersonnel-newValue});
@@ -104,6 +109,7 @@ const FlightSearch = () => {
     useEffect(() => {
         console.log(count)
         if(count>0){
+            
             setFlightsLoading(true)
             const { out, source } = getFlightOffers(inputs);
 
@@ -124,6 +130,8 @@ const FlightSearch = () => {
 
         }
 
+        // setCount(0)
+
       }, [count]);
 
 
@@ -132,7 +140,7 @@ const FlightSearch = () => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker label="Depart" onChange={newValue =>{
                         chooseInputs('departureDate', newValue.format('YYYY-MM-DD'))
-                    }}/>
+                    }}/><span>  </span>
                     <DatePicker label="Return" onChange={newValue =>{
                         chooseInputs('returnDate', newValue.format('YYYY-MM-DD'))
                     }}/>
@@ -177,14 +185,18 @@ const FlightSearch = () => {
                         />
                         </Grid>
                     </Grid>
+                    <div><br /></div>
                     <LocationField chooseInputs={chooseInputs} label='To:' name='locationDeparture'/>
                     <LocationField chooseInputs={chooseInputs} label='From:' name='locationArrival'/>
+                    <div><TextField value={'$' + Number((currentcost)).toFixed(2)} disabled InputLabelProps={{shrink: true}} id="filled-basic" label="Cost Per" variant="filled" />
+                    <span>    </span>
+                    <TextField value={'$' + Number((currentcost * value.com)).toFixed(2)} disabled InputLabelProps={{shrink: true}} id="filled-basic" label="Total Cost" variant="filled" /></div>
                     <LoadingButton loading={flightsloading} variant="contained" loadingPosition="end"
                     disabled={flightdisable} onClick={() => setCount(count + 1)}
                     >
                         <span>Find Flights</span>
                     </LoadingButton>
-                    <FlightTable disabled={flightdisable} data={data}/>
+                    <FlightTable disabled={flightdisable} data={data} updateCost={updateCost}/>
                 </LocalizationProvider>
         </Box>
 
