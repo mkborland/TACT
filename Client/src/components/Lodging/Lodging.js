@@ -17,6 +17,7 @@ const Lodging = () => {
   const copy = newExerciseObject;
   const date = newExerciseObject.overView.startEx;
   const location = newExerciseObject.overView.startLocation;
+  const totalPeopleObj = newExerciseObject.overView.totalPersonal;
   const year = date.slice(0, 4);
   const month = date.slice(5, 7);
   const city = location.split(",")[0];
@@ -60,6 +61,15 @@ const Lodging = () => {
   const card = (
     <React.Fragment>
       <CardContent>
+        <TextField
+          disabled
+          id="numPeopleTotal"
+          label="Total People"
+          variant="outlined"
+          margin="normal"
+          defaultValue={totalPeopleObj}
+        />
+        <br />
         <TextField
           id="numGovLodge"
           label="Government Lodging"
