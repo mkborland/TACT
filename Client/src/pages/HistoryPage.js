@@ -284,6 +284,27 @@ const EnhancedTable = ({ data }) => {
     [order, orderBy, page, rowsPerPage]
   );
 
+  const makeTotal = (obj) => {
+    const totalMeals =
+      obj.perDiem.mAndIE.ratePer *
+      (obj.overView.totalPersonal - obj.perDiem.mAndIE.providedAmount);
+    const totalAirFare =
+      obj.perDiem.airFare.comAirFare.occupancy *
+      obj.perDiem.airFare.comAirFare.rate;
+
+    const totalLodging =
+      obj.perDiem.lodging.comLodgingInfo.ratePerOccupancy *
+      obj.perDiem.lodging.comLodgingInfo.occupancy;
+
+    const oneDay = 1000 * 60 * 60 * 24;
+    const start = new Date(obj.overView.startEx);
+    const end = new Date(obj.overView.endEx);
+    const diffInTime = end.getTime() - start.getTime();
+    const diffInDays = Math.round(diffInTime / oneDay);
+
+    return totalLodging * diffInDays + totalAirFare + totalMeals * diffInDays;
+  };
+
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -344,7 +365,7 @@ const EnhancedTable = ({ data }) => {
                     <TableCell align="left">
                       {row.overView.totalPersonal}
                     </TableCell>
-                    <TableCell align="left">{row.overView.totalCost}</TableCell>
+                    <TableCell align="left">{makeTotal(row)}</TableCell>
                     <TableCell align="left">{row.overView.startEx}</TableCell>
                     <TableCell align="left">{row.overView.endEx}</TableCell>
                     <TableCell align="left">
