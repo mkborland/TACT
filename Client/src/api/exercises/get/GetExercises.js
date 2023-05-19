@@ -60,6 +60,44 @@ export const ExerciseObjectFormat = (
   airfareCostGov = 0,
   incidentalExpenses = 5
 ) => {
+  console.log(index);
+  console.log(exerciseName);
+  console.log(dateCreated);
+  console.log(locationStart);
+  console.log(locationEnd);
+  console.log(unit);
+  console.log(exerciseDateStart);
+  console.log(exerciseDateEnd);
+  console.log(personnelNumber);
+  console.log(comAirFareOccupancy);
+  console.log(govAirFareOccupancy);
+  console.log(comAirFareCost);
+  console.log(KC135Num);
+  console.log(C130Num);
+  console.log(C17Num);
+  console.log(C5Num);
+  console.log(F22Num);
+  console.log(F35Num);
+  console.log(A10Num);
+  console.log(F15CNum);
+  console.log(KC135Persons);
+  console.log(C130Persons);
+  console.log(C17Persons);
+  console.log(C5Persons);
+  console.log(F22Persons);
+  console.log(F35Persons);
+  console.log(A10Persons);
+  console.log(F15CPersons);
+  console.log(govLodging);
+  console.log(govLodgingCost);
+  console.log(commercialHotel);
+  console.log(commercialHotelCost);
+  console.log(fieldConditions);
+  console.log(perDiem); // Tota)
+  console.log(mealsProvided);
+  console.log(foodPerDiem);
+  console.log(userID);
+  console.log(userName);
   return {
     id: index,
     userId: userID,
