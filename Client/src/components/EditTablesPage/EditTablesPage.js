@@ -53,7 +53,7 @@ const EditTables = () => {
             <TableCell align="right" key={entry.id}>
               <TextField
                 onChange={(e) => handleTextChange(e)}
-                name={entry.id}
+                name={entry.id -1}
                 inputProps={{ min: 0, style: { textAlign: 'center' } }}
                 size="small"
                 variant='standard'
@@ -87,10 +87,9 @@ const EditTables = () => {
   }
   //the on save :( {aircraftname: "", aircraftnumber: "", newPersonnel: ""}
   const HandleSave = () => {
-    //todo fix
-    // airframeList.forEach(cell => {
-    //   TactApi.updateAircraft({aircraftName:cell.aircraftName, aircraftNumber:cell.aircraftNumber, newPersonnel:cell.personnelReq})
-    // })
+    airframeList.forEach(cell => {
+      TactApi.updateAircraft({aircraftname:cell.aircraftName, aircraftnumber:cell.aircraftNumber, newPersonnel:cell.personnelReq})
+    })
   }
   const handleTextChange = (e) => {
     airframeList[e.target.name].personnelReq = e.target.value

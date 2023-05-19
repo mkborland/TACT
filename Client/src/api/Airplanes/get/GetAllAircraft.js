@@ -15,6 +15,9 @@ const GetAllAircraft = async (body, token = "") => {
     console.log("Failed to connect to airframe db")
   } else {
     const result = await response.json();
+    result.sort((a,b) => {
+      return a.id - b.id
+    })
     return result;
   }
 };
