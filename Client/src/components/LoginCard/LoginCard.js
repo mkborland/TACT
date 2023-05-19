@@ -60,8 +60,13 @@ const LoginCard = () => {
             color="primary"
             variant="outlined"
             onClick={() => {
-              tryLogin(userNameInput, userPasswordInput)
-              nav("/Dashboard/History")}}
+              if( tryLogin(userNameInput, userPasswordInput))
+              {
+                 nav("/Dashboard/History")
+              }else{
+                console.log("pain")
+              }
+            }}
           >
             Log in
           </Button>

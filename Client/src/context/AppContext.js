@@ -6,21 +6,20 @@ const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
   const [UserInfo, setUser] = useState({
-    userName: "bob",
+    userName: "admin",
     access: "admin",
   });
 
-  const tryLogin = (userName, password) => {
+  const tryLogin = async (userName, password) => {
     // Make a API request to see if this is a good account.
-    TactApi.getUser({name:userName}).then(data => {
-      if(data != "error" && data != undefined){
-      setUser({userName: data.userName , access: "admin" })
-      }
+    await TactApi.getUser(`${userName}`,"").then(data => {
+        if( data != "error" && data != undefined && data[0].userPass === password){
+          setUser({userName: userName, access: data[0].roleName })
+          return true
+        }else {
+          return false
+        }
     })
-    // YES
-    // Get User INFO
-    // setUser(To the return of the server side object)
-    // return that actions was good
   };
 
   const trySignUp = (userName, pass) => {

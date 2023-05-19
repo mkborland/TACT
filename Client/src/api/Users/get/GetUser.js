@@ -1,7 +1,7 @@
 import baseApiUrl from "../../TactApiConfig";
-const GetUser = async (token = "") => {
-  const endPoint = "/get_users";
-  const response = await fetch(`${baseApiUrl}${endPoint}`, {
+const GetUser = async (body, token = "") => {
+  const endPoint = "/get_user";
+  const response = await fetch(`${baseApiUrl}${endPoint}?name=${body}`, {
     method: "GET",
     headers: {
       "Content-type": "application/json",
