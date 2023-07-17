@@ -31,8 +31,12 @@ Build an automated tool that calculates PACAF O&M dollars per head count for the
 - Make sure the ports 8080, 3000, and 5432 are unassigned
 - Run the following commands
 
-```docker-compose build```
+```
+docker-compose build
+```
 
-```docker-compose up```
+```
+docker-compose up
+```
 
 - The client will be running on [localhost](http://localhost:3000 "Local port 3000")
