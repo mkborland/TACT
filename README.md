@@ -35,4 +35,4 @@ Build an automated tool that calculates PACAF O&M dollars per head count for the
 
 ```docker-compose up```
 
-- The client will be running on [localhost](localhost:3000 "Local port 3000")
+- The client will be running on [localhost](http://localhost:3000 "Local port 3000")
