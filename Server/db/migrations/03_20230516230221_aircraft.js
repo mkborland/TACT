@@ -3,11 +3,11 @@
  * @returns { Promise<void> }
  */
 export function up(knex) {
-    return knex.schema.createTable("aircrafttype", (table) => {
+    return knex.schema.createTable("aircraft", (table) => {
         table.increments();
         table.string("aircraftName");
-        table.integer("aircraftNumber");
-        table.integer("personnelReq");
+        table.integer("aircraftCount");
+        table.integer("personnelCount");
     })
 };
 
@@ -16,5 +16,5 @@ export function up(knex) {
  * @returns { Promise<void> }
  */
 export function down(knex) {
-    return knex.schema.dropTableIfExists("aircrafttype");
+    return knex.schema.dropTableIfExists("aircraft");
 };

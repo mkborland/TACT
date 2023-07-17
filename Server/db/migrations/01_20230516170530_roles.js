@@ -5,10 +5,10 @@
 export function up(knex) {
     return knex.schema.createTable("roles", (table) => {
         table.string("roleName");
-        table.integer("authKey");
+        table.integer("roleID");
     }).then(() => {
         return knex.schema.alterTable("roles", (table) => {
-            table.primary("authKey");
+            table.primary("roleID");
         })
     });
 };
