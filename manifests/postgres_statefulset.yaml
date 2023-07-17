@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tact-db
+  labels:
+    app: tact-db
+spec:
+  ports:
+  - port: 5432
+    name: db
+  clusterIP: None
+  selector:
+    app: tact-db
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tact-db
+spec:
+  selector:
+    matchLabels:
+      app: tact-db # has to match .spec.template.metadata.labels
+  serviceName: "tact-db"
+  replicas: 1 # by default is 1
+  template:
+    metadata:
+      labels:
+        app: tact-db # has to match .spec.selector.matchLabels
+    spec:
+      containers:
+      - name: tact-db
+        image: postgres:latest
+        env:
+        - name: DATABASE_HOST
+          value: 127.0.0.1
+        - name: POSTGRES_PORT
+          value: '5432'
+        - name: POSTGRES_USER
+          value: admin
+        - name: POSTGRES_PASSWORD
+          value: admin
+        - name: POSTGRES_DB
+          value: TACT_DB
+        ports:
+        - containerPort: 5432
+          name: db
+        volumeMounts:
+        - name: db-data
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: db-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi

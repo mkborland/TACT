@@ -27,8 +27,6 @@ services:
       - POSTGRES_PASSWORD=admin
       - POSTGRES_PORT=5432
       - POSTGRES_DB=TACT_DB
-    volumes:
-      - ./Server:/app/TACT_Server
     command: npm run start
   client:
     build:
@@ -39,9 +37,4 @@ services:
       - REACT_APP_PORT=3000
     ports:
       - 3000:3000
-    volumes:
-      - ./Client/src:/app/src
-      - ./Client/public:/app/public
-    # links:
-    #   - server
     command: npm run start

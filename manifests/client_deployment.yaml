@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tact-client
+  labels:
+    app: tact-client
+spec:
+  ports:
+  - port: 3000
+    name: client
+  clusterIP: None
+  selector:
+    app: tact-client
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tact-client
+  labels:
+    app: tact-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tact-client
+  template:
+    metadata:
+      labels:
+        app: tact-client
+    spec:
+      containers:
+      - name: tact-client
+        image: mkborland/tact-client:v0.1
+        env:
+        - name: REACT_APP_PORT
+          value: '3000'
+        ports:
+        - containerPort: 3000
+          name: client
