@@ -27,9 +27,9 @@ Build an automated tool that calculates PACAF O&M dollars per head count for the
 
 ## How to use
 
-- Edit the .env file under the Server folder to include the secrets for the flight api calls
-- Run the following commands
+- Create a .env file under the Server folder to include the secrets for the flight api calls
 - Make sure the ports 8080, 3000, and 5432 are unassigned
+- Run the following commands
 
 ```docker-compose build```
 
