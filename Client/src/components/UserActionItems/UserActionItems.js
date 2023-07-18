@@ -8,7 +8,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Divider } from "@mui/material";
 
 
-const NewExercisePage = "/Dashboard/NewExercisePage"
+const NewDashboardPage = "/Dashboard/DashboardPage";
+const NewExercisePage = "/Dashboard/NewExercisePage";
 const HistoryPage = "/Dashboard/History";
 const EditTablesPage = "/Dashboard/EditTablesPage";
 const ManageUsersPage = "/Dashboard/ManageUsersPage";
@@ -17,7 +18,11 @@ const LoginPage = "/";
 const ActionObject = [
   {
     text: "Dashboard",
-    link: HistoryPage,
+    link: NewDashboardPage,
+  },
+  {
+    text: "New Exercise",
+    link: NewExercisePage,
   },
   { text: "Profile", link: ManageUsersPage },
   { text: "New Form", link: NewExercisePage },
@@ -52,6 +57,7 @@ const UserActionItems = () => {
     return <></>
   }
   if (UserInfo.access === "admin") {
+    console.log(`***ACTIONOBJECT[0] = ${ActionObject[0]}`)
     return (
       <>
         {ActionObject.map((items) => {

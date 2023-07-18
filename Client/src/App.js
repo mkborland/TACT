@@ -6,6 +6,7 @@ import PersistentDrawerLeft from "./components/MainPage/MainPage.js";
 import EditTables from "./components/EditTablesPage/EditTablesPage";
 import ManageUsers from "./components/ManageUsersPage/ManageUsersPage";
 import HistoryPage from "./pages/HistoryPage";
+import DashboardPage from "./pages/DashboardPage";
 import FlightSearch from "./components/FlightSearch/FlightSearch";
 import AirTypeTable from "./components/NewExerciseAircraftType/AirTypeTable";
 import Lodging from "./components/Lodging/Lodging";
@@ -23,6 +24,7 @@ function App() {
               <Route path="NewExercisePage-pg2" element={<FlightSearch />} />
               <Route path="NewExercisePage-pg3" element={<Lodging />} />
               <Route path="History" element={<HistoryPage />} />
+              <Route path="DashboardPage" element={<DashboardPage />} />
               <Route path="EditTablesPage" element={<EditTables />} />
               <Route path="ManageUsersPage" element={<ManageUsers />} />
             </Route>
