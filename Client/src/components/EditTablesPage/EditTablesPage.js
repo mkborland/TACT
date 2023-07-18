@@ -44,11 +44,11 @@ const EditTables = () => {
             pain2.push(<TableCell align='left'>{name}</TableCell>)
             counter++
           }
-          if (counter !== entry.aircraftNumber) {
+          if (counter !== entry.aircraftCount) {
             pain2.push(<TableCell align="center">N/A</TableCell>)
             counter++
           }
-          const obj = { id: entry.id, pr: entry.personnelReq }
+          const obj = { id: entry.id, pr: entry.personnelCount }
           pain2.push(
             <TableCell align="right" key={entry.id}>
               <TextField
@@ -57,7 +57,7 @@ const EditTables = () => {
                 inputProps={{ min: 0, style: { textAlign: 'center' } }}
                 size="small"
                 variant='standard'
-                defaultValue={entry.personnelReq}
+                defaultValue={entry.personnelCount}
                 margin='none' />
             </TableCell>
           )
@@ -88,11 +88,11 @@ const EditTables = () => {
   //the on save :( {aircraftname: "", aircraftnumber: "", newPersonnel: ""}
   const HandleSave = () => {
     airframeList.forEach(cell => {
-      TactApi.updateAircraft({aircraftname:cell.aircraftName, aircraftnumber:cell.aircraftNumber, newPersonnel:cell.personnelReq})
+      TactApi.updateAircraft({aircraftname:cell.aircraftName, aircraftnumber:cell.aircraftCount, newPersonnel:cell.personnelCount})
     })
   }
   const handleTextChange = (e) => {
-    airframeList[e.target.name].personnelReq = e.target.value
+    airframeList[e.target.name].personnelCount = e.target.value
     console.log(airframeList[e.target.name])
   }
 

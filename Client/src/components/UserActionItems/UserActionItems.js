@@ -20,10 +20,6 @@ const ActionObject = [
     text: "Dashboard",
     link: NewDashboardPage,
   },
-  {
-    text: "New Exercise",
-    link: NewExercisePage,
-  },
   { text: "Profile", link: ManageUsersPage },
   { text: "New Form", link: NewExercisePage },
   {
