@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import { CardActions } from "@mui/material";
+import { PostUnitExercise } from "../../api/UnitExercises/post/PostUnitExercise.js"
 
 const NewExerciseForm = () => {
   const [exerciseNameInput, setExerciseNameInput] = useState()
@@ -84,6 +85,8 @@ const NewExerciseForm = () => {
             sx={{backgroundColor: "white", color: "black", m: 1, fontSize: ".75em"}}
             onClick={() => {
               //save to data base if good
+              // PostUnitExercise()
+              
             }}
           >
             Save
@@ -94,5 +97,17 @@ const NewExerciseForm = () => {
     </Box>
   );
 };
+
+// "exerciseName": "Dr Slow", 
+// "status": "0", 
+// "dateCreated": "18 July 2023", 
+// "location": "Tucson, AZ", 
+// "exerciseStartDate": "15 August 2023", 
+// "exerciseEndDate": "18 August 2023", 
+// "userID": "2", 
+// "personnelSum": "200", 
+// "costSum": "40000"
+
+
 
 export default NewExerciseForm;
