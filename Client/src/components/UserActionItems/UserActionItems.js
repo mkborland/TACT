@@ -16,16 +16,14 @@ const LoginPage = "/";
 
 const ActionObject = [
   {
-    text: "New Exercise",
-    icon: <AddIcon />,
-    link: NewExercisePage,
+    text: "Dashboard",
+    link: HistoryPage,
   },
-  { text: "History", icon: <HistoryIcon />, link: HistoryPage },
-  { text: "Edit Data Table", icon: <CreateIcon />, link: EditTablesPage },
+  { text: "Profile", link: ManageUsersPage },
+  { text: "New Form", link: NewExercisePage },
   {
-    text: "Manage Users",
-    icon: <ManageAccountsIcon />,
-    link: ManageUsersPage,
+    text: "Tables",
+    link: EditTablesPage,
   },
   // {
   //   text: "Log Out",
@@ -37,10 +35,9 @@ const ActionObject = [
 const ActionObjectGeneral = [
   {
     text: "New Exercise",
-    icon: <AddIcon />,
     link: NewExercisePage,
   },
-  { text: "History", icon: <HistoryIcon />, link: HistoryPage },
+  { text: "History", link: HistoryPage },
   // {
   //   text: "Log Out",
   //   icon: <LogoutIcon/>,
@@ -61,7 +58,6 @@ const UserActionItems = () => {
           return (
             <DefinedListItem
               text={items.text}
-              icon={items.icon}
               link={items.link}
             />
           );
@@ -83,7 +79,6 @@ const UserActionItems = () => {
           return (
             <DefinedListItem
               text={items.text}
-              icon={items.icon}
               link={items.link}
             />
           );
