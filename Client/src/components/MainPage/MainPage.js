@@ -7,16 +7,8 @@ import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { Button } from "@mui/material";
-import {grey} from '@mui/material/colors';
 import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
@@ -83,61 +75,45 @@ export default function PersistentDrawerLeft() {
 
   const title = () => {
     if(UserInfo != undefined){
-      return `Name: ${UserInfo.userName} ------------ Role: ${UserInfo.access}`
+      return `Welcome, ${UserInfo.userName} `
     }else{
       return ""
     }
   }
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex"}}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar justifyContent={'space-between'}>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: "none" }) }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography justifyContent="space-between" variant="h6" noWrap={true} component="div">
-            {title()}
-            {/* <Divider orientation="horizontal"/>
-            <Button sx={{color: grey[400]}} onClick={() => nav("/")}>Log Out</Button> */}
-          </Typography>
-        </Toolbar>
+      <AppBar position="fixed" open={open}  sx={{backgroundColor: "#333333"}}>
       </AppBar>
       <Drawer
+      // here is the styling for the left side drawer
         sx={{
           width: drawerWidth,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
+            borderRight : 7,
+            borderColor : 'primary.main',
+            backgroundColor: "grey.200",
           },
         }}
         variant="persistent"
         anchor="left"
         open={open}
       >
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
+        <DrawerHeader >
+          {/* place Icon for top left here */}
         </DrawerHeader>
-        <Divider />
         <List>
           <UserActionItems />
         </List>
       </Drawer>
       <MainPage open={open}>
+      <Typography justifyContent="space-between" variant="h2" noWrap={true} component="div" align="left">
+            {title()}
+          </Typography>
         <DrawerHeader />
         <Outlet />
       </MainPage>
