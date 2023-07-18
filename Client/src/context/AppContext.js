@@ -9,27 +9,29 @@ const AppProvider = ({ children }) => {
     access: "admin",
   });
 
+  //TODO fix Login stuff
   const tryLogin = async (userName, password) => {
     // Make a API request to see if this is a good account.
-    await TactApi.getUser(`${userName}`, "").then((data) => {
-      if (
-        data != "error" &&
-        data != undefined &&
-        data[0].userPass === password
-      ) {
-        setUser({ userName: userName, access: data[0].roleName });
-        return true;
-      } else {
-        return false;
-      }
-    });
+    // await TactApi.getUser(`${userName}`, "").then((data) => {
+    //   if (
+    //     data != "error" &&
+    //     data != undefined &&
+    //     data[0].userPass === password
+    //   ) {
+    //     setUser({ userName: userName, access: data[0].roleName });
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // });
+    return true
   };
 
   const trySignUp = (userName, pass) => {
     //check if other inputs
-    TactApi.addUser({ name: userName, pass: pass }).then((data) => {
-      return data.status;
-    });
+    // TactApi.addUser({ name: userName, pass: pass }).then((data) => {
+    //   return data.status;
+    // });
     //save to db
     //return action was good
   };

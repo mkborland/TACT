@@ -29,7 +29,7 @@ const ManageUsers = () => {
     if (!isLoading) {
       list.forEach(element => {
         if (element.roleName === "pending")
-          pain.push(UserInfo(element.userName, element.userID, "pending"))
+          pain.push(UserInfo(element.email, element.userID, "pending"))
       });
     }
     return pain;
@@ -40,7 +40,7 @@ const ManageUsers = () => {
     if (!isLoading) {
       list.forEach(element => {
         if (element.roleName !== "pending")
-          pain2.push(UserInfo(element.userName, element.userID, element.roleName))
+          pain2.push(UserInfo(element.email, element.userID, element.roleName))
       });
     }
     return pain2;
