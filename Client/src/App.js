@@ -10,6 +10,7 @@ import DashboardPage from "./pages/DashboardPage";
 import FlightSearch from "./components/FlightSearch/FlightSearch";
 import AirTypeTable from "./components/NewExerciseAircraftType/AirTypeTable";
 import Lodging from "./components/Lodging/Lodging";
+import NewExerciseForm from "./components/NewExcersizeForm/NewExerciseForm";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
               <Route path="DashboardPage" element={<DashboardPage />} />
               <Route path="EditTablesPage" element={<EditTables />} />
               <Route path="ManageUsersPage" element={<ManageUsers />} />
+              <Route path="NewExerciseForm" element={<NewExerciseForm />} />
             </Route>
           </Routes>
         </BrowserRouter>
