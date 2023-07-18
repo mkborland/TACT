@@ -7,20 +7,20 @@ export async function seed(knex) {
   await knex('roles').del()
   await knex('roles').insert([
     {
-      roleName: 'admin',
-      authKey: '12345'
+      roleName: 'Admin',
+      roleID: '12345'
     }
   ]);
   await knex('roles').insert([
     {
-      roleName: 'general',
-      authKey: '54321'
+      roleName: 'User',
+      roleID: '54321'
     }
   ]);
   await knex('roles').insert([
     {
-      roleName: 'pending',
-      authKey: '11111'
+      roleName: 'Pending',
+      roleID: '11111'
     }
   ]);
 };

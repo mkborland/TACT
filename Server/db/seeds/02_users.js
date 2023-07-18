@@ -7,14 +7,20 @@ export async function seed(knex) {
   await knex('users').del()
   await knex('users').insert([
     {
-      userName: 'admin',
-      userPass: 'admin'
+      firstName: 'admin',
+      lastName: 'admin',
+      email: 'admin@gmail.com',
+      unit: 'OL-2',
+      roleID: '12345'
     }
   ]);
   await knex('users').insert([
     {
-      userName: 'test',
-      userPass: 'test'
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'Doe.John@gmail.com',
+      unit: 'OL-1',
+      roleID: '54321'
     }
   ]);
 };

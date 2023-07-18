@@ -4,43 +4,17 @@
  */
 export function up(knex) {
     return knex.schema.createTable("exercises", (table) => {
-        table.increments();
+        table.increments("exerciseID");
         table.string("exerciseName");
+        table.boolean("status");
         table.date("dateCreated");
-        table.string("locationStart");
-        table.string("locationEnd");
-        table.string("unit");
-        table.date("exerciseDateStart");
-        table.date("exerciseDateEnd");
-        table.integer("personnelNumber");
-        table.integer("commercialAirfare");
-        table.integer("governmentAirfare");
-        table.decimal("airfareCost");
-        table.integer("kc135Num");
-        table.integer("c130Num");
-        table.integer("c17Num");
-        table.integer("c5Num");
-        table.integer("f22Num");
-        table.integer("f35Num");
-        table.integer("a10Num");
-        table.integer("f15cNum");
-        table.integer("kc135Persons");
-        table.integer("c130Persons");
-        table.integer("c17Persons");
-        table.integer("c5Persons");
-        table.integer("f22Persons");
-        table.integer("f35Persons");
-        table.integer("a10Persons");
-        table.integer("f15cPersons");
-        table.integer("govLodging");
-        table.decimal("govLodgingCost");
-        table.integer("commercialHotel");
-        table.decimal("commercialHotelCost");
-        table.integer("fieldConditions");
-        table.decimal("perDiem");
-        table.integer("mealsProvided");
-        table.decimal("foodPerDiem");
+        table.string("location");
+        table.date("exerciseStartDate");
+        table.date("exerciseEndDate");
         table.integer("userID");
+        table.foreign("userID").references("users.userID");
+        table.integer("personnelSum");
+        table.decimal("costSum");
     });
 };
 
@@ -49,5 +23,9 @@ export function up(knex) {
  * @returns { Promise<void> }
  */
 export function down(knex) {
-    return knex.schema.dropTableIfExists("exercises");
+    return knex.schema.alterTable("exercises", (table) => {
+        table.dropForeign("userID");
+    }).then(() => {
+        return knex.schema.dropTableIfExists("exercises");
+    });
 };

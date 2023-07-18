@@ -9,6 +9,7 @@ import { Divider } from "@mui/material";
 
 const newExerciseForm = "/Dashboard/NewExerciseForm"
 const NewExercisePage = "/Dashboard/NewExercisePage"
+const NewDashboardPage = "/Dashboard/DashboardPage";
 const HistoryPage = "/Dashboard/History";
 const EditTablesPage = "/Dashboard/EditTablesPage";
 const ManageUsersPage = "/Dashboard/ManageUsersPage";
@@ -17,7 +18,11 @@ const LoginPage = "/";
 const ActionObject = [
   {
     text: "Dashboard",
-    link: HistoryPage,
+    link: NewDashboardPage,
+  },
+  {
+    text: "New Exercise",
+    link: NewExercisePage,
   },
   { text: "Profile", link: ManageUsersPage },
   { text: "New Form", link: NewExercisePage },
@@ -44,6 +49,7 @@ const UserActionItems = () => {
     return <></>
   }
   if (UserInfo.access === "admin") {
+    console.log(`***ACTIONOBJECT[0] = ${ActionObject[0]}`)
     return (
       <>
         {ActionObject.map((items) => {
