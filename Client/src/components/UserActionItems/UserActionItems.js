@@ -7,7 +7,7 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Divider } from "@mui/material";
 
-
+const newExerciseForm = "/Dashboard/NewExerciseForm"
 const NewExercisePage = "/Dashboard/NewExercisePage"
 const HistoryPage = "/Dashboard/History";
 const EditTablesPage = "/Dashboard/EditTablesPage";
@@ -25,11 +25,8 @@ const ActionObject = [
     text: "Tables",
     link: EditTablesPage,
   },
-  // {
-  //   text: "Log Out",
-  //   icon: <LogoutIcon/>,
-  //   link: LoginPage
-  // }
+  {text: "New Exercise",
+    link: newExerciseForm}
 ];
 
 const ActionObjectGeneral = [
@@ -38,11 +35,6 @@ const ActionObjectGeneral = [
     link: NewExercisePage,
   },
   { text: "History", link: HistoryPage },
-  // {
-  //   text: "Log Out",
-  //   icon: <LogoutIcon/>,
-  //   link: LoginPage
-  // }
 ];
 
 const UserActionItems = () => {
@@ -64,12 +56,6 @@ const UserActionItems = () => {
         })}
         <Divider />
         <DefinedListItem text="Log Out" icon={<LogoutIcon/>} link={LoginPage}/>
-
-        {/* <DefinedListItem
-          text="New Exercise"
-          icon={<CreateIcon />}
-          onClick={NewExercisePage}
-        /> */}
       </>
     );
   } else if (UserInfo.access === "general") {
@@ -84,11 +70,6 @@ const UserActionItems = () => {
           );
         })}
 
-        {/* <DefinedListItem
-          text="New Exercise"
-          icon={<CreateIcon />}
-          onClick={NewExercisePage}
-        /> */}
       </>
     );
   }
