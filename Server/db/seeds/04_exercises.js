@@ -8,41 +8,27 @@ export async function seed(knex) {
   await knex('exercises').insert([
     {
       exerciseName: 'Test Exercise',
+      status: '1',
       dateCreated: '15 May 2023',
-      locationStart: 'Tucsan, AZ',
-      locationEnd: 'Scott AFB, IL',
-      unit: '375 CSPTS',
-      exerciseDateStart: '15 May 2023',
-      exerciseDateEnd: '20 May 2023',
-      personnelNumber: '4',
-      commercialAirfare: '4',
-      governmentAirfare: '0',
-      airfareCost: '500.00',
-      kc135Num: '0',
-      c130Num: '0',
-      c17Num: '0',
-      c5Num: '0',
-      f22Num: '0',
-      f35Num: '0',
-      a10Num: '0',
-      f15cNum: '0',
-      kc135Persons: '0',
-      c130Persons: '0',
-      c17Persons: '0',
-      c5Persons: '0',
-      f22Persons: '0',
-      f35Persons: '0',
-      a10Persons: '0',
-      f15cPersons: '0',
-      govLodging: '0',
-      govLodgingCost: '90.00',
-      commercialHotel: '3',
-      commercialHotelCost: '150.00',
-      fieldConditions: '0',
-      perDiem: '220.00',
-      mealsProvided: '0',
-      foodPerDiem: '70.00',
-      userID: '2'
+      location: 'Tucsan, AZ',
+      exerciseStartDate: '17 July 2023',
+      exerciseEndDate: '28 July 2023',
+      userID: '1',
+      personnelSum: '7',
+      costSum: '30000'
+    }
+  ]);
+  await knex('exercises').insert([
+    {
+      exerciseName: 'Test Exercise Too',
+      status: '0',
+      dateCreated: '16 May 2023',
+      location: 'Scott AFB, IL',
+      exerciseStartDate: '18 July 2023',
+      exerciseEndDate: '29 July 2023',
+      userID: '2',
+      personnelSum: '9',
+      costSum: '35000'
     }
   ]);
 };
