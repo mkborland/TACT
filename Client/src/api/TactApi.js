@@ -1,4 +1,5 @@
 import GetAllAircraft from "./Airplanes/get/GetAllAircraft.js";
+import GetDashboard from "./exercises/get/GetDashboard.js";
 import GetExercises from "./exercises/get/GetExercises.js";
 import UpdateAircraft from "./Airplanes/update/UpdateAircraft.js";
 import GetAllExercises from "./exercises/get/GetAllExercises.js";
@@ -9,6 +10,7 @@ import UpdateUser from "./Users/update/UpdateUser.js";
 import PostExercises from "./exercises/post/PostExercises.js";
 
 const TactApi = {
+  getDashboard: GetDashboard,
   getExercises: GetExercises,
   getAllExercises: GetAllExercises,
   postExercises: PostExercises,
