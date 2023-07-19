@@ -8,7 +8,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Divider } from "@mui/material";
 
 const newExerciseForm = "/Dashboard/NewExerciseForm"
-const NewExercisePage = "/Dashboard/NewExercisePage"
 const NewDashboardPage = "/Dashboard/DashboardPage";
 const HistoryPage = "/Dashboard/History";
 const EditTablesPage = "/Dashboard/EditTablesPage";
@@ -21,7 +20,8 @@ const ActionObject = [
     link: NewDashboardPage,
   },
   { text: "Profile", link: ManageUsersPage },
-  { text: "New Form", link: NewExercisePage },
+  //just goes to dashboard until page is made
+  { text: "New Form", link: "/Dashboard" },
   {
     text: "Tables",
     link: EditTablesPage,
