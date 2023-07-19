@@ -9,6 +9,7 @@ import { Divider } from "@mui/material";
 
 
 const NewDashboardPage = "/Dashboard/DashboardPage";
+const NewPlanningTool = "/Dashboard/PlanningToolPage";
 const NewExercisePage = "/Dashboard/NewExercisePage";
 const HistoryPage = "/Dashboard/History";
 const EditTablesPage = "/Dashboard/EditTablesPage";
@@ -19,6 +20,10 @@ const ActionObject = [
   {
     text: "Dashboard",
     link: NewDashboardPage,
+  },
+  {
+    text: "Exercise Planning Tool",
+    link: NewPlanningTool,
   },
   {
     text: "New Exercise",

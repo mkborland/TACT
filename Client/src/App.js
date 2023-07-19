@@ -7,6 +7,7 @@ import EditTables from "./components/EditTablesPage/EditTablesPage";
 import ManageUsers from "./components/ManageUsersPage/ManageUsersPage";
 import HistoryPage from "./pages/HistoryPage";
 import DashboardPage from "./pages/DashboardPage";
+import PlanningTool from "./pages/PlanningTool";
 import FlightSearch from "./components/FlightSearch/FlightSearch";
 import AirTypeTable from "./components/NewExerciseAircraftType/AirTypeTable";
 import Lodging from "./components/Lodging/Lodging";
@@ -25,6 +26,7 @@ function App() {
               <Route path="NewExercisePage-pg3" element={<Lodging />} />
               <Route path="History" element={<HistoryPage />} />
               <Route path="DashboardPage" element={<DashboardPage />} />
+              <Route path="PlanningToolPage" element={<PlanningTool />} />
               <Route path="EditTablesPage" element={<EditTables />} />
               <Route path="ManageUsersPage" element={<ManageUsers />} />
             </Route>

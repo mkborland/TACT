@@ -1,0 +1,139 @@
+/* Step02 */
+.form-container .relative {
+    position: relative;
+    padding: 1rem;
+}
+
+.options-plans {
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+}
+
+.form-container .clicked-style {
+    border-color: var(--purplish-blue);
+    background-color: var(--magnolia);
+
+    transition: all .1s ease-in-out;
+}
+
+.form-container .radio-container input{
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    opacity: 0;
+
+    height: 100%;
+    width: 100%;
+}
+
+.radio-content,
+.radio-content .plan-informations {
+    display: flex;
+}
+
+.radio-content {
+    gap: .875rem;
+}
+
+.radio-content .plan-informations {
+    flex-direction: column;
+    gap: .375rem;
+}
+
+.radio-content .plan-informations h2 {
+    color: var(--marine-blue);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.radio-content .plan-informations span {
+    font-weight: 400;
+}
+
+.radio-content .plan-informations .plan-value {
+    color: var( --cool-gray);
+    font-size: .9rem;
+}
+
+.radio-content .plan-informations .yearly-discount {
+    color: var(--marine-blue);
+    font-size: .8rem;
+    font-weight: 500;
+}
+
+/* toggle-option */
+.toggle-option {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+
+    padding: 1rem;
+
+    margin-top: .5rem;
+    background-color: var(--alabaster);
+}
+
+.toggle-option span {
+    font-weight: 500;
+    transition: all .1s ease-in-out;
+}
+
+/* switch-button */
+.toggle-option .switch-button {
+    display: inline-block;
+    background-color: var(--marine-blue);
+    border-radius: 20px;
+
+    position: relative;
+
+    padding: 4px;
+    width: 2.375rem;
+    height: 1.25rem;
+}
+
+.toggle-option .switch-button::before {
+    content: '';
+
+    position: absolute;
+    background-color: var(--white);
+    border-radius: 50%;
+
+    width: .75rem;
+    height: .75rem;
+
+    transition: all .1s linear;
+}
+
+.toggle-option .cliked::before {
+    transform: translateX(150%);
+}
+
+@media only screen and (min-width: 768px) {
+    /* Step02 */
+    .options-plans {
+        flex-direction: row;
+    }
+
+    .options-plans .radio-content {
+        flex-direction: column;
+        gap: 1.625rem;
+        width: 5.2rem;
+    }
+
+    .options-plans .relative {
+        padding-right: 1.8125rem;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    /* Step02 */
+    .options-plans .radio-content {
+        gap: 2.625rem;
+    }
+
+    .options-plans .relative {
+        padding-right: 2.8125rem;
+    }
+}

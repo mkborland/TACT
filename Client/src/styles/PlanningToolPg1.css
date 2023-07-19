@@ -1,0 +1,81 @@
+/* form-container step01*/
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    margin-top: 1.5rem;
+}
+
+.form-container .input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    font-size: .9rem;
+    color: var(--marine-blue);
+}
+
+.form-container .input {
+    border: 1px solid var(--light-gray);
+    border-radius: .3rem;
+
+    cursor: pointer;
+
+    padding: .75rem 1rem;
+    font-weight: 700;
+
+    transition: all .1s ease-in-out;
+}
+
+.form-container .input:focus {
+    border: 1px solid var(--purplish-blue);
+    outline: 1px solid var(--purplish-blue);
+}
+
+.form-container .input:hover {
+    border: 1px solid var(--purplish-blue);
+    outline: 1px solid var(--purplish-blue);
+}
+
+.input-container .input,
+.input-container .input::placeholder {
+    color: black;
+}
+
+/* input-container when invalid */
+
+.input-container .inputInvalid {
+    border-color: var(--strawberry-red);
+}
+
+.form-container .inputInvalid:focus {
+    border: 1px solid var(--strawberry-red);
+    outline: 1px solid var(--strawberry-red);
+}
+
+.form-container .inputLabel {
+    position: relative;
+}
+
+.input-container .beforeInputInvalid::before {
+    content: 'This field is required';
+    font-size: .9rem;
+    color: var(--strawberry-red);
+
+    position: absolute;
+    right: 0;
+}
+
+@media only screen and (min-width: 768px) {
+    .form-container .inputLabel {
+        margin-bottom: .4rem;
+        font-weight: 500;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .form-container {
+        gap: 1.5rem;
+    }
+}
