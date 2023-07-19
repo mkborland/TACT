@@ -85,7 +85,7 @@ const NewExerciseForm = () => {
             sx={{backgroundColor: "white", color: "black", m: 1, fontSize: ".75em"}}
             onClick={() => {
               //save to data base if good
-              // PostUnitExercise()
+              // PostExercise()
             }}
           >
             Save
