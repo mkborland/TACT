@@ -13,7 +13,7 @@ const HistoryPage = "/Dashboard/History";
 const EditTablesPage = "/Dashboard/EditTablesPage";
 const ManageUsersPage = "/Dashboard/ManageUsersPage";
 const LoginPage = "/";
-
+//list for admin role
 const ActionObject = [
   {
     text: "Dashboard",
@@ -29,12 +29,8 @@ const ActionObject = [
   {text: "New Exercise",
     link: newExerciseForm}
 ];
-
+//list for general role
 const ActionObjectGeneral = [
-  {
-    text: "New Exercise",
-    link: NewExercisePage,
-  },
   { text: "History", link: HistoryPage },
 ];
 

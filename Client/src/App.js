@@ -5,11 +5,7 @@ import SignUp from "./components/SignUp/SignUp.js";
 import PersistentDrawerLeft from "./components/MainPage/MainPage.js";
 import EditTables from "./components/EditTablesPage/EditTablesPage";
 import ManageUsers from "./components/ManageUsersPage/ManageUsersPage";
-import HistoryPage from "./pages/HistoryPage";
 import DashboardPage from "./pages/DashboardPage";
-import FlightSearch from "./components/FlightSearch/FlightSearch";
-import AirTypeTable from "./Deprecated Files/NewExerciseAircraftType/AirTypeTable";
-import Lodging from "./Deprecated Files/Lodging/Lodging";
 import NewExerciseForm from "./components/NewExcersizeForm/NewExerciseForm";
 
 function App() {
