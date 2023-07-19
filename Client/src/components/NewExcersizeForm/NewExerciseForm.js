@@ -86,7 +86,6 @@ const NewExerciseForm = () => {
             onClick={() => {
               //save to data base if good
               // PostUnitExercise()
-              
             }}
           >
             Save
