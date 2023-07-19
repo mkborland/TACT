@@ -22,7 +22,6 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 
 const DashboardPage = () => {
-  console.log(`THIS IS THE DashboardPage`);
   const [dashboardList, setDashboardList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -31,8 +30,6 @@ const DashboardPage = () => {
       setIsLoading(false);
     });
   }, []);
-  console.log("Return data");
-  console.log(dashboardList);
 
   if (!isLoading) {
     return <EnhancedTable data={dashboardList} />;
@@ -218,8 +215,6 @@ const EnhancedTable = ({ data }) => {
   const dense = false;
   const [rowsPerPage, setRowsPerPage] = useState(25);
 
-  console.log(data);
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -234,7 +229,7 @@ const EnhancedTable = ({ data }) => {
     }
     setSelected([]);
   };
-
+  
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
@@ -324,7 +319,6 @@ const EnhancedTable = ({ data }) => {
                 const isItemSelected = isSelected(row.exerciseName);
                 const labelId = `enhanced-table-checkbox-${index}`;
                 let status = row.status ? 'Complete' : 'Draft';
-                console.log(row);
 
                 return (
                   <TableRow

@@ -74,8 +74,6 @@ const EditTables = () => {
     let pain3 = []
     let currentAirframe = "";
     if (!isLoading) {
-      console.log("?")
-      console.log(airframeList)
       airframeList.forEach(entry => {
         if (currentAirframe !== entry.aircraftName) {
           currentAirframe = entry.aircraftName;
@@ -93,7 +91,6 @@ const EditTables = () => {
   }
   const handleTextChange = (e) => {
     airframeList[e.target.name].personnelCount = e.target.value
-    console.log(airframeList[e.target.name])
   }
 
   return (

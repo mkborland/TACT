@@ -112,11 +112,9 @@ const FlightSearch = () => {
         setNewExerciseObject(newExerciseObject2);
         break;
     }
-    console.log(newExerciseObject);
   };
 
   useEffect(() => {
-    console.log(count);
     if (count > 0) {
       setFlightsLoading(true);
       const { out, source } = getFlightOffers(inputs);

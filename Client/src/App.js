@@ -17,10 +17,6 @@ function App() {
             <Route path="/" element={<LoginCard />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/Dashboard" element={<PersistentDrawerLeft />}>
-              {/* <Route path="NewExercisePage" element={<AirTypeTable />} />
-              <Route path="NewExercisePage-pg2" element={<FlightSearch />} />
-              <Route path="NewExercisePage-pg3" element={<Lodging />} />
-              <Route path="History" element={<HistoryPage />} /> */}
               <Route path="DashboardPage" element={<DashboardPage />} />
               <Route path="EditTablesPage" element={<EditTables />} />
               <Route path="ManageUsersPage" element={<ManageUsers />} />

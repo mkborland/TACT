@@ -51,7 +51,6 @@ const Lodging = () => {
     });
 
     if (!response.ok) {
-      console.log("error");
     } else {
       const result = await response.json();
       return result;
@@ -149,7 +148,6 @@ const Lodging = () => {
               copy.perDiem.mAndIE.total = parseInt(data.mealrate) * mealsReq;
               copy.perDiem.mAndIE.providedAmount = parseInt(numMealsProv);
               copy.basicInfo.exercise = nameExercise;
-              console.log(copy);
               setNewExerciseObject(copy);
               TactApi.postExercises(newExerciseObject).then(() => {
                 setNewExerciseObject(defaultExerciseObject);

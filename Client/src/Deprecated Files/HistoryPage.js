@@ -30,8 +30,6 @@ const HistoryPage = () => {
       setIsLoading(false);
     });
   }, []);
-  console.log("Return data");
-  console.log(historyList);
 
   if (!isLoading) {
     return <EnhancedTable data={historyList} />;
@@ -222,8 +220,6 @@ const EnhancedTable = ({ data }) => {
   const dense = false;
   const [rowsPerPage, setRowsPerPage] = useState(25);
 
-  console.log(data);
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -327,7 +323,6 @@ const EnhancedTable = ({ data }) => {
               {visibleRows.map((row, index) => {
                 const isItemSelected = isSelected(row.basicInfo.exercise);
                 const labelId = `enhanced-table-checkbox-${index}`;
-                console.log(row);
 
                 return (
                   <TableRow

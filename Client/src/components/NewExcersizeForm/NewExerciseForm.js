@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GetCurrentDate } from "../Util/DefinedListItem.js";
 import { useAppContext } from "../../context/AppContext.js";
-import { PostExercise} from "../../api/exercises/post/PostExercises.js"
+import PostExercises from "../../api/exercises/post/PostExercises.js"
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -10,7 +10,6 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import { CardActions } from "@mui/material";
-import { PostUnitExercise } from "../../api/UnitExercises/post/PostUnitExercise.js"
 
 const NewExerciseForm = () => {
   const [exerciseNameInput, setExerciseNameInput] = useState()
@@ -99,9 +98,8 @@ const NewExerciseForm = () => {
                 personnelSum: 0, //zero as this is first creation
                 costSum: 0, // ^^^
               }
-              console.log(newExercise)
               //save to data base if good
-              PostExercise(newExercise)
+              PostExercises(newExercise)
             }}
           >
             Save

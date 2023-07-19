@@ -7,6 +7,8 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Divider } from "@mui/material";
 
+//This file controls the list in the mainpage drawer and changes what is shown depending on user role
+
 const newExerciseForm = "/Dashboard/NewExerciseForm"
 const NewDashboardPage = "/Dashboard/DashboardPage";
 const HistoryPage = "/Dashboard/History";
@@ -23,7 +25,7 @@ const ActionObject = [
   //just goes to dashboard until page is made
   { text: "New Form", link: "/Dashboard" },
   {
-    text: "Tables",
+    text: "Default Table",
     link: EditTablesPage,
   },
   {text: "New Exercise",
@@ -36,12 +38,10 @@ const ActionObjectGeneral = [
 
 const UserActionItems = () => {
   const { UserInfo } = useAppContext();
-  console.log(UserInfo);
   if(UserInfo == undefined){
     return <></>
   }
   if (UserInfo.access === "admin") {
-    console.log(`***ACTIONOBJECT[0] = ${ActionObject[0]}`)
     return (
       <>
         {ActionObject.map((items) => {
