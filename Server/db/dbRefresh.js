@@ -40,7 +40,6 @@ const setTimeoutAsync = (ms) => {
 export const buildTables = async () =>
   await runMigrations(10, 500)
     .catch((err) => {
-      console.log(err);
       process.exit(1);
     })
     .then((res) => {
@@ -54,7 +53,6 @@ export const buildTables = async () =>
 export const seedDb = async () =>
   await runSeed(10, 500)
     .catch((err) => {
-      console.log(err);
       process.exit(1);
     })
     .then((res) => {

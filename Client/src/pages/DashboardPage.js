@@ -22,7 +22,6 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 
 const DashboardPage = () => {
-  console.log(`THIS IS THE DashboardPage`);
   const [dashboardList, setDashboardList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -31,8 +30,6 @@ const DashboardPage = () => {
       setIsLoading(false);
     });
   }, []);
-  console.log("Return data");
-  console.log(dashboardList);
 
   if (!isLoading) {
     return <EnhancedTable data={dashboardList} />;
@@ -218,8 +215,6 @@ const EnhancedTable = ({ data }) => {
   const dense = false;
   const [rowsPerPage, setRowsPerPage] = useState(25);
 
-  console.log(data);
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -228,13 +223,13 @@ const EnhancedTable = ({ data }) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = data.map((n) => n.name); // here
+      const newSelected = data.map((n) => n.exerciseName); // here
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
-
+  
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
@@ -280,26 +275,26 @@ const EnhancedTable = ({ data }) => {
     [order, orderBy, page, rowsPerPage]
   );
 
-  const makeTotal = (obj) => {
-    const totalMeals =
-      obj.perDiem.mAndIE.ratePer *
-      (obj.overView.totalPersonal - obj.perDiem.mAndIE.providedAmount);
-    const totalAirFare =
-      obj.perDiem.airFare.comAirFare.occupancy *
-      obj.perDiem.airFare.comAirFare.rate;
+  // const makeTotal = (obj) => {
+  //   const totalMeals =
+  //     obj.perDiem.mAndIE.ratePer *
+  //     (obj.overView.totalPersonal - obj.perDiem.mAndIE.providedAmount);
+  //   const totalAirFare =
+  //     obj.perDiem.airFare.comAirFare.occupancy *
+  //     obj.perDiem.airFare.comAirFare.rate;
 
-    const totalLodging =
-      obj.perDiem.lodging.comLodgingInfo.ratePerOccupancy *
-      obj.perDiem.lodging.comLodgingInfo.occupancy;
+  //   const totalLodging =
+  //     obj.perDiem.lodging.comLodgingInfo.ratePerOccupancy *
+  //     obj.perDiem.lodging.comLodgingInfo.occupancy;
 
-    const oneDay = 1000 * 60 * 60 * 24;
-    const start = new Date(obj.overView.startEx);
-    const end = new Date(obj.overView.endEx);
-    const diffInTime = end.getTime() - start.getTime();
-    const diffInDays = Math.round(diffInTime / oneDay);
+  //   const oneDay = 1000 * 60 * 60 * 24;
+  //   const start = new Date(obj.overView.startEx);
+  //   const end = new Date(obj.overView.endEx);
+  //   const diffInTime = end.getTime() - start.getTime();
+  //   const diffInDays = Math.round(diffInTime / oneDay);
 
-    return totalLodging * diffInDays + totalAirFare + totalMeals * diffInDays;
-  };
+  //   return totalLodging * diffInDays + totalAirFare + totalMeals * diffInDays;
+  // };
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -321,20 +316,20 @@ const EnhancedTable = ({ data }) => {
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row.exercise_name);
+                const isItemSelected = isSelected(row.exerciseName);
                 const labelId = `enhanced-table-checkbox-${index}`;
-                console.log(row);
+                let status = row.status ? 'Complete' : 'Draft';
 
                 return (
                   <TableRow
                     hover
                     onClick={(event) =>
-                      handleClick(event, row.exercise_name)
+                      handleClick(event, row.exerciseName)
                     }
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.exercise_name}
+                    key={row.exerciseName}
                     selected={isItemSelected}
                     sx={{ cursor: "pointer" }}
                   >
@@ -353,15 +348,15 @@ const EnhancedTable = ({ data }) => {
                       scope="row"
                       padding="none"
                     >
-                      {row.exercise_name}
+                      {row.exerciseName}
                     </TableCell>
                     <TableCell align="left">
-                      {row.owner}
+                      {row.email}
                     </TableCell>
                     <TableCell align="left">
-                      {row.cost_sum}
+                      {row.costSum}
                     </TableCell>
-                    <TableCell align="left">{row.status}</TableCell>
+                    <TableCell align="left">{status}</TableCell>
                   </TableRow>
                 );
               })}

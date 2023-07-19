@@ -11,7 +11,6 @@ const UserInfo = (email, id, role) => {
     const handleAccept = (e, id) => {
         TactApi.updateUser({ userid: id, authkey: "54321" }).then(
             data => {
-                console.log(data);
                 window.location.reload(true);
             }
         )
@@ -20,7 +19,6 @@ const UserInfo = (email, id, role) => {
     const handlePromote = (e, id) => {
         TactApi.updateUser({ userid: id, authkey: "12345" }).then(
             data => {
-                console.log(data);
                 window.location.reload(true);
             }
         )
@@ -29,7 +27,6 @@ const UserInfo = (email, id, role) => {
     const handleDemote = (e, id) => {
         TactApi.updateUser({ userid: id, authkey: "54321" }).then(
             data => {
-                console.log(data);
                 window.location.reload(true);
             }
         )

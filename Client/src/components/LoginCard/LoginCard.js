@@ -63,9 +63,9 @@ const LoginCard = () => {
             onClick={() => {
               if( tryLogin(userNameInput, userPasswordInput))
               {
-                 nav("/Dashboard/History")
+                 nav("/Dashboard/DashboardPage")
               }else{
-                console.log("pain")
+                //tell user about fail to login
               }
             }}
           >

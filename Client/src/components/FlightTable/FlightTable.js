@@ -12,7 +12,7 @@ import { Button } from '@mui/material';
 
 class simpleflightoffer {
   constructor(offer) {
-    // console.log(offer)
+    
     this.departureStartAirport = offer.itineraries[0].segments[0].departure.iataCode
     this.departureStartTime = new Date(offer.itineraries[0].segments[0].departure.at).toTimeString().slice(0, 5)
     this.departureEndAirport = offer.itineraries[0].segments.slice(-1)[0].arrival.iataCode
@@ -42,7 +42,7 @@ const FlightTable = (props) => {
     newExerciseObject2.perDiem.airFare.comAirFare.rate = Number(cost)
     newExerciseObject2.perDiem.airFare.govAirFare.rate = 0
     setNewExerciseObject(newExerciseObject2)
-    // console.log(newExerciseObject)
+    
     setSimple_Data([])
   };
 
@@ -51,7 +51,7 @@ const FlightTable = (props) => {
       setSimple_Data([])
     } else {
       setSimple_Data(props.data.map(offer => {
-        // console.log(offer)
+        
         return new simpleflightoffer(offer)
       })
       )

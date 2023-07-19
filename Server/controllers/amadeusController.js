@@ -34,11 +34,8 @@ const airports = async (req, res) => {
     });
 
   // Sending response for client
-    // console.log('try res.json')
     await res.json(JSON.parse(response.body));
   } catch (err) {
-    // console.log(err)
-
     const { page, subType, keyword } = req.query;
     if (err.response.statusCode == 429) {
       try {

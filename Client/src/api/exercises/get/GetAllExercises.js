@@ -15,9 +15,10 @@ const GetAllExercises = async (token = "") => {
     console.log("error");
   } else {
     const result = await response.json();
-    return result.map((exercise) =>
-      ExerciseObjectFormat(...Object.values(exercise))
-    );
+    return result
+    // .map((exercise) =>
+    //   ExerciseObjectFormat(...Object.values(exercise))
+    // );
   }
 };
 

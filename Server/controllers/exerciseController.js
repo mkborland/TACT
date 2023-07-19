@@ -10,6 +10,7 @@ const requestExercise = async (req, res) => {
                 return knex('exercises')
                     .select('*')
                     .where({ exerciseID: exerciseID })
+                    .innerJoin("users", "exercises.userID", "users.userID")
                     .then((data) => data[0])
             } else {
                 res.status(202).send(`Exercise with an ID of ${exerciseID} could not be found.`);
@@ -64,6 +65,7 @@ const requestExerciseAircraft = async (req, res) => {
 const requestAllExercises = async (req, res) => {
     knex('exercises')
         .select('*')
+        .innerJoin("users", "exercises.userID", "users.userID")
         .then(data => res.status(200).json(data))
 };
 
