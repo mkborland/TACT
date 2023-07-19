@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { GetCurrentDate } from "../Util/DefinedListItem.js";
 import { useAppContext } from "../../context/AppContext.js";
+import { PostExercise} from "../../api/exercises/post/PostExercises.js"
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -84,8 +86,22 @@ const NewExerciseForm = () => {
             variant="contained"
             sx={{backgroundColor: "white", color: "black", m: 1, fontSize: ".75em"}}
             onClick={() => {
+
+              //create the object to send
+              const newExercise = {
+                exerciseName: exerciseNameInput,
+                status: 0,
+                dateCreated: GetCurrentDate(), 
+                location: exerciseLocationInput,
+                exerciseStartDate: exerciseStartDate,
+                exerciseEndDate: exerciseEndDate,
+                userID: 1, //pull from app Context or where ever we save current user
+                personnelSum: 0, //zero as this is first creation
+                costSum: 0, // ^^^
+              }
+              console.log(newExercise)
               //save to data base if good
-              // PostExercise()
+              PostExercise(newExercise)
             }}
           >
             Save
