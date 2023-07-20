@@ -1,8 +1,8 @@
 // hooks
-import { texts } from "../hooks/texts"
+import { texts } from "../../hooks/texts"
 
 //styles
-import '../styles/PlanningToolPg4.css'
+import '../../styles/PlanningToolPg4.css'
 
 function FinishingUp({ data, changeStep }) {
     const { services } = texts()

@@ -1,13 +1,13 @@
 // hooks
-import { texts } from '../hooks/texts'
+import { texts } from '../../hooks/texts'
 
 // images
-import iconArcade from '../assets/images/icon-arcade.svg'
-import iconAdvanced from '../assets/images/icon-advanced.svg'
-import iconPro from '../assets/images/icon-pro.svg'
+import iconArcade from '../../assets/images/icon-arcade.svg'
+import iconAdvanced from '../../assets/images/icon-advanced.svg'
+import iconPro from '../../assets/images/icon-pro.svg'
 
 // styles
-import '../styles/PlanningToolPg2.css'
+import '../../styles/PlanningToolPg2.css'
 
 function YourPlan({ data, updateFielHandler }) {
     const { plans } = texts();

@@ -1,8 +1,8 @@
 //styles
-import '../styles/PlanningToolPg5.css'
+import '../../styles/PlanningToolPg5.css'
 
 // images
-import iconThankYou from '../assets/images/icon-thank-you.svg'
+import iconThankYou from '../../assets/images/icon-thank-you.svg'
 
 function Thanks() {
 

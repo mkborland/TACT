@@ -1,7 +1,7 @@
 // react
 import { useState } from "react";
 
-import FinishingUp from "../pages/PlanningToolPg4.jsx";
+import FinishingUp from "../components/PlanningTool/PlanningToolPg4.jsx"
 
 // function to switch the current page for the client to the next step when some button is clicked
 export function useForm(steps, data) {

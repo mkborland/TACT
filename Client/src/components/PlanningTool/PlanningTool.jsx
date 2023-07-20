@@ -7,12 +7,36 @@ import Thanks from "./PlanningToolPg5"
 import StepInformations from "./StepInformations"
 
 //styles
-import '../styles/PlanningTool.css'
+import '../../styles/PlanningTool.css'
 
 // hooks
 import { useState } from "react"
-import { texts } from "../hooks/texts"
-import { useForm } from "../hooks/useForm"
+import { texts } from "../../hooks/texts"
+import { useForm } from "../../hooks/useForm"
+import { GetCurrentDate } from "../Util/DefinedListItem"
+// --------- planning layout ------------
+//pg 1 (ex Info) -> drop down with made ex's, user name and unit
+//pg 2 (Aircraft) -> Amount of aircraft + personnel attached .... list or table
+//pg 3 (airfair) -> api needs dates and location ---- steal for unit info
+//pg 4 (lodging) -> perdiem api used with total personnel
+//pg 5 (meals) -> ^^ above but if meals provided
+
+// find where to join unit exercise db with used aircraft db for calculations
+
+
+const unitExerciseTemplate = {
+    exerciseID: "1", //set from drop down of High level exercise
+    status: "0", // Not sure where this will be used
+    dateCreated: GetCurrentDate(),
+    locationFrom: "Phoenix, AZ", //to be used with api for airfair
+    locationTo: "St Louis, IL",
+    travelStartDate: "26 July 2023", //in airfair for api use
+    travelEndDate: "27 July 2023",
+    unit: "OL-2",       //exercise info (default to current user)
+    userID: "1",    //pull from current user
+    personnelSum: "0", //calculated from total aircraft
+    unitCostSum: "0" //^^
+}
 
 const formTemplate = {
     name: '',

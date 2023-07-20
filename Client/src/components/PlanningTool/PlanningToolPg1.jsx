@@ -6,7 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 // styles
-import '../styles/PlanningToolPg1.css';
+import '../../styles/PlanningToolPg1.css';
 
 function YourInfo({ data, updateFileHandler }) {
     // function to change the className of the input and
@@ -52,28 +52,20 @@ function YourInfo({ data, updateFileHandler }) {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker', 'DatePicker']}>
                         <DatePicker
-                    className="input"
-                    type="date"
-                    name="startDate"
-                    id="startDate"
                             label="Start Date"
                             value={startDate}
                             sx={{ backgroundColor: 'white' }}
-                            onChange={(e) => verifyInputs(e)}
-                            // onChange={(newValue) => setStartDate(newValue)}
-                            onInvalid={verifyInputsInvalids}
+                            // onChange={(e) => verifyInputs(e)}
+                            onChange={(newValue) => setStartDate(newValue)}
+                            // onInvalid={verifyInputsInvalids}
                             />
                         <DatePicker
-                    className="input"
-                    type="date"
-                    name="endDate"
-                    id="endDate"
                             label="End Date"
                             value={endDate}
                             sx={{ backgroundColor: 'white' }}
-                            onChange={(e) => verifyInputs(e)}
-                            // onChange={(newValue) => setStartDate(newValue)}
-                            onInvalid={verifyInputsInvalids}
+                            // onChange={(e) => verifyInputs(e)}
+                            onChange={(newValue) => setEndDate(newValue)}
+                            // onInvalid={verifyInputsInvalids}
                             />
                     </DemoContainer>
                 </LocalizationProvider>
@@ -81,7 +73,7 @@ function YourInfo({ data, updateFileHandler }) {
 
 
             <div className="input-container">
-                <label htmlFor="email" className='inputLabel'>Departing Location</label>
+                <label htmlFor="departingLocation" className='inputLabel'>Departing Location</label>
                 <input
                     className="input"
                     type="text"
@@ -96,7 +88,7 @@ function YourInfo({ data, updateFileHandler }) {
             </div>
 
             <div className="input-container">
-                <label htmlFor="number" className='inputLabel'>Destination</label>
+                <label htmlFor="destination" className='inputLabel'>Destination</label>
                 <input
                     className="input"
                     type="text"

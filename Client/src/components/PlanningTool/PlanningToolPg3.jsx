@@ -1,8 +1,8 @@
 //hooks
-import { texts } from "../hooks/texts"
+import { texts } from "../../hooks/texts"
 
 // styles
-import "../styles/PlanningToolPg3.css"
+import "../../styles/PlanningToolPg3.css"
 
 function PickAddOns({ data, updateFielHandler }) {
     const { services } = texts()
