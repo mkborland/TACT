@@ -1,5 +1,5 @@
 import express from "express";
-import { requestExercise, requestUnitExercise, requestExerciseAircraft, requestAllExercises, requestAllUnitExercises, requestAllExerciseAircraft, addExercise, addUnitExercise, addExerciseAircraft } from "../controllers/exerciseController.js";
+import { requestExercise, requestUnitExercise, requestExerciseAircraft, requestAllExercises, requestAllUnitExercises, requestAllExerciseAircraft, addExercise, addUnitExercise, addExerciseAircraft, updateExercise } from "../controllers/exerciseController.js";
 
 const router = express.Router();
 
@@ -20,5 +20,7 @@ router.route("/add_exercise").post(addExercise);
 router.route("/add_unit_exercise").post(addUnitExercise);
 
 router.route("/add_exercise_aircraft").post(addExerciseAircraft);
+
+router.route("/update_exercise").post(updateExercise);
 
 export default router;

@@ -109,6 +109,28 @@ const addExercise = async (req, res) => {
         });
 };
 
+const updateExercise = async (req, res) => {
+    const { exerciseID, personnelSum, costSum } = req.body
+    knex('exercises')
+        .select("*")
+        .where({ exerciseID: exerciseID })
+        .then((data) => {
+            if (data.length !== 0) {
+                return knex('exercises')
+                    .where({ exerciseID: exerciseID})
+                    .update({
+                        personnelSum: personnelSum, 
+                        costSum: costSum
+                    })
+                    .then(() => {
+                        res.status(201).send(`Exercise with ID ${exerciseID} has been updated.`);
+                    });
+            } else {
+                res.status(202).send(`Exercise with ID ${exerciseID} doesn't exist.`);
+            }
+        });
+};
+
 const addUnitExercise = async (req, res) => {
     const { exerciseID, status, dateCreated, locationFrom, locationTo, travelStartDate, travelEndDate, unit, userID, personnelSum, unitCostSum } = req.body
     knex('unitexercises')
@@ -174,4 +196,4 @@ const addExerciseAircraft = async (req, res) => {
         });
 };
 
-export { requestExercise, requestUnitExercise, requestExerciseAircraft, requestAllExercises, requestAllUnitExercises, requestAllExerciseAircraft, addExercise, addUnitExercise, addExerciseAircraft }
+export { requestExercise, requestUnitExercise, requestExerciseAircraft, requestAllExercises, requestAllUnitExercises, requestAllExerciseAircraft, addExercise, addUnitExercise, addExerciseAircraft, updateExercise }

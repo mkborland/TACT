@@ -12,6 +12,16 @@ const requestAircraft = async (req, res) => {
         .then(data => res.status(200).json(data))
 };
 
+const requestAircraftType = async (req, res) => {
+    const aircraftName = req.query.aircraftName
+    return knex('aircraft')
+        .select('*')
+        .where({
+            aircraftName: aircraftName
+        })
+        .then(data => res.status(200).json(data))
+};
+
 const requestAllAircraft = async (req, res) => {
     knex('aircraft')
         .select('*')
@@ -40,4 +50,4 @@ const updateAircraft = async (req, res) => {
         })
 };
 
-export { requestAircraft, requestAllAircraft, updateAircraft }
+export { requestAircraft, requestAircraftType, requestAllAircraft, updateAircraft }
