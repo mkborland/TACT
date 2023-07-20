@@ -26,23 +26,20 @@ class simpleflightoffer {
     this.returnStopovers = offer.itineraries[1].segments.length - 1
 
     this.cost = offer.price.total
-
     this.id = offer.id
   }
 }
 
 const FlightTable = (props) => {
-  const { newExerciseObject, setNewExerciseObject } = useAppContext()
-  const newExerciseObject2 = newExerciseObject
+  const { newExerciseAircraftObject, setNewExerciseAircraftObject } = useAppContext()
+  const newExerciseAircraftObject2 = newExerciseAircraftObject
   const [simple_data, setSimple_Data] = useState([]);
 
 
   const selectButtonClick = (cost) => {
     props.updateCost(cost)
-    newExerciseObject2.perDiem.airFare.comAirFare.rate = Number(cost)
-    newExerciseObject2.perDiem.airFare.govAirFare.rate = 0
-    setNewExerciseObject(newExerciseObject2)
-    
+    newExerciseAircraftObject2.commercialAirfareCost = Number(cost)
+    setNewExerciseAircraftObject(newExerciseAircraftObject2)
     setSimple_Data([])
   };
 
@@ -51,14 +48,10 @@ const FlightTable = (props) => {
       setSimple_Data([])
     } else {
       setSimple_Data(props.data.map(offer => {
-        
         return new simpleflightoffer(offer)
-      })
-      )
+      }))
     }
-
   }, [props.data]);
-
 
   return (
     <TableContainer component={Paper}>
