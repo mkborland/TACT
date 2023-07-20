@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GetCurrentDate } from "../Util/DefinedListItem.js";
 import { useAppContext } from "../../context/AppContext.js";
@@ -10,12 +10,27 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import { CardActions } from "@mui/material";
+import CustomSnackbar from "../SnackBar/SnackBarState.js";
+import TactApi from "../../api/TactApi.js";
 
 const NewExerciseForm = () => {
   const [exerciseNameInput, setExerciseNameInput] = useState()
   const [exerciseLocationInput, setExerciseLocationInput] = useState()
   const [exerciseStartDate, setExerciseStartDate] = useState()
   const [exerciseEndDate, setExerciseEndDate] = useState()
+
+  //state and functions for snackbar use ------
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState()
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+  //----------
+
   const nav = useNavigate();
 
   const saveName = (input) => {
@@ -33,7 +48,7 @@ const NewExerciseForm = () => {
   }
 
   const handleRoute = () => {
-    nav("/Dashboard/History");
+    nav("/Dashboard/DashBoardPage");
   };
 
   return (
@@ -80,12 +95,12 @@ const NewExerciseForm = () => {
           />
         </CardContent>
       </Card>
+      <CustomSnackbar messageToUser={message} open={open} handleClose={handleClose}/>
       <Button
             type="button"
             variant="contained"
             sx={{backgroundColor: "white", color: "black", m: 1, fontSize: ".75em"}}
             onClick={() => {
-
               //create the object to send
               const newExercise = {
                 exerciseName: exerciseNameInput,
@@ -98,8 +113,18 @@ const NewExerciseForm = () => {
                 personnelSum: 0, //zero as this is first creation
                 costSum: 0, // ^^^
               }
-              //save to data base if good
-              PostExercises(newExercise)
+
+              //save to data base if good and let user know if success
+              //response is promise so then.., text is promise so then.., show snackbar
+              TactApi.postExercises(newExercise).then(data => {
+                  data.text().then(message => {
+                    setMessage(message)
+                    setOpen(true)
+                    handleRoute()
+                  })
+              })
+             
+              
             }}
           >
             Save
