@@ -7,6 +7,10 @@ import EditTables from "./components/EditTablesPage/EditTablesPage";
 import ManageUsers from "./components/ManageUsersPage/ManageUsersPage";
 import DashboardPage from "./pages/DashboardPage";
 import NewExerciseForm from "./components/NewExcersizeForm/NewExerciseForm";
+import PlanningTool from "./pages/PlanningTool";
+import FlightSearch from "./components/FlightSearch/FlightSearch";
+import AirTypeTable from "./components/NewExerciseAircraftType/AirTypeTable";
+import Lodging from "./components/Lodging/Lodging";
 
 function App() {
   return (
@@ -18,6 +22,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/Dashboard" element={<PersistentDrawerLeft />}>
               <Route path="DashboardPage" element={<DashboardPage />} />
+              <Route path="PlanningToolPage" element={<PlanningTool />} />
               <Route path="EditTablesPage" element={<EditTables />} />
               <Route path="ManageUsersPage" element={<ManageUsers />} />
               <Route path="NewExerciseForm" element={<NewExerciseForm />} />

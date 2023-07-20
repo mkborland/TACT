@@ -1,0 +1,121 @@
+/* final-informations step04*/
+.final-informations {
+    background-color: var(--alabaster);
+    padding: 1rem;
+}
+
+.final-informations hr {
+    border: none;
+    border-top: 1px solid var(--light-gray);
+
+    margin: .75rem 0;
+}
+
+.final-informations .final-plan-informations {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.final-plan-informations .final-value span,
+.final-plan-informations .title-step04 {
+    color: var(--marine-blue);
+}
+
+.final-plan-informations .title-step04 h2 {
+    font-size: .9rem;
+}
+
+.final-plan-informations .title-step04 a {
+    color: var(--cool-gray);
+    font-size: .9rem;
+}
+
+.final-plan-informations .title-step04 a:hover {
+    color: var(--purplish-blue);
+}
+
+.final-plan-informations .final-value span {
+    font-weight: 700;
+}
+
+.final-services-informations-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.final-informations .final-services-informations {
+    justify-content: space-between;
+
+    width: 100%;
+}
+
+.final-informations .final-services-informations span {
+    font-size: .9rem;
+}
+
+.final-informations .final-services-informations span:first-child {
+    color: var(--cool-gray);
+}
+
+.final-informations .final-services-informations span:last-child {
+    color: var(--marine-blue);
+}
+
+/* total-informations */
+
+.form-container .total-informations {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 1rem;
+
+    font-size: .9rem;
+}
+
+.form-container .total-informations span:first-child {
+    color: var(--cool-gray);
+}
+
+.form-container .total-informations span:last-child {
+    font-weight: 700;
+    color: var(--purplish-blue);
+}
+
+@media only screen and (min-width: 768px) {
+
+    /* final-informations step04*/
+    .final-informations {
+        padding: 1.5rem;
+    }
+
+    .final-informations hr {
+        margin: 1.5rem 0;
+    }
+
+    .final-plan-informations .title-step04 h2 {
+        font-size: 1rem;
+    }
+
+    .final-services-informations-container {
+        gap: 1.5rem;
+    }
+
+    /* total-informations */
+    .form-container .total-informations {
+        padding: 0 1.5rem;
+    }
+
+    .form-container .total-informations span:last-child {
+        font-size: 1.3rem;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .final-informations .final-plan-informations {
+        gap: 14rem;
+    }
+}
