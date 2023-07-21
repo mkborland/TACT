@@ -1,7 +1,7 @@
 // components
 import ExerciseInfo from "./ExerciseInfoPg1"
 import YourPlan from "./AircraftInfoPg2"
-import PickAddOns from "./PlanningToolPg3"
+import PickAddOns from "./AirfareInfoPg3"
 import FinishingUp from "./PlanningToolPg4"
 import Thanks from "./PlanningToolPg5"
 import StepInformations from "./StepInformations"
@@ -79,7 +79,7 @@ function PlanningTool() {
                 </aside>
 
                 <div className="header-and-form-container">
-                    <div className="header-container">
+                    {/* <div className="header-container">
                         <h1>
                             {currentStep + 1 >= formComponents.length ? null : headerText[currentStep].h1}
                         </h1>
@@ -87,7 +87,7 @@ function PlanningTool() {
                         <p>
                             {currentStep + 1 >= formComponents.length ? null : headerText[currentStep].p}
                         </p>
-                    </div>
+                    </div> */}
                     <form onSubmit={(e) => changeStep(currentStep + 1, e)} className='form' style={{ justifyContent: isThankyouStep }}>
                         <div className="inputs-container">{currentComponent}</div>
                         <div className="actions" style={{ justifyContent: styleToActions, display: displayOff }}>

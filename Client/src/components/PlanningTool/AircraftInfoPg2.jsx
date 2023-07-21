@@ -49,11 +49,11 @@ function YourPlan({ data, updateFielHandler }) {
         createRowData("KC-135", 0, 0),
         createRowData("F-22", 0, 0),
         createRowData("F-35", 0, 0),
-        createRowData("A-10", 0, 0),
-        createRowData("F-15C", 0, 0),
-        createRowData("C-130", 0, 0),
-        createRowData("C-17", 0, 0),
-        createRowData("C-5", 0, 0),
+        // createRowData("A-10", 0, 0),
+        // createRowData("F-15C", 0, 0),
+        // createRowData("C-130", 0, 0),
+        // createRowData("C-17", 0, 0),
+        // createRowData("C-5", 0, 0),
     ]);
 
     useEffect(() => {
@@ -127,7 +127,7 @@ function YourPlan({ data, updateFielHandler }) {
     return (
         <div className="form-container">
             <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700, maxHeight: "50%"}} aria-label="customized table">
+      <Table sx={{ minWidth: 700}} aria-label="customized table">
         <TableHead>
           <TableRow>
             <StyledTableCell>Airframe Types</StyledTableCell>
