@@ -9,7 +9,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import LoadingButton from "@mui/lab/LoadingButton";
 import InputLabel from "@mui/material/InputLabel";
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Slider from "@mui/material/Slider";
 import MuiInput from "@mui/material/Input";
@@ -20,21 +19,20 @@ import { Paper } from "@mui/material";
 
 const FlightSearch = () => {
   const nav = useNavigate();
-  const { newExerciseObject, setNewExerciseObject } = useAppContext();
-  const newExerciseObject2 = newExerciseObject;
+  const { newExerciseAircraftObject, setNewExerciseAircraftObject } = useAppContext();
+  const newExerciseAircraftObject2 = newExerciseAircraftObject;
 
   const [count, setCount] = useState(0);
   const [data, setData] = useState([]);
-  // const [inputs, setInputs] = useState({ departureDate: '2023-06-25', returnDate: '2023-06-30', locationDeparture: 'SJC', locationArrival: 'SAN' });
   const [inputs, setInputs] = useState({});
   const [flightdisable, setFlightDisable] = useState(true);
   const [flightsloading, setFlightsLoading] = useState(false);
   const [currentcost, setCurrentCost] = useState(0);
 
+  //need to figure out if airfare is going to be per plane or per unit, will change which table/context we use here
   const [totalpersonnel, setTotalPersonnel] = useState(
-    newExerciseObject.overView.totalPersonal
+    newExerciseAircraftObject.personnelCount
   );
-  // const [totalpersonnel, setTotalPersonnel] = useState(100);
   const [value, setValue] = useState({ mil: totalpersonnel, com: 0 });
 
   const Input = styled(MuiInput)`
@@ -42,9 +40,9 @@ const FlightSearch = () => {
   `;
 
   useEffect(() => {
-    newExerciseObject2.perDiem.airFare.comAirFare.occupancy = value.com;
-    newExerciseObject2.perDiem.airFare.govAirFare.occupancy = value.mil;
-    setNewExerciseObject(newExerciseObject2);
+    newExerciseAircraftObject2.commercialAircraftCount = value.com;
+    newExerciseAircraftObject2.governmentAircraftCount = value.mil;
+    setNewExerciseAircraftObject(newExerciseAircraftObject2);
 
     if (value.com > 0) {
       setFlightDisable(false);
@@ -82,14 +80,9 @@ const FlightSearch = () => {
           }
     );
   };
+//not sure how this will work without pulling unit exercise table
 
-  // const handleBlur = () => {
-  //   if (value < 0) {
-  //     setValue(0);
-  //   } else if (value > 100) {
-  //     setValue(100);
-  //   }
-  // };
+//TODO
 
   const chooseInputs = (name, value) => {
     inputs[name] = value;
@@ -135,13 +128,10 @@ const FlightSearch = () => {
         source.cancel();
       };
     }
-
-    // setCount(0)
   }, [count]);
 
   return (
     <Paper elevation={3} sx={{ backgroundColor: "white", p: 3 }}>
-      {/* <Box sx={{ backgroundColor: "#FFFFFF", p: 2 }}> */}
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label="Depart"
@@ -163,7 +153,6 @@ const FlightSearch = () => {
               value={value.mil}
               size="small"
               onChange={handleMilInputChange}
-              // onBlur={handleBlur}
               inputProps={{
                 step: 1,
                 min: 0,
@@ -188,7 +177,6 @@ const FlightSearch = () => {
               value={value.com}
               size="small"
               onChange={handleComInputChange}
-              // onBlur={handleBlur}
               inputProps={{
                 step: 1,
                 min: 0,
@@ -253,7 +241,6 @@ const FlightSearch = () => {
           updateCost={updateCost}
         />
       </LocalizationProvider>
-      {/* </Box> */}
     </Paper>
   );
 };

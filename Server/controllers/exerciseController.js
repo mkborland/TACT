@@ -131,7 +131,39 @@ const updateExercise = async (req, res) => {
         });
 };
 
-const addUnitExercise = async (req, res) => {
+const updateUnitExercise = async (req, res) => {
+    const { exerciseID, status, dateCreated, locationFrom, locationTo, travelStartDate, travelEndDate, unit, userID, personnelSum, unitCostSum } = req.body
+    knex('unitexercises')
+        .select("*")
+        .where({ exerciseID: exerciseID, unit: unit })
+        .then((data) => {
+            if (data.length !== 0) {
+                return knex('unitexercises')
+                    .select("*")
+                    .where({ exerciseID: exerciseID, unit: unit })
+                    .update({
+                        exerciseID: exerciseID,
+                        status: status,
+                        dateCreated: dateCreated,
+                        locationFrom: locationFrom,
+                        locationTo: locationTo,
+                        travelStartDate: travelStartDate,
+                        travelEndDate: travelEndDate,
+                        unit: unit,
+                        userID: userID,
+                        personnelSum: personnelSum,
+                        unitCostSum: unitCostSum
+                    })
+                    .then(() => {
+                        res.status(201).send(`Updated entry for ${unit}'s participation in exercise with ID ${exerciseID}.`);
+                    });
+            } else {
+                res.status(202).send(`Can't find an entry for ${unit} participating in exercise with ID ${exerciseID}.`);
+            }
+        });
+};
+
+const saveUnitExercise = async (req, res) => {
     const { exerciseID, status, dateCreated, locationFrom, locationTo, travelStartDate, travelEndDate, unit, userID, personnelSum, unitCostSum } = req.body
     knex('unitexercises')
         .select("*")
@@ -156,7 +188,8 @@ const addUnitExercise = async (req, res) => {
                         res.status(201).send(`Created entry for ${unit}'s participation in exercise with ID ${exerciseID}.`);
                     });
             } else {
-                res.status(202).send(`There is already an entry for ${unit} participating in exercise with ID ${exerciseID}.`);
+                //data returns array with one entry
+                res.status(201).send(data[0]);
             }
         });
 };
@@ -196,4 +229,4 @@ const addExerciseAircraft = async (req, res) => {
         });
 };
 
-export { requestExercise, requestUnitExercise, requestExerciseAircraft, requestAllExercises, requestAllUnitExercises, requestAllExerciseAircraft, addExercise, addUnitExercise, addExerciseAircraft, updateExercise }
+export { requestExercise, requestUnitExercise, requestExerciseAircraft, requestAllExercises, requestAllUnitExercises, requestAllExerciseAircraft, addExercise, saveUnitExercise, updateUnitExercise, addExerciseAircraft, updateExercise }

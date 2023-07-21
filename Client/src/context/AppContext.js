@@ -96,7 +96,6 @@ const AppProvider = ({ children }) => {
         newUnitExerciseObject,
         setNewExerciseAircraftObject,
         newExerciseAircraftObject
-        // defaultExerciseObject,
       }}
     >
       {children}
