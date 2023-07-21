@@ -6,16 +6,20 @@ export function texts() {
             p: 'All data will auto-save once your click/tab away from each field.'
         },
         {
-            h1: 'Select your plan',
-            p: 'You have the option of monthly or yearly billing.'
+            h1: 'Aircraft Info',
+            p: 'Pick the aircraft and accompanying personnel for your unit.'
         },
         {
-            h1: 'Pick add-ons',
-            p: 'Add-ons help enhance your gaming experience.'
+            h1: 'Airfare Info',
+            p: 'Decide on how much personnel will be using commercial airfare.'
         },
         {
-            h1: 'Finishing up',
-            p: 'Double-check everything looks OK before confirming.'
+            h1: 'Lodging info',
+            p: '..................'
+        },
+        {
+            h1: 'Meal Info',
+            p: '...................'
         }
     ]
 
@@ -35,6 +39,10 @@ export function texts() {
         {
             num: 4,
             name: 'lodging'
+        },
+        {
+            num: 5,
+            name: 'meals'
         }
     ]
 

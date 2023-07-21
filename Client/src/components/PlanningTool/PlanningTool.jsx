@@ -14,6 +14,7 @@ import { useState } from "react"
 import { texts } from "../../hooks/texts"
 import { useForm } from "../../hooks/useForm"
 import { GetCurrentDate } from "../Util/DefinedListItem"
+
 // --------- planning layout ------------
 //pg 1 (ex Info) -> drop down with made ex's, user name and unit
 //pg 2 (Aircraft) -> Amount of aircraft + personnel attached .... list or table
@@ -64,7 +65,7 @@ const formTemplate = {
 }
 
 function PlanningTool() {
-    const [data, setData] = useState(formTemplate)
+    const [data, setData] = useState(unitExerciseTemplate)
 
     const { headerText, arrayInformationsStep } = texts()
 
