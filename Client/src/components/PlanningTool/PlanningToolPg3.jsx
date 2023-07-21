@@ -9,7 +9,7 @@ function PickAddOns({ data, updateFielHandler }) {
 
     return (
         <div className="form-container new-gap">
-            <div className={`input input-flex${data.services.service01.isChecked == true ? " clicked-style" : ""}`}>
+            <div className={`input input-flex${data.services.service01.isChecked === true ? " clicked-style" : ""}`}>
                 <div className="input-checkbox">
                     <input
                         type="checkbox"
@@ -30,13 +30,13 @@ function PickAddOns({ data, updateFielHandler }) {
 
                     <div className="service-value">
                         <span>
-                            {data.typePlan == "Monthly" ? `+$${services.monthly[0]}/mo` : `+$${services.yearly[0]}/yr`}
+                            {data.typePlan === "Monthly" ? `+$${services.monthly[0]}/mo` : `+$${services.yearly[0]}/yr`}
                         </span>
                     </div>
                 </div>
             </div>
 
-            <div className={`input input-flex${data.services.service02.isChecked == true ? " clicked-style" : ""}`}>
+            <div className={`input input-flex${data.services.service02.isChecked === true ? " clicked-style" : ""}`}>
                 <div className="input-checkbox">
                     <input
                         type="checkbox"
@@ -57,14 +57,14 @@ function PickAddOns({ data, updateFielHandler }) {
 
                     <div className="service-value">
                         <span>
-                            {data.typePlan == "Monthly" ? `+$${services.monthly[1]}/mo` : `+$${services.yearly[1]}/yr`}
+                            {data.typePlan === "Monthly" ? `+$${services.monthly[1]}/mo` : `+$${services.yearly[1]}/yr`}
                         </span>
 
                     </div>
                 </div>
             </div>
 
-            <div className={`input input-flex${data.services.service03.isChecked == true ? " clicked-style" : ""}`}>
+            <div className={`input input-flex${data.services.service03.isChecked === true ? " clicked-style" : ""}`}>
                 <div className="input-checkbox">
                     <input
                         type="checkbox"
@@ -85,7 +85,7 @@ function PickAddOns({ data, updateFielHandler }) {
 
                     <div className="service-value">
                         <span>
-                            {data.typePlan == "Monthly" ? `+$${services.monthly[2]}/mo` : `+$${services.yearly[2]}/yr`}
+                            {data.typePlan === "Monthly" ? `+$${services.monthly[2]}/mo` : `+$${services.yearly[2]}/yr`}
                         </span>
                     </div>
                 </div>

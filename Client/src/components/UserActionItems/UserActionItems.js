@@ -34,7 +34,7 @@ const ActionObjectGeneral = [
 
 const UserActionItems = () => {
   const { UserInfo } = useAppContext();
-  if(UserInfo == undefined){
+  if(UserInfo === undefined){
     return <></>
   }
   if (UserInfo.access === "admin") {

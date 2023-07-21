@@ -12,7 +12,7 @@ function StepInformations(props) {
     const verifyStep = () => {
         if (num === step) {
             return 'step-number current-step'
-        } else if (num + 1 === step && lastNumber == step) {
+        } else if (num + 1 === step && lastNumber === step) {
             return 'step-number current-step'
         } else {
             return 'step-number'

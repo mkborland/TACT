@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GetCurrentDate } from "../Util/DefinedListItem.js";
-import { useAppContext } from "../../context/AppContext.js";
-import PostExercises from "../../api/exercises/post/PostExercises.js"
+// import { useAppContext } from "../../context/AppContext.js";
+// import PostExercises from "../../api/exercises/post/PostExercises.js"
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { CardActions } from "@mui/material";
+// import { CardActions } from "@mui/material";
 import CustomSnackbar from "../SnackBar/SnackBarState.js";
 import TactApi from "../../api/TactApi.js";
 

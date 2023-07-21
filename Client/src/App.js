@@ -6,7 +6,7 @@ import PersistentDrawerLeft from "./components/MainPage/MainPage.js";
 import EditTables from "./components/EditTablesPage/EditTablesPage";
 import ManageUsers from "./components/ManageUsersPage/ManageUsersPage";
 import DashboardPage from "./pages/DashboardPage";
-import NewExerciseForm from "./components/NewExcersizeForm/NewExerciseForm";
+import NewExerciseForm from "./components/NewExerciseForm/NewExerciseForm";
 import PlanningTool from "./components/PlanningTool/PlanningTool";
 
 function App() {

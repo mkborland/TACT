@@ -7,11 +7,11 @@ import '../../styles/PlanningToolPg4.css'
 function FinishingUp({ data, changeStep }) {
     const { services } = texts()
 
-    const Arcade = data.plan.name == "arcade" ? 'Arcade' : false
-    const Advanced = data.plan.name == "advanced" ? 'Advanced' : false
-    const Pro = data.plan.name == "pro" ? 'Pro' : false
+    const Arcade = data.plan.name === "arcade" ? 'Arcade' : false
+    const Advanced = data.plan.name === "advanced" ? 'Advanced' : false
+    const Pro = data.plan.name === "pro" ? 'Pro' : false
 
-    const planMonthly = data.typePlan == 'Monthly'
+    const planMonthly = data.typePlan === 'Monthly'
     const title = Arcade || Advanced || Pro
 
     // function to calculate and display the final value of the plan and services
@@ -43,7 +43,7 @@ function FinishingUp({ data, changeStep }) {
                             {`${title} (${data.typePlan})`}
                         </h2>
 
-                        <a href="#" onClick={() => changeStep(1)}>Change</a>
+                        {/* <a href="#" onClick={() => changeStep(1)}>Change</a> */}
                     </div>
                     <div className="final-value">
                         <span>
@@ -56,21 +56,21 @@ function FinishingUp({ data, changeStep }) {
 
                 <div className="final-services-informations-container">
                     <div
-                        style={{ display: data.services.service01.isChecked == true ? 'flex' : 'none' }}
+                        style={{ display: data.services.service01.isChecked === true ? 'flex' : 'none' }}
                         className="final-services-informations"
                     >
                         <span>{data.services.service01.name}</span>
                         <span>{planMonthly ? `+$${services.monthly[0]}/mo` : `+$${services.yearly[0]}/yr`}</span>
                     </div>
                     <div
-                        style={{ display: data.services.service02.isChecked == true ? 'flex' : 'none' }}
+                        style={{ display: data.services.service02.isChecked === true ? 'flex' : 'none' }}
                         className="final-services-informations"
                     >
                         <span>{data.services.service02.name}</span>
                         <span>{planMonthly ? `+$${services.monthly[1]}/mo` : `+$${services.yearly[1]}/yr`}</span>
                     </div>
                     <div
-                        style={{ display: data.services.service03.isChecked == true ? 'flex' : 'none' }}
+                        style={{ display: data.services.service03.isChecked === true ? 'flex' : 'none' }}
                         className="final-services-informations"
                     >
                         <span>{data.services.service03.name}</span>

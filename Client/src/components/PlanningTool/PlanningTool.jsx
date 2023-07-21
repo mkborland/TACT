@@ -39,30 +39,30 @@ const unitExerciseTemplate = {
     unitCostSum: "0" //^^
 }
 
-const formTemplate = {
-    name: '',
-    email: '',
-    number: '',
-    plan: {
-        name: 'arcade',
-        value: 9,
-    },
-    typePlan: "Monthly",
-    services: {
-        service01: {
-            name: 'Online service',
-            isChecked: false
-        },
-        service02: {
-            name: 'Larger storage',
-            isChecked: false
-        },
-        service03: {
-            name: 'Customizable profile',
-            isChecked: false
-        }
-    },
-}
+// const formTemplate = {
+//     name: '',
+//     email: '',
+//     number: '',
+//     plan: {
+//         name: 'arcade',
+//         value: 9,
+//     },
+//     typePlan: "Monthly",
+//     services: {
+//         service01: {
+//             name: 'Online service',
+//             isChecked: false
+//         },
+//         service02: {
+//             name: 'Larger storage',
+//             isChecked: false
+//         },
+//         service03: {
+//             name: 'Customizable profile',
+//             isChecked: false
+//         }
+//     },
+// }
 
 function PlanningTool() {
     const [data, setData] = useState(unitExerciseTemplate)
@@ -88,8 +88,8 @@ function PlanningTool() {
 
     // to keep the 'Next Step' button in the same place
     const styleToActions = isFarstStep ? 'end' : 'space-between'
-    const isThankyouStep = currentStep == formComponents.length - 1 ? 'center' : 'space-between'
-    const displayOff = currentStep != formComponents.length - 1 ? 'flex' : 'none'
+    const isThankyouStep = currentStep === formComponents.length - 1 ? 'center' : 'space-between'
+    const displayOff = currentStep !== formComponents.length - 1 ? 'flex' : 'none'
 
     // DeltaFox: This code was grabbed from this site: https://www.frontendmentor.io/solutions/multistep-form-isMXbZc7cy.  You can go there to see the intended functionality and original source code.
     return (
@@ -116,7 +116,7 @@ function PlanningTool() {
                     <form onSubmit={(e) => changeStep(currentStep + 1, e)} className='form' style={{ justifyContent: isThankyouStep }}>
                         <div className="inputs-container">{currentComponent}</div>
                         <div className="actions" style={{ justifyContent: styleToActions, display: displayOff }}>
-                            {!isFarstStep && currentStep != formComponents.length - 1 ? (
+                            {!isFarstStep && currentStep !== formComponents.length - 1 ? (
                                 <button
                                     type="button"
                                     className="btn-go-back"
