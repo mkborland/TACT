@@ -2,7 +2,7 @@
 import ExerciseInfo from "./ExerciseInfoPg1"
 import YourPlan from "./AircraftInfoPg2"
 import PickAddOns from "./AirfareInfoPg3"
-import FinishingUp from "./PlanningToolPg4"
+import Lodging from "./PlanningToolPg4"
 import Thanks from "./PlanningToolPg5"
 import StepInformations from "./StepInformations"
 
@@ -55,7 +55,7 @@ function PlanningTool() {
         <ExerciseInfo data={data} updateFileHandler={updateFileHandler} />,
         <YourPlan data={data} updateFielHandler={updateFileHandler} />,
         <PickAddOns data={data} updateFielHandler={updateFileHandler} />,
-        <FinishingUp data={data} />,
+        <Lodging data={data} />,
         <Thanks />
     ]
 
