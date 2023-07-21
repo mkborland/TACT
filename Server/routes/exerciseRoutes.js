@@ -1,5 +1,5 @@
 import express from "express";
-import { requestExercise, requestUnitExercise, requestExerciseAircraft, requestAllExercises, requestAllUnitExercises, requestAllExerciseAircraft, addExercise, addUnitExercise, addExerciseAircraft, updateExercise } from "../controllers/exerciseController.js";
+import { requestExercise, requestUnitExercise, requestExerciseAircraft, requestAllExercises, requestAllUnitExercises, requestAllExerciseAircraft, addExercise, saveUnitExercise, updateUnitExercise, addExerciseAircraft, updateExercise } from "../controllers/exerciseController.js";
 
 const router = express.Router();
 
@@ -17,7 +17,9 @@ router.route("/get_all_exercise_aircraft").get(requestAllExerciseAircraft);
 
 router.route("/add_exercise").post(addExercise);
 
-router.route("/add_unit_exercise").post(addUnitExercise);
+router.route("/save_unit_exercise").post(saveUnitExercise);
+
+router.route("/update_unit_exercise").post(updateUnitExercise);
 
 router.route("/add_exercise_aircraft").post(addExerciseAircraft);
 

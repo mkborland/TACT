@@ -4,7 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="16b37374-88ff-402c-b42b-788f598b2262" name="Changes" comment="" />
+    <list default="true" id="16b37374-88ff-402c-b42b-788f598b2262" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Client/src/components/PlanningTool/AircraftInfoPg2.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Client/src/components/PlanningTool/AirfareInfoPg3.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client/src/Deprecated Files/FlightSearch/FlightSearch.js" beforeDir="false" afterPath="$PROJECT_DIR$/Client/src/Deprecated Files/FlightSearch/FlightSearch.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client/src/Deprecated Files/NewExerciseHeader/NewExerciseHeader.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client/src/components/FlightTable/FlightTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/Client/src/components/FlightTable/FlightTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client/src/components/PlanningTool/PlanningTool.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Client/src/components/PlanningTool/PlanningTool.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client/src/components/PlanningTool/PlanningToolPg2.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client/src/components/PlanningTool/PlanningToolPg3.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client/src/components/PlanningTool/PlanningToolPg4.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Client/src/components/PlanningTool/PlanningToolPg4.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client/src/context/AppContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/Client/src/context/AppContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client/src/hooks/useForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Client/src/hooks/useForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client/src/styles/PlanningTool.css" beforeDir="false" afterPath="$PROJECT_DIR$/Client/src/styles/PlanningTool.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/controllers/exerciseController.js" beforeDir="false" afterPath="$PROJECT_DIR$/Server/controllers/exerciseController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/routes/exerciseRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/Server/routes/exerciseRoutes.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,20 +36,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/hchapman7/Desktop/Code/TACT&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "Merging flowers-planning-tool-rebased",
+    "last_opened_file_path": "/Users/hchapman7/Desktop/Code/TACT",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="01_20230516170518_users.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/Server/db/migrations/01_20230516170518_users.js" working-dir="$PROJECT_DIR$/Server/db/migrations">
       <method v="2" />
@@ -56,6 +71,7 @@
       <workItem from="1689617320914" duration="3364000" />
       <workItem from="1689630063521" duration="2251000" />
       <workItem from="1689636807807" duration="865000" />
+      <workItem from="1689983263232" duration="169000" />
     </task>
     <servers />
   </component>

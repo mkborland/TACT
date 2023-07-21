@@ -1,8 +1,8 @@
 // components
 import ExerciseInfo from "./ExerciseInfoPg1"
-import YourPlan from "./PlanningToolPg2"
-import PickAddOns from "./PlanningToolPg3"
-import FinishingUp from "./PlanningToolPg4"
+import YourPlan from "./AircraftInfoPg2"
+import PickAddOns from "./AirfareInfoPg3"
+import Lodging from "./PlanningToolPg4"
 import Thanks from "./PlanningToolPg5"
 import StepInformations from "./StepInformations"
 
@@ -39,31 +39,6 @@ const unitExerciseTemplate = {
     unitCostSum: "0" //^^
 }
 
-// const formTemplate = {
-//     name: '',
-//     email: '',
-//     number: '',
-//     plan: {
-//         name: 'arcade',
-//         value: 9,
-//     },
-//     typePlan: "Monthly",
-//     services: {
-//         service01: {
-//             name: 'Online service',
-//             isChecked: false
-//         },
-//         service02: {
-//             name: 'Larger storage',
-//             isChecked: false
-//         },
-//         service03: {
-//             name: 'Customizable profile',
-//             isChecked: false
-//         }
-//     },
-// }
-
 function PlanningTool() {
     const [data, setData] = useState(unitExerciseTemplate)
 
@@ -78,9 +53,9 @@ function PlanningTool() {
     // get the pages of the steps
     const formComponents = [
         <ExerciseInfo data={data} updateFileHandler={updateFileHandler} />,
-        <YourPlan data={data} updateFielHandler={updateFileHandler} />,
-        <PickAddOns data={data} updateFielHandler={updateFileHandler} />,
-        <FinishingUp data={data} />,
+        <YourPlan data={data} updateFileHandler={updateFileHandler} />,
+        <PickAddOns data={data} updateFileHandler={updateFileHandler} />,
+        <Lodging data={data} updateFileHandler={updateFileHandler}/>,
         <Thanks />
     ]
 
@@ -104,7 +79,7 @@ function PlanningTool() {
                 </aside>
 
                 <div className="header-and-form-container">
-                    <div className="header-container">
+                    {/* <div className="header-container">
                         <h1>
                             {currentStep + 1 >= formComponents.length ? null : headerText[currentStep].h1}
                         </h1>
@@ -112,7 +87,7 @@ function PlanningTool() {
                         <p>
                             {currentStep + 1 >= formComponents.length ? null : headerText[currentStep].p}
                         </p>
-                    </div>
+                    </div> */}
                     <form onSubmit={(e) => changeStep(currentStep + 1, e)} className='form' style={{ justifyContent: isThankyouStep }}>
                         <div className="inputs-container">{currentComponent}</div>
                         <div className="actions" style={{ justifyContent: styleToActions, display: displayOff }}>
