@@ -12,17 +12,18 @@ function YourInfo({ data, updateFileHandler }) {
     // function to change the className of the input and
     // label to warn that the client has not filled in that field
     const verifyInputsInvalids = (e) => {
-        e.target.classList.add('inputInvalid');
-        e.target.labels[0].className = 'inputLabel beforeInputInvalid';
+        // e.target.classList.add('inputInvalid');
+        // e.target.labels[0].className = 'inputLabel beforeInputInvalid';
     };
 
     //function to bring back to normal the input
     //that the client filled in correctly
     const verifyInputs = (e) => {
-        updateFileHandler(e.target.id, e.target.value);
+        updateFileHandler(e.target.id, e.target.value); //fills in template based on key value pair
+        console.log(e.target)
 
-        e.target.classList.remove("inputInvalid");
-        e.target.labels[0].className = 'inputLabel';
+        // e.target.classList.remove("inputInvalid");
+        // e.target.labels[0].className = 'inputLabel';
 
     };
 
@@ -37,8 +38,8 @@ function YourInfo({ data, updateFileHandler }) {
                     className="input"
                     type="text"
                     name="name"
-                    id="name"
-                    value={data.name || ""}
+                    id="exerciseID"
+                    value={data.exerciseID.toString() || ""}  //where the text fields update based on data object (template)
                     onChange={(e) => verifyInputs(e)}
                     placeholder="Exercise Name will auto-convert to upper-case"
                     onInvalid={verifyInputsInvalids}
@@ -55,9 +56,9 @@ function YourInfo({ data, updateFileHandler }) {
                             label="Start Date"
                             value={startDate}
                             sx={{ backgroundColor: 'white' }}
-                            // onChange={(e) => verifyInputs(e)}
+                            //onChange={(e) => verifyInputs(e)}
                             onChange={(newValue) => setStartDate(newValue)}
-                            // onInvalid={verifyInputsInvalids}
+                            //onInvalid={verifyInputsInvalids}
                             />
                         <DatePicker
                             label="End Date"
@@ -78,8 +79,8 @@ function YourInfo({ data, updateFileHandler }) {
                     className="input"
                     type="text"
                     name="departingLocation"
-                    id="departingLocation"
-                    value={data.departingLocation || ""}
+                    id="locationFrom"
+                    value={data.locationFrom || ""}
                     onChange={(e) => verifyInputs(e)}
                     placeholder="e.g. March ARB, CA"
                     onInvalid={verifyInputsInvalids}
@@ -93,8 +94,8 @@ function YourInfo({ data, updateFileHandler }) {
                     className="input"
                     type="text"
                     name="destination"
-                    id="destination"
-                    value={data.destination || ""}
+                    id="locationTo"
+                    value={data.locationTo || ""}
                     onChange={(e) => verifyInputs(e)}
                     placeholder="Name of military installation, airfield, city, or region"
                     onInvalid={verifyInputsInvalids}

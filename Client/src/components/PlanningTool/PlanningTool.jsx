@@ -1,5 +1,5 @@
 // components
-import ExerciseInfo from "./PlanningToolPg1"
+import ExerciseInfo from "./ExerciseInfoPg1"
 import YourPlan from "./PlanningToolPg2"
 import PickAddOns from "./PlanningToolPg3"
 import FinishingUp from "./PlanningToolPg4"
