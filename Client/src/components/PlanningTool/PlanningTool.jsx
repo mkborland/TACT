@@ -1,6 +1,6 @@
 // components
 import ExerciseInfo from "./ExerciseInfoPg1"
-import YourPlan from "./PlanningToolPg2"
+import YourPlan from "./AircraftInfoPg2"
 import PickAddOns from "./PlanningToolPg3"
 import FinishingUp from "./PlanningToolPg4"
 import Thanks from "./PlanningToolPg5"
@@ -37,31 +37,6 @@ const unitExerciseTemplate = {
     userID: "1",    //pull from current user
     personnelSum: "0", //calculated from total aircraft
     unitCostSum: "0" //^^
-}
-
-const formTemplate = {
-    name: '',
-    email: '',
-    number: '',
-    plan: {
-        name: 'arcade',
-        value: 9,
-    },
-    typePlan: "Monthly",
-    services: {
-        service01: {
-            name: 'Online service',
-            isChecked: false
-        },
-        service02: {
-            name: 'Larger storage',
-            isChecked: false
-        },
-        service03: {
-            name: 'Customizable profile',
-            isChecked: false
-        }
-    },
 }
 
 function PlanningTool() {

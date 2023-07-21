@@ -91,11 +91,11 @@ const AppProvider = ({ children }) => {
         tryLogin,
         trySignUp,
         setNewExerciseObject,
-        newExerciseObject,
-        setNewUnitExerciseObject,
-        newUnitExerciseObject,
-        setNewExerciseAircraftObject,
-        newExerciseAircraftObject
+        // newExerciseObject,
+        // setNewUnitExerciseObject,
+        // newUnitExerciseObject,
+        // setNewExerciseAircraftObject,
+        // newExerciseAircraftObject
       }}
     >
       {children}

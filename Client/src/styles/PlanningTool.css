@@ -52,7 +52,7 @@
 /* main-container */
 .main-container {
     background-color: var(--white);
-
+    size: 100%;
     padding: 2rem 1.5rem;
     border-radius: .7rem;
 
