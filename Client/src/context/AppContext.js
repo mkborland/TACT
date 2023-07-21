@@ -262,7 +262,10 @@ const AppProvider = ({ children }) => {
         trySignUp,
         setNewExerciseObject,
         newExerciseObject,
-        defaultExerciseObject,
+        setNewUnitExerciseObject,
+        newUnitExerciseObject,
+        setNewExerciseAircraftObject,
+        newExerciseAircraftObject
       }}
     >
       {children}
