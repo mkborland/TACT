@@ -38,222 +38,52 @@ const AppProvider = ({ children }) => {
 
   const errorMessage = (message) => {};
 
-  const defaultExerciseObject = {
-    id: "",
-    userId: "1",
-    basicInfo: {
-      exercise: "Exercise Name",
-      unit: "375 CPST",
-      dateCreated: "2023-05-19",
-      author: "admin",
-    },
-    overView: {
-      startEx: "2022-05-15",
-      endEx: "0",
-      startLocation: "Tucsan, AZ",
-      endLocation: "0",
-      totalPersonal: "0",
-      totalCost: 0,
-    },
-    airCraftInventory: {
-      airCraftTotal: 0,
-      airCraftPersonalTotal: 0,
-      airCraftDetails: [
-        {
-          airCraftType: "KC-135",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-        {
-          airCraftType: "C-130",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-        {
-          airCraftType: "C-17",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-        {
-          airCraftType: "C-5",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-        {
-          airCraftType: "F-22",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-        {
-          airCraftType: "F-35",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-        {
-          airCraftType: "A-10",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-        {
-          airCraftType: "F-15c",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-      ],
-    },
-    perDiem: {
-      total: 0,
-      mAndIE: {
-        total: "0",
-        providedAmount: "0",
-        ratePer: "0",
-        incidentalExpenses: "0",
-      },
-      lodging: {
-        total: 0,
-        govLodgingInfo: {
-          type: "Government Lodging",
-          ratePerOccupancy: "0",
-          occupancy: "0",
-          total: "0",
-        },
-        comLodgingInfo: {
-          type: "Commercial Lodging",
-          ratePerOccupancy: "0",
-          occupancy: "0",
-          total: "0",
-        },
-        fieLodgingInfo: {
-          type: "Field Conditions",
-          ratePerOccupancy: "0",
-          occupancy: "0",
-          total: "0",
-        },
-      },
-      airFare: {
-        total: 0,
-        comAirFare: {
-          total: "0",
-          occupancy: "0",
-          rate: "0",
-        },
-        govAirFare: {
-          total: "0",
-          occupancy: "0",
-          rate: "0",
-        },
-      },
-    },
-  };
-
   const [newExerciseObject, setNewExerciseObject] = useState({
-    id: "",
-    userId: "1",
-    basicInfo: {
-      exercise: "Exercise Name",
-      unit: "375 CPST",
-      dateCreated: "2023-05-19",
-      author: "admin",
-    },
-    overView: {
-      startEx: "2022-05-15",
-      endEx: "0",
-      startLocation: "Tucsan, AZ",
-      endLocation: "0",
-      totalPersonal: "0",
-      totalCost: 0,
-    },
-    airCraftInventory: {
-      airCraftTotal: 0,
-      airCraftPersonalTotal: 0,
-      airCraftDetails: [
-        {
-          airCraftType: "KC-135",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-        {
-          airCraftType: "C-130",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-        {
-          airCraftType: "C-17",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-        {
-          airCraftType: "C-5",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-        {
-          airCraftType: "F-22",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-        {
-          airCraftType: "F-35",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-        {
-          airCraftType: "A-10",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-        {
-          airCraftType: "F-15c",
-          airCraftAmount: "0",
-          airCraftPersonal: "0",
-        },
-      ],
-    },
-    perDiem: {
-      total: 0,
-      mAndIE: {
-        total: "0",
-        providedAmount: "0",
-        ratePer: "0",
-        incidentalExpenses: "0",
-      },
-      lodging: {
-        total: 0,
-        govLodgingInfo: {
-          type: "Government Lodging",
-          ratePerOccupancy: "0",
-          occupancy: "0",
-          total: "0",
-        },
-        comLodgingInfo: {
-          type: "Commercial Lodging",
-          ratePerOccupancy: "0",
-          occupancy: "0",
-          total: "0",
-        },
-        fieLodgingInfo: {
-          type: "Field Conditions",
-          ratePerOccupancy: "0",
-          occupancy: "0",
-          total: "0",
-        },
-      },
-      airFare: {
-        total: 0,
-        comAirFare: {
-          total: "0",
-          occupancy: "0",
-          rate: "0",
-        },
-        govAirFare: {
-          total: "0",
-          occupancy: "0",
-          rate: "0",
-        },
-      },
-    },
+    exerciseID: "",
+    exerciseName: "test",
+    status: "false",
+    dateCreated: "20 July 2023",
+    location: "Tucson, AZ",
+    exerciseStartDate: "21 July 2023",
+    exerciseEndDate: "22 July 2023",
+    userID: "1",
+    personnelSum: "1",
+    costSum: "3000"
   });
 
+  const [newUnitExerciseObject, setNewUnitExerciseObject] = useState({
+    unitExerciseID: "",
+    exerciseID: "1",
+    status: "false",
+    dateCreated: "20 July 2023",
+    locationFrom: "Scott AFB, IL",
+    locationTo: "Tucson, AZ",
+    travelStartDate: "21 July 2023",
+    travelEndDate: "22 July 2023",
+    unit: "OL-2",
+    userID: "1",
+    personnelSum: "1",
+    costSum: "3000"
+  });
+
+  const [newExerciseAircraftObject, setNewExerciseAircraftObject] = useState({
+    unitExerciseID: "1",
+    aircraftType: "F-22",
+    aircraftCount: "2",
+    personnelCount: "2",
+    commercialAircraftCount: "2",
+    commercialAircraftCost: "400",
+    governmentAircraftCount: "0",
+    commercialLodgingCount: "2",
+    commercialLodgingCost: "500",
+    governmentLodgingCount: "0",
+    governmentLodgingCost: "0",
+    fieldLodgingCount: "0",
+    lodgingPerDiem: "600",
+    mealPerDiem: "300",
+    mealProvidedCount: "0",
+    mealNotProvidedCount: "2"
+  });
   return (
     <AppContext.Provider
       value={{
