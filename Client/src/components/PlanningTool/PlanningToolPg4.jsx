@@ -7,47 +7,47 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import { useState } from "react";
-import { useAppContext } from "../../context/AppContext";
+// import { useAppContext } from "../../context/AppContext";
 // import { baseApiUrl, TactApi } from "../../api/TactApi.js";
 import TactApi from "../../api/TactApi"
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 //styles
 import '../../styles/PlanningToolPg4.css'
 
-const Lodging = () => {
+const Lodging = ({data, updateFileHandler}) => {
     //Initialization
     const baseApiUrl = "http://localhost:8080/api";
-    const { newExerciseObject, setNewExerciseObject, defaultExerciseObject } =
-      useAppContext();
-    const copy = newExerciseObject;
-    const date = newExerciseObject.overView.startEx;
-    const location = newExerciseObject.overView.startLocation;
-    const totalPeopleObj = newExerciseObject.overView.totalPersonal;
-    const year = date.slice(0, 4);
-    const month = date.slice(5, 7);
+
+    // const date = data.travelStartDate;
+    const location = data.locationTo;
+    const totalPeopleObj = data.personnelSum;
+    const year = "2022"
+    // date.slice(0, 4);
+    const month = "07"
+    // date.slice(5, 7);
     const city = location.split(",")[0];
     const state = location.split(",")[1].trim();
-    const nav = useNavigate();
+    // const nav = useNavigate();
     //Inputs
     const [numGovLodge, setNumGovLodge] = useState(0);
     const [numComLodge, setNumComLodge] = useState(0);
     const [numFieldCon, setNumFieldCon] = useState(0);
     const [numMealsProv, setnumMealsProv] = useState(0);
-    const [nameExercise, setNameExercise] = useState("New Exercise");
+    // const [nameExercise, setNameExercise] = useState("New Exercise");
     //Calcs
-    if (isNaN(parseInt(numGovLodge))) {
-      setNumGovLodge(0);
-    }
-    if (isNaN(parseInt(numComLodge))) {
-      setNumComLodge(0);
-    }
-    if (isNaN(parseInt(numFieldCon))) {
-      setNumFieldCon(0);
-    }
-    if (isNaN(parseInt(numMealsProv))) {
-      setnumMealsProv(0);
-    }
+    // if (isNaN(parseInt(numGovLodge))) {
+    //   setNumGovLodge(0);
+    // }
+    // if (isNaN(parseInt(numComLodge))) {
+    //   setNumComLodge(0);
+    // }
+    // if (isNaN(parseInt(numFieldCon))) {
+    //   setNumFieldCon(0);
+    // }
+    // if (isNaN(parseInt(numMealsProv))) {
+    //   setnumMealsProv(0);
+    // }
   
     const buttonTing = async () => {
       const endPoint = "/get_rates";
@@ -118,8 +118,8 @@ const Lodging = () => {
               setnumMealsProv(e.target.value);
             }}
           />
-          <br />
-          <TextField
+          {/* <br /> */}
+          {/* <TextField
             id="numMealsProv"
             label="Exercise Name"
             variant="outlined"
@@ -127,38 +127,42 @@ const Lodging = () => {
             onChange={(e) => {
               setNameExercise(e.target.value);
             }}
-          />
+          /> */}
         </CardContent>
         <CardActions>
           <Button
             onClick={() =>
               buttonTing().then((data) => {
-                const LodgingRate = data.monthlyrates[parseInt(month) - 1].value;
-                const totalPpl =
-                  parseInt(numGovLodge) +
-                  parseInt(numComLodge) +
-                  parseInt(numFieldCon);
-                const mealsReq = totalPpl - parseInt(numMealsProv);
-                copy.perDiem.lodging.total = parseInt(numComLodge) * LodgingRate;
-                copy.perDiem.lodging.govLodgingInfo.occupancy =
-                  parseInt(numGovLodge);
-                copy.perDiem.lodging.comLodgingInfo.ratePerOccupancy =
-                  LodgingRate;
-                copy.perDiem.lodging.comLodgingInfo.occupancy =
-                  parseInt(numComLodge);
-                copy.perDiem.lodging.comLodgingInfo.total =
-                  parseInt(numComLodge) * LodgingRate;
-                copy.perDiem.lodging.fieLodgingInfo.occupancy =
-                  parseInt(numFieldCon);
-                copy.perDiem.mAndIE.ratePer = data.mealrate;
-                copy.perDiem.mAndIE.total = parseInt(data.mealrate) * mealsReq;
-                copy.perDiem.mAndIE.providedAmount = parseInt(numMealsProv);
-                copy.basicInfo.exercise = nameExercise;
-                setNewExerciseObject(copy);
-                TactApi.postExercises(newExerciseObject).then(() => {
-                  setNewExerciseObject(defaultExerciseObject);
+
+                //TODO CHANGE TO USE VALUES PULLED FROM API
+
+                // const LodgingRate = data.monthlyrates[parseInt(month) - 1].value;
+                updateFileHandler(unitCostSum, "50000")
+                // const totalPpl =
+                //   parseInt(numGovLodge) +
+                //   parseInt(numComLodge) +
+                //   parseInt(numFieldCon);
+                // const mealsReq = totalPpl - parseInt(numMealsProv);
+                // copy.perDiem.lodging.total = parseInt(numComLodge) * LodgingRate;
+                // copy.perDiem.lodging.govLodgingInfo.occupancy =
+                //   parseInt(numGovLodge);
+                // copy.perDiem.lodging.comLodgingInfo.ratePerOccupancy =
+                //   LodgingRate;
+                // copy.perDiem.lodging.comLodgingInfo.occupancy =
+                //   parseInt(numComLodge);
+                // copy.perDiem.lodging.comLodgingInfo.total =
+                //   parseInt(numComLodge) * LodgingRate;
+                // copy.perDiem.lodging.fieLodgingInfo.occupancy =
+                //   parseInt(numFieldCon);
+                // copy.perDiem.mAndIE.ratePer = data.mealrate;
+                // copy.perDiem.mAndIE.total = parseInt(data.mealrate) * mealsReq;
+                // copy.perDiem.mAndIE.providedAmount = parseInt(numMealsProv);
+                // copy.basicInfo.exercise = nameExercise;
+                // setNewExerciseObject(copy);
+                // TactApi.postExercises(newExerciseObject).then(() => {
+                //   setNewExerciseObject(defaultExerciseObject);
                 //   nav("/Dashboard/History", { replace: true });
-                });
+                // })
               })
             }
             size="small"

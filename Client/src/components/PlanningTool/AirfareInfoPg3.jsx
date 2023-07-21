@@ -21,7 +21,7 @@ import { texts } from "../../hooks/texts.jsx"
 // styles
 import "../../styles/PlanningToolPg3.css"
 
-function PickAddOns({ templates, updateFielHandler }) {
+function PickAddOns({ templates, updateFileHandler }) {
     const { services } = texts()
     const { newExerciseAircraftObject, setNewExerciseAircraftObject } = useAppContext();
     const newExerciseAircraftObject2 = newExerciseAircraftObject;

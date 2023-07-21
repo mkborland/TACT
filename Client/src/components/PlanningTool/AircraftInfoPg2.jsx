@@ -20,7 +20,7 @@ import iconPro from '../../assets/images/icon-pro.svg'
 // styles
 import '../../styles/PlanningToolPg2.css'
 
-function YourPlan({ data, updateFielHandler }) {
+function YourPlan({ data, updateFileHandler }) {
     const { plans } = texts();
 
     const unitAircraftTemplate = { //will need multiple per unit?

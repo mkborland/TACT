@@ -53,9 +53,9 @@ function PlanningTool() {
     // get the pages of the steps
     const formComponents = [
         <ExerciseInfo data={data} updateFileHandler={updateFileHandler} />,
-        <YourPlan data={data} updateFielHandler={updateFileHandler} />,
-        <PickAddOns data={data} updateFielHandler={updateFileHandler} />,
-        <Lodging data={data} />,
+        <YourPlan data={data} updateFileHandler={updateFileHandler} />,
+        <PickAddOns data={data} updateFileHandler={updateFileHandler} />,
+        <Lodging data={data} updateFileHandler={updateFileHandler}/>,
         <Thanks />
     ]
 
