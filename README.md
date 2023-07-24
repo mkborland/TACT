@@ -44,32 +44,39 @@ docker-compose up
 ## Using PM2 for Development
 
 - Because this application is designed to run as a group of containers, development can be painful sometimes due to the nature of how docker images work. PM2 alleviates this by automating running both client and server locally while keeping the database in a container. 
-- To start without changing any files, simply follow the "How to use" steps from above. 
-- If using Docker Desktop, navigate to the GUI and click the stop button for only the client and server container. 
-- Remove both stopped containers by hitting the garbage can on the right hand side. 
-- If done properly, you should still see the TACT cluster with only the database container inside and running.
 
-- If using Docker CLI, run 
+- To start without changing any files, simply follow the "How to use" steps from above to start, then the following depending on if you are using Docker Desktop or just the Docker CLI
+
+### If using Docker Desktop
+- Navigate to the GUI and click the stop button for only the client and server container. 
+
+### If using Docker CLI, run 
 ```
 docker-compose up db
 ```
+
 - Then open a new terminal window and run
+
 ```
 docker stop tact-server-1
 ```
-```
-docker rm tact-server-1
-```
+
 - If done properly run 
 ```
-docker ps -a
+docker ps 
 ```
-- There should only be the postgres container running and no other containers using ports 8080 or 3000.
+- There should only be the postgres container running.
 
 - Make sure you are in the TACT directory then run 
+
 ```
 npm install pm2 -g
 ```
+
+- If you get permission errors, you may need to use sudo
+
+- Finally run 
+
 ```
 ./start.sh
 ```

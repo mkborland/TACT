@@ -194,6 +194,23 @@ const saveUnitExercise = async (req, res) => {
         });
 };
 
+const lookupUnitExercise = async (req, res) => {
+    const userID = req.query.userID
+    knex('unitexercises')
+        .select("*")
+        .where({ userID: userID, status: false })
+        .then((data) => {
+            if (data.length !== 0) {
+                return knex('unitexercises')
+                    .select('*')
+                    .where({ userID: userID, status: false })
+                    .then((data) => res.status(200).json(data[0]))
+            } else {
+                res.status(202).send(`No exercise draft found for ${userID}`);
+            }
+        })
+};
+
 const addExerciseAircraft = async (req, res) => {
     const { unitExerciseID, aircraftType, aircraftCount, personnelCount, commercialAirfareCount, commercialAirfareCost, governmentAirfareCount, commercialLodgingCount, commercialLodgingCost, governmentLodgingCount, governmentLodgingCost,fieldLodgingCount, lodgingPerDiem, mealPerDiem, mealProvidedCount, mealNotProvidedCount } = req.body
     knex('exerciseaircraft')
@@ -229,4 +246,4 @@ const addExerciseAircraft = async (req, res) => {
         });
 };
 
-export { requestExercise, requestUnitExercise, requestExerciseAircraft, requestAllExercises, requestAllUnitExercises, requestAllExerciseAircraft, addExercise, saveUnitExercise, updateUnitExercise, addExerciseAircraft, updateExercise }
+export { requestExercise, requestUnitExercise, requestExerciseAircraft, requestAllExercises, requestAllUnitExercises, requestAllExerciseAircraft, addExercise, saveUnitExercise,  addExerciseAircraft, updateExercise, lookupUnitExercise, updateUnitExercise }
