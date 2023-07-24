@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppContext } from "../../context/AppContext.js";
+// import { useAppContext } from "../../context/AppContext.js";
 import {
   Box,
   Card,
@@ -18,8 +18,8 @@ const SignUp = () => {
   const [passwordOne, setPasswordOne] = useState();
   const [passwordTwo, setPasswordTwo] = useState();
   const [displayMessage, setDisplayMessage] = useState(false);
-  const [successCode, setSuccessCode] = useState();
-  const { trySignUp } = useAppContext();
+  // const [successCode, setSuccessCode] = useState();
+  // const { trySignUp } = useAppContext();
   const nav = useNavigate();
 
   const saveUserName = (value) => {
@@ -34,7 +34,7 @@ const SignUp = () => {
 
   const validatePass = (passOne, passTwo) => {
     if (passOne === passTwo && userName !== "" && passOne !== "") {
-      setSuccessCode(trySignUp(userName, passOne))
+      // setSuccessCode(trySignUp(userName, passOne))
       nav("/")
     } else {
       setDisplayMessage(true);

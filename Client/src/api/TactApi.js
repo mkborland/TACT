@@ -8,11 +8,13 @@ import AddUser from "./Users/add/AddUser.js";
 import GetUser from "./Users/get/GetUser.js";
 import UpdateUser from "./Users/update/UpdateUser.js";
 import PostExercises from "./exercises/post/PostExercises.js";
+import GetAllUnitExercises from "./UnitExercises/get/GetAllUnitExercises";
 
 const TactApi = {
   getDashboard: GetDashboard,
   getExercises: GetExercises,
   getAllExercises: GetAllExercises,
+  getAllUnitExercises: GetAllUnitExercises,
   postExercises: PostExercises,
   getAllAircraft: GetAllAircraft,
   updateAircraft: UpdateAircraft,

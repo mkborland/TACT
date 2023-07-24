@@ -1,9 +1,5 @@
 import { useAppContext } from "../../context/AppContext.js";
 import DefinedListItem from "../Util/DefinedListItem.js";
-import CreateIcon from "@mui/icons-material/Create";
-import HistoryIcon from "@mui/icons-material/History";
-import AddIcon from "@mui/icons-material/Add";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Divider } from "@mui/material";
 
@@ -11,6 +7,7 @@ import { Divider } from "@mui/material";
 
 const newExerciseForm = "/Dashboard/NewExerciseForm"
 const NewDashboardPage = "/Dashboard/DashboardPage";
+const NewPlanningTool = "/Dashboard/PlanningToolPage";
 const HistoryPage = "/Dashboard/History";
 const EditTablesPage = "/Dashboard/EditTablesPage";
 const ManageUsersPage = "/Dashboard/ManageUsersPage";
@@ -22,8 +19,7 @@ const ActionObject = [
     link: NewDashboardPage,
   },
   { text: "Profile", link: ManageUsersPage },
-  //just goes to dashboard until page is made
-  { text: "New Form", link: "/Dashboard" },
+  { text: "New Form", link: NewPlanningTool },
   {
     text: "Default Table",
     link: EditTablesPage,
@@ -38,7 +34,7 @@ const ActionObjectGeneral = [
 
 const UserActionItems = () => {
   const { UserInfo } = useAppContext();
-  if(UserInfo == undefined){
+  if(UserInfo === undefined){
     return <></>
   }
   if (UserInfo.access === "admin") {

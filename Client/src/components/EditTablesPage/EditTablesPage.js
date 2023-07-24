@@ -10,7 +10,7 @@ import { Typography, Button, Divider, TextField } from '@mui/material';
 import TactApi from "../../api/TactApi.js";
 
 const EditTables = () => {
-  const [airNum, setAirNum] = useState(16)
+  const [airNum] = useState(16)
   const [airframeList, setAirframeList] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -48,7 +48,7 @@ const EditTables = () => {
             pain2.push(<TableCell align="center">N/A</TableCell>)
             counter++
           }
-          const obj = { id: entry.id, pr: entry.personnelCount }
+          // const obj = { id: entry.id, pr: entry.personnelCount }
           pain2.push(
             <TableCell align="right" key={entry.id}>
               <TextField

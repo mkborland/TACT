@@ -6,7 +6,8 @@ import PersistentDrawerLeft from "./components/MainPage/MainPage.js";
 import EditTables from "./components/EditTablesPage/EditTablesPage";
 import ManageUsers from "./components/ManageUsersPage/ManageUsersPage";
 import DashboardPage from "./pages/DashboardPage";
-import NewExerciseForm from "./components/NewExcersizeForm/NewExerciseForm";
+import NewExerciseForm from "./components/NewExerciseForm/NewExerciseForm";
+import PlanningTool from "./components/PlanningTool/PlanningTool";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/Dashboard" element={<PersistentDrawerLeft />}>
               <Route path="DashboardPage" element={<DashboardPage />} />
+              <Route path="PlanningToolPage" element={<PlanningTool />} />
               <Route path="EditTablesPage" element={<EditTables />} />
               <Route path="ManageUsersPage" element={<ManageUsers />} />
               <Route path="NewExerciseForm" element={<NewExerciseForm />} />

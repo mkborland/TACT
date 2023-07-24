@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { Outlet } from "react-router-dom";
 import UserActionItems from "../UserActionItems/UserActionItems.js";
 import { useAppContext } from "../../context/AppContext.js";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar from "@mui/material/AppBar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -59,22 +59,22 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function PersistentDrawerLeft() {
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  // const theme = useTheme();
+  const [open] = React.useState(true);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+  // const handleDrawerOpen = () => {
+  //   setOpen(true);
+  // };
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  // const handleDrawerClose = () => {
+  //   setOpen(false);
+  // };
 
   const {UserInfo} = useAppContext()
-  const nav = useNavigate()
+  // const nav = useNavigate()
 
   const title = () => {
-    if(UserInfo != undefined){
+    if(UserInfo !== undefined){
       return `Welcome, ${UserInfo.userName} `
     }else{
       return ""

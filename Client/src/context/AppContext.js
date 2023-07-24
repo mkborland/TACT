@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
-import TactApi from "../api/TactApi.js";
+import React, { useContext, useState } from "react";
+// import TactApi from "../api/TactApi.js";
 
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
-  const [UserInfo, setUser] = useState({
+  const [UserInfo] = useState({
     userName: "admin",
     access: "admin",
   });
@@ -36,7 +36,7 @@ const AppProvider = ({ children }) => {
     //return action was good
   };
 
-  const errorMessage = (message) => {};
+  // const errorMessage = (message) => {};
 
   const [newExerciseObject, setNewExerciseObject] = useState({
     exerciseID: "",
@@ -91,12 +91,11 @@ const AppProvider = ({ children }) => {
         tryLogin,
         trySignUp,
         setNewExerciseObject,
-        newExerciseObject,
-        setNewUnitExerciseObject,
-        newUnitExerciseObject,
-        setNewExerciseAircraftObject,
-        newExerciseAircraftObject
-        // defaultExerciseObject,
+        // newExerciseObject,
+        // setNewUnitExerciseObject,
+        // newUnitExerciseObject,
+        // setNewExerciseAircraftObject,
+        // newExerciseAircraftObject
       }}
     >
       {children}
