@@ -1,7 +1,7 @@
 import baseApiUrl from "../../TactApiConfig.js"
 
-const AddUnitExercise = async (body, token = "") => {
-  const endPoint = "/add_user";
+const SaveUnitExercise = async (body, token = "") => {
+  const endPoint = "/save_unit_exercise";
   const response = await fetch(`${baseApiUrl}${endPoint}`, {
     method: "POST",
     headers: {
@@ -19,4 +19,4 @@ const AddUnitExercise = async (body, token = "") => {
 };
 
 
-export default AddUnitExercise;
+export default SaveUnitExercise;
