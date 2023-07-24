@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import * as React from 'react';
+import { DateTimeAdapter } from '../helper';
 
 // import PropTypes from "prop-types";
 import TactApi from "../api/TactApi.js";
@@ -89,8 +90,8 @@ export default function DashboardPage() {
               {row.exerciseName}
             </TableCell>
             <TableCell align="right">{row.userID}</TableCell>
-            <TableCell align="right">{row.exerciseStartDate}</TableCell>
-            <TableCell align="right">{row.exerciseEndDate}</TableCell>
+            <TableCell align="right">{DateTimeAdapter.toString(row.exerciseStartDate)}</TableCell>
+            <TableCell align="right">{DateTimeAdapter.toString(row.exerciseEndDate)}</TableCell>
             <TableCell align="right">{row.costSum}</TableCell>
           </TableRow>
           <TableRow>
@@ -117,7 +118,7 @@ export default function DashboardPage() {
                                 <TableCell component="th" scope="row">
                                   {unitRow.unit}
                                 </TableCell>
-                                <TableCell>{unitRow.dateCreated}</TableCell>
+                                <TableCell>{DateTimeAdapter.toString(unitRow.dateCreated)}</TableCell>
                                 <TableCell align="right">{unitRow.unitCostSum}</TableCell>
                                 <TableCell align="right">{unitRow.status}</TableCell>
                               </TableRow>
