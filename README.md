@@ -75,5 +75,5 @@ npm install pm2 -g
 ```
 - Once the script is finished, there should be a process list in the terminal showing both tact-api and tact-client
 
-**Warning**
-If you have a db_data_volume folder in the top directory you may need to remove it if you run into issues with the database not seeding properly.
+>**Warning**
+>If you have a db_data_volume folder in the top directory you may need to remove it if you run into issues with the database not seeding properly.
