@@ -1,5 +1,5 @@
 import express from "express";
-import { requestExercise, requestUnitExercise, requestExerciseAircraft, requestAllExercises, requestAllUnitExercises, requestAllExerciseAircraft, addExercise, addUnitExercise, addExerciseAircraft, updateExercise } from "../controllers/exerciseController.js";
+import { requestExercise, requestUnitExercise, requestExerciseAircraft, requestAllExercises, requestAllUnitExercises, requestAllExerciseAircraft, addExercise, saveUnitExercise, addExerciseAircraft, updateExercise, lookupUnitExercise, updateUnitExercise } from "../controllers/exerciseController.js";
 
 const router = express.Router();
 
