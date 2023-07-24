@@ -1,8 +1,23 @@
 import { useState, useEffect, useCallback } from "react";
+import * as React from 'react';
+
 // import PropTypes from "prop-types";
 import TactApi from "../api/TactApi.js";
 // import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+
 import { DataGrid } from '@mui/x-data-grid';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 // import GetAllExercises from "../api/exercises/get/GetAllExercises.js";
@@ -54,67 +69,71 @@ export default function DashboardPage() {
 
   ];
 
-  function DetailPanelContent({ row: rowProp }) {
-
-    const [unitExerciseList, setUnitExerciseList] = useState([]);
-    // const [isLoading, setIsLoading] = useState(true);
-    useEffect(() => {
-      TactApi.getAllUnitExercises().then((data) => {
-        setUnitExerciseList(data);
-        // setIsLoading(false);
-      })
-    }, []);
-
-    const columns = [
-      {
-        field: 'unitExerciseID',
-        headerName: 'ID',
-        headerClassName: 'dashboard-table-header',
-        width: 90,
-        editable: false,
-      },
-      {
-        field: 'exerciseID',
-        headerName: 'Exercise ID',
-        headerClassName: 'dashboard-table-header',
-        width: 150,
-        editable: false,
-
-      },
-      {
-        field: 'status',
-        headerName: 'Status',
-        headerClassName: 'dashboard-table-header',
-        width: 150,
-        editable: false,
-      },
-    ];
-    let rowsByExercise = [];
-    
-    unitExerciseList.forEach(ex => {
-      if (ex.exerciseID == rowProp.exerciseID) {
-        rowsByExercise.push(ex);
-      }
-    });
-
-
+  function Row(props: { row: ReturnType<typeof createData> }) {
+    const { row } = props;
+    const [open, setOpen] = useState(false);
 
     return (
-      <DataGrid
-        columns={columns}
-        rows={rowsByExercise}
-        getRowId={(row) => row.unitExerciseID}
-      >
-      </DataGrid>
+        <React.Fragment>
+          <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+            <TableCell>
+              <IconButton
+                  aria-label="expand row"
+                  size="small"
+                  onClick={() => setOpen(!open)}
+              >
+                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+            </TableCell>
+            <TableCell component="th" scope="row">
+              {row.exerciseName}
+            </TableCell>
+            <TableCell align="right">{row.userID}</TableCell>
+            <TableCell align="right">{row.exerciseStartDate}</TableCell>
+            <TableCell align="right">{row.exerciseEndDate}</TableCell>
+            <TableCell align="right">{row.costSum}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+              <Collapse in={open} timeout="auto" unmountOnExit>
+                <Box sx={{ margin: 1 }}>
+                  <Typography variant="h6" gutterBottom component="div">
+                    Unit Cost Estimation Forms
+                  </Typography>
+                  <Table size="small" aria-label="unit-forms">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Unit</TableCell>
+                        <TableCell>Date Created</TableCell>
+                        <TableCell align="right">Est. Cost</TableCell>
+                        <TableCell align="right">Status</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {unitExerciseList.map((unitRow) => {
+                        if (unitRow.exerciseID === row.exerciseID){
+                          return (
+                              <TableRow key={unitRow.unitExerciseID}>
+                                <TableCell component="th" scope="row">
+                                  {unitRow.unit}
+                                </TableCell>
+                                <TableCell>{unitRow.dateCreated}</TableCell>
+                                <TableCell align="right">{unitRow.unitCostSum}</TableCell>
+                                <TableCell align="right">{unitRow.status}</TableCell>
+                              </TableRow>
+                          );
+                        }
+                      }
+                      )}
+                    </TableBody>
+                  </Table>
+                </Box>
+              </Collapse>
+            </TableCell>
+          </TableRow>
+        </React.Fragment>
     );
   }
-
-  const getDetailPanelContent = useCallback(
-    ({ row }) => <DetailPanelContent row={row} />,
-    [],
-  );
-
-  const getDetailPanelHeight = useCallback(() => 400, []);
 
   return (
     <Box sx={{
@@ -125,25 +144,25 @@ export default function DashboardPage() {
         fontSize: 18
       },
     }}>
-      <DataGridPro
-        style={{ color: 'black', borderRadius: 10 }}
-        rows={exerciseList}
-        getRowId={(row) => row.exerciseID}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
-            },
-          },
-        }}
-        rowThreshold={0}
-        getDetailPanelHeight={getDetailPanelHeight}
-        getDetailPanelContent={getDetailPanelContent}
-        pageSizeOptions={[5]}
-        checkboxSelection
-        disableRowSelectionOnClick
-      />
+      <TableContainer component={Paper}>
+        <Table size="small" aria-label="purchases">
+          <TableHead style={{background: '#48dfed5c'}}>
+            <TableRow>
+              <TableCell />
+              <TableCell style={{fontSize: 'large', color: '#282c34', fontWeight: 'bold'}} >Exercise Name</TableCell>
+              <TableCell style={{fontSize: 'large', color: '#282c34', fontWeight: 'bold'}} >Owner</TableCell>
+              <TableCell style={{fontSize: 'large', color: '#282c34', fontWeight: 'bold'}} align="right">Start Date</TableCell>
+              <TableCell style={{fontSize: 'large', color: '#282c34', fontWeight: 'bold'}}  align="right">End Date</TableCell>
+              <TableCell style={{fontSize: 'large', color: '#282c34', fontWeight: 'bold'}}  align="right">Est. Cost</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {exerciseList.map((row) => (
+                <Row key={row.name} row={row} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Box>
   );
 

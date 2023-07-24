@@ -12,6 +12,7 @@ const HistoryPage = "/Dashboard/History";
 const EditTablesPage = "/Dashboard/EditTablesPage";
 const ManageUsersPage = "/Dashboard/ManageUsersPage";
 const LoginPage = "/";
+
 //list for admin role
 const ActionObject = [
   {
