@@ -21,6 +21,8 @@ export function up(knex) {
         table.decimal("mealPerDiem");
         table.integer("mealProvidedCount");
         table.integer("mealNotProvidedCount");
+        table.integer("rentalCount");
+        table.decimal("rentalCost");
     });
 };
 
