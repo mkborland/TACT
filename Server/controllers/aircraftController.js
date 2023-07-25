@@ -50,4 +50,26 @@ const updateAircraft = async (req, res) => {
         })
 };
 
-export { requestAircraft, requestAircraftType, requestAllAircraft, updateAircraft }
+const addAirframe = async (req, res) => {
+    const { aircraftName, personnelCount } = req.body
+    knex('aircraft')
+        .select('*')
+        .where({aircraftName: aircraftName})
+        .then(data => {
+            if (data.length === 0){
+                return knex('aircraft')
+                    .insert({
+                        aircraftName: aircraftName,
+                        aircraftCount: '1',
+                        personnelCount: personnelCount
+                    })
+                    .then(() => {
+                        res.status(201).send(`${aircraftName} has been successfully added`);
+                    });
+            } else {
+                res.status(202).send(`${aircraftName} already exists`);
+            }
+        });
+};
+
+export { requestAircraft, requestAircraftType, requestAllAircraft, updateAircraft, addAirframe }
