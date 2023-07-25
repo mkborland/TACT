@@ -51,11 +51,13 @@ const AppBar = styled(MuiAppBar, {
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
-  alignItems: "right",
+  flexDirection: "column",
+  height: 100,
+  // alignItems: "right",
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
+  justifyContent: "center",
 }));
 
 export default function PersistentDrawerLeft() {
@@ -95,7 +97,7 @@ export default function PersistentDrawerLeft() {
             width: drawerWidth,
             boxSizing: "border-box",
             borderRight : 7,
-            borderColor : 'primary.main',
+            borderColor : '#eddc48',
             backgroundColor: "grey.200",
           },
         }}
@@ -104,7 +106,7 @@ export default function PersistentDrawerLeft() {
         open={open}
       >
         <DrawerHeader >
-          {/* place Icon for top left here */}
+          <img src="/tact_logo.png" alt="image" />
         </DrawerHeader>
         <List>
           <UserActionItems />
