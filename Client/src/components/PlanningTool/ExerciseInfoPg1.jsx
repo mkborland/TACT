@@ -19,6 +19,12 @@ function YourInfo(props) {
     const { data, exercises, updateFileHandler } = props;
     const [locations, setLocations ] = useState(undefined)
 
+    async function fetchLocations() {
+        //TODO: point this to the db when the table is created
+        const response = await Promise.resolve(travelLocations);
+        setLocations(response);
+    };
+
     useEffect(() => {
         fetchLocations()
     }, [])
@@ -40,38 +46,26 @@ function YourInfo(props) {
             label: location.state ? `${location.city}, ${location.state}` : `${location.city}, ${location.country}`
         }})
     
-    async function fetchLocations() {
-        //TODO: point this to the db when the table is created
-        const response = await Promise.resolve(travelLocations);
-        setLocations(response);
-    }
-
-    //function to bring back to normal the input
-    //that the client filled in correctly
-
     const verifyExerciseInputs = (e) => {
         updateFileHandler("exerciseID", e.value); //fills in template based on key value pair
     };
 
     const verifyStartDateInputs = (e) => {
-        updateFileHandler("travelStartDate", e.$d); //fills in template based on key value pair
+        updateFileHandler("travelStartDate", e.$d);
     };
 
     const verifyEndDateInputs = (e) => {
-        updateFileHandler("travelEndDate", e.$d); //fills in template based on key value pair
+        updateFileHandler("travelEndDate", e.$d);
     };
 
     const changeDepartLocation = (e) => {
-        const newLocation = locationlabels.find((label) => label.value === e.value)
-        console.log(newLocation)
         updateFileHandler("locationFrom", e.label)
-    }
+    };
 
     const changeDestinationLocation = (e) => {
-        const newLocation = locationlabels.find((label) => label.value === e.value)
-        console.log(newLocation)
         updateFileHandler("locationTo", e.label)
-    }
+    };
+
     return (
         <div className="form-container">
             <div className="input-container">
@@ -79,22 +73,21 @@ function YourInfo(props) {
                 <Select
                     className="input"
                     name="exercise-name"
-                    defaultValue={exerciseLabels[0].value}
+                    placeholder={'Select an Exercise'}
                     onChange={verifyExerciseInputs}
                     isSearchable
                     required
                     options={exerciseLabels}
                 />
              </div>
-
             <div className="input-container">
                 <label htmlFor="dates" className='inputLabel'>Start / End Dates</label>
-
+                {/* use the DateRangePicker for this specific component  https://mui.com/x/react-date-pickers/date-range-picker/*/}
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker', 'DatePicker']}>
                         <DatePicker
                             label="Start Date"
-                            value={dayjs(data.travelStartDate).format('DD MMM YYYY')}
+                            value={dayjs(data.travelStartDate)}
                             sx={{ backgroundColor: 'white' }}
                             onChange={verifyStartDateInputs}
                         />
@@ -107,8 +100,6 @@ function YourInfo(props) {
                     </DemoContainer>
                 </LocalizationProvider>
             </div>
-
-
             <div className="input-container">
                 <label htmlFor="departingLocation" className='inputLabel'>Departing Location</label>
                 <Select
@@ -122,7 +113,6 @@ function YourInfo(props) {
                     options={locationlabels}
                 />
             </div>
-
             <div className="input-container">
                 <label htmlFor="destination" className='inputLabel'>Destination</label>
                 <Select
