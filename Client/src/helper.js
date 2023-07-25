@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 function toDate(date, formatTemplate = 'dd LLL yyyy') {
     return DateTime.fromJSDate(date).toLocal().toUTC().toFormat(formatTemplate);
 }
-function toString(date, formatTemplate = 'yyyy LLL dd HH:mm') {
+function toString(date, formatTemplate = 'yyyy LLL dd') {
     return DateTime.fromISO(date).toFormat(formatTemplate);
 }
 /**

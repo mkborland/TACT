@@ -1,10 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
-import * as React from 'react';
+import { Fragment, useState, useEffect, useCallback } from "react";
 import { DateTimeAdapter } from '../helper';
 
-// import PropTypes from "prop-types";
 import TactApi from "../api/TactApi.js";
-// import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -21,7 +18,6 @@ import Typography from '@mui/material/Typography';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { DataGridPro } from '@mui/x-data-grid-pro';
-// import GetAllExercises from "../api/exercises/get/GetAllExercises.js";
 
 export default function DashboardPage() {
   const [exerciseList, setExerciseList] = useState([]);
@@ -75,7 +71,7 @@ export default function DashboardPage() {
     const [open, setOpen] = useState(false);
 
     return (
-        <React.Fragment>
+        <Fragment>
           <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
             <TableCell>
               <IconButton
@@ -132,7 +128,7 @@ export default function DashboardPage() {
               </Collapse>
             </TableCell>
           </TableRow>
-        </React.Fragment>
+        </Fragment>
     );
   }
 
