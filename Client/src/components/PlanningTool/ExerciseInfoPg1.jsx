@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React from 'react';
+import Dropdown from 'react-dropdown';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -8,7 +9,24 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // styles
 import '../../styles/PlanningToolPg1.css';
 
-function YourInfo({ data, updateFileHandler }) {
+const defaultValues = {
+    exerciseLabels: [{ value: 'x', label: "Select Exercise"}],
+}
+
+function YourInfo(props) {
+    const { data, exercises, updateFileHandler } = props;
+    console.log('props in YourInfo', props)
+
+    // const exerciseLabels = defaultValues.exerciseLabels;
+    const exerciseLabels = exercises ? 
+        exercises.map((exercise) => { return {
+            value: exercise.exerciseID,
+            label: exercise.exerciseName,
+        }}) :
+        defaultValues.exerciseLabels;
+    
+    console.log('in ExInfo exercises', data, exercises, exerciseLabels)
+
     // function to change the className of the input and
     // label to warn that the client has not filled in that field
     const verifyInputsInvalids = (e) => {
@@ -19,12 +37,13 @@ function YourInfo({ data, updateFileHandler }) {
     //function to bring back to normal the input
     //that the client filled in correctly
     const verifyInputs = (e) => {
-        updateFileHandler(e.target.id, e.target.value); //fills in template based on key value pair
         console.log(e.target)
+        updateFileHandler(e.target.id, e.target.value); //fills in template based on key value pair
+    };
 
-        // e.target.classList.remove("inputInvalid");
-        // e.target.labels[0].className = 'inputLabel';
-
+    const verifyExerciseInputs = (e) => {
+        console.log(e)
+        updateFileHandler("exerciseID", e.value); //fills in template based on key value pair
     };
 
     const [startDate, setStartDate] = React.useState(dayjs(new Date().toJSON().slice(0, 10)));
@@ -34,18 +53,14 @@ function YourInfo({ data, updateFileHandler }) {
         <div className="form-container">
             <div className="input-container">
                 <label htmlFor="name" className='inputLabel'>Exercise Name</label>
-                <input
+                <Dropdown
                     className="input"
-                    type="text"
-                    name="name"
-                    id="exerciseID"
-                    value={data.exerciseID || ""}  //where the text fields update based on data object (template)
-                    onChange={(e) => verifyInputs(e)}
-                    placeholder="Exercise Name will auto-convert to upper-case"
-                    onInvalid={verifyInputsInvalids}
-                    required
+                    name="exercise-name"
+                    defaultValue={exerciseLabels[0].value}
+                    onChange={verifyExerciseInputs}
+                    options={exerciseLabels}
                 />
-            </div>
+             </div>
 
             <div className="input-container">
                 <label htmlFor="dates" className='inputLabel'>Start / End Dates</label>

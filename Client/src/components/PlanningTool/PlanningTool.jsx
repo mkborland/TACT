@@ -44,7 +44,7 @@ const unitExerciseTemplate = {
 
 function PlanningTool() {
     const [data, setData] = useState(unitExerciseTemplate)
-    const [exercises, setExercises] = useState([]);
+    const [exercises, setExercises] = useState(undefined);
     const [userInfo, setUserInfo] = useState();
 
     useEffect(() => {
@@ -52,27 +52,24 @@ function PlanningTool() {
         fetchUserInfo()
     }, []);
 
-    useEffect(() => {
-        console.log('exercises', exercises);
-        setData({...data, 
-            exerciseID: exercises[0]?.exerciseID,
-            travelStartDate: exercises[0]?.exerciseStartDate,
-            travelEndDate: exercises[0]?.exerciseEndDate,
-        })
-    }, [exercises])
-
-    useEffect(() => {
-        console.log('data', data)        
-    }, [data])
+    //initialize labels and data
+    // useEffect(() => {
+    //     // console.log('exercises', exercises);
+    //     setData({...data, 
+    //         exerciseID: exercises[0]?.exerciseID,
+    //         travelStartDate: exercises[0]?.exerciseStartDate,
+    //         travelEndDate: exercises[0]?.exerciseEndDate,
+    //     })
+    // }, [exercises])
 
 
-    useEffect(() => {
-        console.log(userInfo)
-    }, [userInfo])
+    // useEffect(() => {
+    //     console.log('userinfo', userInfo)
+    // }, [userInfo])
 
     const fetchAllMissions = async () => { 
         const response = await GetAllExercises();
-        setExercises(response)
+        setExercises(response);
     }
 
     const fetchUserInfo = async () => {
@@ -84,13 +81,13 @@ function PlanningTool() {
 
     const updateFileHandler = (key, value) => {
         setData(prev => {
-            return { ...prev, [key]: value.toUpperCase() }
+            return { ...prev, [key]: value }
         })
     }
 
     // get the pages of the steps
     const formComponents = [
-        <ExerciseInfo data={data} updateFileHandler={updateFileHandler} />,
+        <ExerciseInfo data={data} exercises={exercises} updateFileHandler={updateFileHandler} />,
         <YourPlan data={data} updateFileHandler={updateFileHandler} />,
         <PickAddOns data={data} updateFileHandler={updateFileHandler} />,
         <Lodging data={data} updateFileHandler={updateFileHandler}/>,
@@ -103,15 +100,23 @@ function PlanningTool() {
     const styleToActions = isFarstStep ? 'end' : 'space-between'
     const isThankyouStep = currentStep === formComponents.length - 1 ? 'center' : 'space-between'
     const displayOff = currentStep !== formComponents.length - 1 ? 'flex' : 'none'
+    const lastNumber = formComponents.length + 1;
 
     // DeltaFox: This code was grabbed from this site: https://www.frontendmentor.io/solutions/multistep-form-isMXbZc7cy.  You can go there to see the intended functionality and original source code.
-    return (
+    return  (
         <div>
             <main className="main-container">
                 <aside>
                     <div className='step-background'>
                         <div className="step-bar">
-                            {arrayInformationsStep.map(step => <StepInformations key={step.num} array={step} step={currentStep} />)}
+                            {arrayInformationsStep.map(step => 
+                                <StepInformations 
+                                    key={step.num}
+                                    array={step}
+                                    step={currentStep} 
+                                    lastNumber={lastNumber}
+                                />
+                            )}
                         </div>
                     </div>
                 </aside>
