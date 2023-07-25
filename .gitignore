@@ -23,6 +23,9 @@ keys.txt
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+Client/package-lock.json
+Server/package-lock.json
+.idea
 
 .vscode/*
 Server/.env
