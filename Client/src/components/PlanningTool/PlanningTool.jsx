@@ -13,7 +13,6 @@ import '../../styles/PlanningTool.css'
 import { useEffect, useState } from "react"
 import { texts } from "../../hooks/texts"
 import { useForm } from "../../hooks/useForm"
-import { GetCurrentDate } from "../Util/DefinedListItem"
 import GetAllExercises from "../../api/exercises/get/GetAllExercises"
 import GetUser from "../../api/Users/get/GetUser"
 import GetAllUsers from "../../api/Users/get/GetAllUsers"
@@ -29,17 +28,17 @@ import GetAllUsers from "../../api/Users/get/GetAllUsers"
 
 
 const unitExerciseTemplate = {
-    exerciseID: "1", //set from drop down of High level exercise
+    exerciseID: "x", //set from drop down of High level exercise
     status: "Draft", // Not sure where this will be used
-    dateCreated: GetCurrentDate(),
-    locationFrom: "Phoenix, AZ", //to be used with api for airfair
-    locationTo: "St Louis, IL",
-    travelStartDate: new Date("26 July 2023"), //should start with the exercise dates, but user modifiable
-    travelEndDate: new Date("27 July 2023"),
+    dateCreated: new Date(),
+    locationFrom: undefined, //to be used with api for airfair
+    locationTo: undefined,
+    travelStartDate: new Date(), //should start with the exercise dates, but user modifiable
+    travelEndDate: new Date(),
     unit: "OL-2",       //exercise info (default to current user)
     userID: "1",    //pull from current user
-    personnelSum: "0", //calculated from total aircraft
-    unitCostSum: "0" //^^
+    personnelSum: 0, //calculated from total aircraft
+    unitCostSum: 0 //^^
 }
 
 function PlanningTool() {
@@ -52,20 +51,9 @@ function PlanningTool() {
         fetchUserInfo()
     }, []);
 
-    //initialize labels and data
-    // useEffect(() => {
-    //     // console.log('exercises', exercises);
-    //     setData({...data, 
-    //         exerciseID: exercises[0]?.exerciseID,
-    //         travelStartDate: exercises[0]?.exerciseStartDate,
-    //         travelEndDate: exercises[0]?.exerciseEndDate,
-    //     })
-    // }, [exercises])
-
-
-    // useEffect(() => {
-    //     console.log('userinfo', userInfo)
-    // }, [userInfo])
+    useEffect(() => {
+        console.log(data);
+    }, [data]);
 
     const fetchAllMissions = async () => { 
         const response = await GetAllExercises();
@@ -77,7 +65,7 @@ function PlanningTool() {
         setUserInfo(response)
     }
 
-    const { headerText, arrayInformationsStep } = texts()
+    const { arrayInformationsStep } = texts()
 
     const updateFileHandler = (key, value) => {
         setData(prev => {
