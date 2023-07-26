@@ -12,35 +12,34 @@ import React, { useEffect, useState } from "react";
 // hooks
 import { texts } from '../../hooks/texts'
 
-// images
-import iconArcade from '../../assets/images/icon-arcade.svg'
-import iconAdvanced from '../../assets/images/icon-advanced.svg'
-import iconPro from '../../assets/images/icon-pro.svg'
-
 // styles
 import '../../styles/PlanningToolPg2.css'
 
+const defaults = {
+  aircraft: [{id: 'x', aircraftName: 'test', aircraftCount: 0, personnelCount: 0}],
+}
+
+//each aircraft row will get a new
+const unitAircraftTemplate = { //will need multiple per unit?
+    unitExerciseID: null, //push and pull base info to fill this
+    aircraftType: "F-22",
+    aircraftCount: 2,
+    personnelCount: 50,
+    commercialAirfareCount: 50,
+    commercialAirfareCost: "4000.00",
+    governmentAirfareCount: 0,
+    commercialLodgingCount: 20,
+    commercialLodgingCost: "2000.00",
+    governmentLodgingCount: 30,
+    governmentLodgingCost: "600.00",
+    fieldLodgingCount: 0,
+    lodgingPerDiem: "600.00",
+    mealPerDiem: "400.00",
+    mealProvidedCount: 0,
+    mealNotProvidedCount: 50
+}
 function YourPlan({ data, updateFileHandler }) {
     const { plans } = texts();
-
-    const unitAircraftTemplate = { //will need multiple per unit?
-        unitExerciseID: null, //push and pull base info to fill this
-        aircraftType: "F-22",
-        aircraftCount: 2,
-        personnelCount: 50,
-        commercialAirfareCount: 50,
-        commercialAirfareCost: "4000.00",
-        governmentAirfareCount: 0,
-        commercialLodgingCount: 20,
-        commercialLodgingCost: "2000.00",
-        governmentLodgingCount: 30,
-        governmentLodgingCost: "600.00",
-        fieldLodgingCount: 0,
-        lodgingPerDiem: "600.00",
-        mealPerDiem: "400.00",
-        mealProvidedCount: 0,
-        mealNotProvidedCount: 50
-    }
 
     const [airframeList, setAirframeList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -63,6 +62,7 @@ function YourPlan({ data, updateFileHandler }) {
         });
     }, []);
 
+    console.log('airframes', airframeList)
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
             backgroundColor: theme.palette.common.black,
