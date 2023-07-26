@@ -5,9 +5,10 @@
 export function up(knex) {
     return knex.schema.createTable("locations", (table) => {
         table.increments("locationID");
-        table.string("baseName");
-        table.string("city");
-        table.string("state");
+        table.string("region");
+        table.string("iata");
+        table.string("icao");
+        table.string("airport");
         table.string("country");
     });
 };

@@ -1,16 +1,24 @@
 import knex from "../db/db.js";
 
 const requestLocation = async (req, res) => {
-    //add something here for checking if state or baseName are passed in?
-    const locationCity = req.query.locationCity
-    const locationCountry = req.query.locationCountry
+    const airport = req.query.airport
+    const country = req.query.country
     return knex('locations')
         .select('*')
         .where({
-            city: locationCity,
-            country: locationCountry
+            airport: airport,
+            country: country
         })
         .then(data => res.status(200).json(data))
 };
 
-export { requestLocation }
+const populateRecommended = async (req, res) => {
+    return knex('locations')
+        .select('*')
+        .where({
+            country: "United States"
+        })
+        .then(data => res.status(200).json(data))
+}
+
+export { requestLocation, populateRecommended }
