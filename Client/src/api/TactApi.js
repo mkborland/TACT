@@ -9,12 +9,20 @@ import GetUser from "./Users/get/GetUser.js";
 import UpdateUser from "./Users/update/UpdateUser.js";
 import PostExercises from "./exercises/post/PostExercises.js";
 import GetAllUnitExercises from "./UnitExercises/get/GetAllUnitExercises";
+import getUnitExerciseByUnit from "./UnitExercises/get/getUnitExerciseByUnit.js";
+import SaveUnitExercise from "./UnitExercises/post/SaveUnitExercise.js";
+import UpdateUnitExercise from "./UnitExercises/post/UpdateUnitExercise.js";
+import GetUnitExercise from "./UnitExercises/get/getUnitExercise.js";
 
 const TactApi = {
   getDashboard: GetDashboard,
   getExercises: GetExercises,
   getAllExercises: GetAllExercises,
   getAllUnitExercises: GetAllUnitExercises,
+  getUnitExerciseByUnit: getUnitExerciseByUnit,
+  saveUnitExercise: SaveUnitExercise,
+  updateUnitExercise: UpdateUnitExercise,
+  getUnitExercise: GetUnitExercise,
   postExercises: PostExercises,
   getAllAircraft: GetAllAircraft,
   updateAircraft: UpdateAircraft,

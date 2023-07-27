@@ -10,12 +10,10 @@ import StepInformations from "./StepInformations"
 import '../../styles/PlanningTool.css'
 
 // hooks
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { texts } from "../../hooks/texts"
 import { useForm } from "../../hooks/useForm"
-import GetAllExercises from "../../api/exercises/get/GetAllExercises"
-import GetUser from "../../api/Users/get/GetUser"
-import GetAllUsers from "../../api/Users/get/GetAllUsers"
+import TactApi from "../../api/TactApi"
 
 // --------- planning layout ------------
 //pg 1 (ex Info) -> drop down with made ex's, user name and unit
@@ -28,54 +26,138 @@ import GetAllUsers from "../../api/Users/get/GetAllUsers"
 
 
 const unitExerciseTemplate = {
-    exerciseID: "x", //set from drop down of High level exercise
-    status: "Draft", // Not sure where this will be used
+    unitExerciseID: undefined,
+    exerciseID: undefined, //set from drop down of High level exercise
+    status: false, // Should be an enum = 'Draft' | "Complete"
     dateCreated: new Date(),
-    locationFrom: undefined, //to be used with api for airfair
-    locationTo: undefined,
+    locationFrom: '', //to be used with api for airfair
+    locationTo: '',
     travelStartDate: new Date(), //should start with the exercise dates, but user modifiable
     travelEndDate: new Date(),
-    unit: "OL-2",       //exercise info (default to current user)
+    unit: "test3",       //exercise info (default to current user)
     userID: "1",    //pull from current user
     personnelSum: 0, //calculated from total aircraft
     unitCostSum: 0 //^^
 }
 
+function usePreviousId(value) {
+    console.log('value in usePreviousId', value)
+    const ref = useRef();
+    useEffect(() => {
+        ref.previous = ref.current;
+        ref.current = value.unitExerciseID;
+    }, [value]);
+    console.log('refs', ref.previous, ref.current, ref)
+    return ref.current;
+}
+
 function PlanningTool() {
-    const [data, setData] = useState(unitExerciseTemplate)
-    const [exercises, setExercises] = useState(undefined);
+    const [data, setData] = useState(unitExerciseTemplate);
     const [userInfo, setUserInfo] = useState();
+    // const previousId = usePreviousId(data);
 
     useEffect(() => {
-        fetchAllMissions();
         fetchUserInfo()
     }, []);
 
     useEffect(() => {
-        console.log(data);
-    }, [data]);
+        console.log('useEffect data', data);
+    }, [data])
 
-    const fetchAllMissions = async () => { 
-        const response = await GetAllExercises();
-        setExercises(response);
+    //when data state is updated, write to DB
+    // useEffect(() => {
+    //     console.log('data in useEffect', data, previousId);
+
+
+    //     if (data.unitExerciseID && previousId === data.unitExerciseID) {
+    //         console.log('id and previousId', data.unitExerciseID, previousId)
+    //         updateUnitExercise(data);
+    //         const test = getCurrentExercise('3');
+    //         console.log('test', test)
+    //     }
+    //     else if (!data.unitExerciseID && data.exerciseID) {
+    //         console.log('in the else if')
+    //         createUnitExercise(data);
+    //     }
+    // }, [data]);
+
+
+    //creates new mission in the DB with 'newMission' as the data obj 
+    const createUnitExercise = async (newMission) => {
+        const response = await TactApi.saveUnitExercise(newMission).then((res) => {return res.json()});
+        console.log('response in create',response);
     }
 
+    const updateUnitExercise = async (changedMission) => {
+        await TactApi.updateUnitExercise(changedMission)
+            .then((res) => {
+                console.log('response in update', res)
+                return res.text()
+            })
+            .then((result) => {
+                console.log('this is what the new data should be', result)
+                // setData(result)
+            })
+            .catch((err) => {console.log(err)});       
+    }
+
+    const getCurrentExercise = async (currentExerciseId) => {
+        const result = await TactApi.getUnitExercise(currentExerciseId)
+                .catch((err) => {console.log(err)});
+        return result;
+    };
+
+    const getCurrentExerciseByUnit = async (currentExerciseId) => {
+        const req = {
+            exerciseID: currentExerciseId,
+            unit: data.unit
+        }
+        const result = await TactApi.getUnitExerciseByUnit(req)
+                .catch((err) => {console.log(err)});
+        return result;
+    };
+
     const fetchUserInfo = async () => {
-        const response = await GetUser("admin@gmail.com");
+        const response = await TactApi.getUser("admin@gmail.com");
         setUserInfo(response)
     }
 
     const { arrayInformationsStep } = texts()
 
-    const updateFileHandler = (key, value) => {
-        setData(prev => {
-            return { ...prev, [key]: value }
-        })
+    const validateCurrentMission = async (idValue) => {
+        const response = await TactApi.getCurrentExerciseByUnit(idValue)
+            .then((res) => {return res});
+        console.log('validate mission', response)
+        return response;
     }
+
+    const updateFileHandler = (key, value) => {
+        if (key === 'exerciseID') {
+            //validate if there is an existing mission with that exId
+            //if yes, then update the current 'data' with the db data
+            //if no, then create a newmission
+            validateCurrentMission(value)
+                .then((res) => {
+                    if (res && res.unitExerciseID) {
+                        setData(res);
+                    }
+                    else {
+                        setData({...data, [key]: value });
+                    }
+                })
+                .catch((err) => {
+                    console.log('err in updateFileHandler', err);
+                });
+        } else {
+            setData({...data, [key]: value })
+        }
+
+    }
+
 
     // get the pages of the steps
     const formComponents = [
-        <ExerciseInfo data={data} exercises={exercises} updateFileHandler={updateFileHandler} />,
+        <ExerciseInfo data={data} updateFileHandler={updateFileHandler} />,
         <YourPlan data={data} updateFileHandler={updateFileHandler} />,
         <PickAddOns data={data} updateFileHandler={updateFileHandler} />,
         <Lodging data={data} updateFileHandler={updateFileHandler}/>,

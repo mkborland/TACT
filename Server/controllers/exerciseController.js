@@ -33,7 +33,7 @@ const requestUnitExercise = async (req, res) => {
                     .where({ unitExerciseID: unitExerciseID })
                     .then((data) => data[0])
             } else {
-                res.status(202).send(`Unit exercise with an ID of ${unitExerciseID} could not be found.`);
+                res.status(202).send({});
             }
         })
     if (exerciseobj !== undefined) {
@@ -53,7 +53,7 @@ const requestUnitExerciseByUnit = async (req, res) => {
                     .where({ exerciseID: exerciseID, unit: unit })
                     .then((data) => data[0])
             } else {
-                res.status(202).send(`Unit exercise with an Exercise ID of ${exerciseID} and Unit ${unit} could not be found.`);
+                res.status(202).send({});
             }
         })
     if (exerciseobj !== undefined) {

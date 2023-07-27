@@ -6,18 +6,27 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { travelLocations } from '../Util/locations';
+import GetAllExercises from "../../api/exercises/get/GetAllExercises"
 
 // styles
 import '../../styles/PlanningToolPg1.css';
 
-const defaultValues = {
-    exerciseLabels: [{ value: 'x', label: "Select Exercise"}],
+const defaultLabelValues = {
+    exerciseLabels: [{ value: undefined, label: "Select Exercise"}],
     locations: [{ city: 'test city', state: 'test state', country: 'test country' }],
 }
 
 function YourInfo(props) {
-    const { data, exercises, updateFileHandler } = props;
-    const [locations, setLocations ] = useState(undefined)
+    const { data, updateFileHandler } = props;
+    const [locations, setLocations ] = useState()
+    const [exercises, setExercises] = useState(undefined);
+
+    const fetchAllExercises = async () => { 
+        const response = await GetAllExercises();
+        setExercises(response);
+    }
+
+    console.log('data in YourINfo', data)
 
     async function fetchLocations() {
         //TODO: point this to the db when the table is created
@@ -26,7 +35,8 @@ function YourInfo(props) {
     };
 
     useEffect(() => {
-        fetchLocations()
+        fetchLocations();
+        fetchAllExercises();
     }, [])
 
     const exerciseLabels = exercises ? 
@@ -34,18 +44,18 @@ function YourInfo(props) {
             value: exercise.exerciseID,
             label: exercise.exerciseName,
         }}) :
-        defaultValues.exerciseLabels;
+        defaultLabelValues.exerciseLabels;
 
     const locationlabels = locations ? 
         locations.map((location, i) => { return {
             value: `${i}`,
             label: location.state ? `${location.city}, ${location.state}` : `${location.city}, ${location.country}`
         }}) :
-        defaultValues.locations.map((location, i) => { return {
+        defaultLabelValues.locations.map((location, i) => { return {
             value: `${i}`,
             label: location.state ? `${location.city}, ${location.state}` : `${location.city}, ${location.country}`
         }})
-    
+  
     const verifyExerciseInputs = (e) => {
         updateFileHandler("exerciseID", e.value); //fills in template based on key value pair
     };
@@ -107,7 +117,6 @@ function YourInfo(props) {
                     name="departingLocation"
                     id='locationFrom'
                     onChange={changeDepartLocation}
-                    placeholder='Select Departure Location'
                     isSearchable
                     required
                     options={locationlabels}
@@ -120,7 +129,6 @@ function YourInfo(props) {
                     name="destination"
                     id="locationTo"
                     onChange={changeDestinationLocation}
-                    placeholder="Select Destination Location"
                     isSearchable
                     required
                     options={locationlabels}
