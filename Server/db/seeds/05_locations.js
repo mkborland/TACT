@@ -33838,11 +33838,11 @@ export async function seed(knex) {
     ]);
     await knex('locations').insert([
     {
-      region: "Gujarat",
+      region: "Indiana",
       iata: "GUS",
       icao: "KGUS",
       airport: "Grissom Air Reserve Base",
-      country: "India"
+      country: "United States"
     }
     ]);
     await knex('locations').insert([

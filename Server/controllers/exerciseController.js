@@ -99,9 +99,9 @@ const addExercise = async (req, res) => {
                         userID: userID, 
                         personnelSum: personnelSum, 
                         costSum: costSum
-                    })
-                    .then(() => {
-                        res.status(201).send(`${exerciseName} has been added.`);
+                    },['exerciseID'])
+                    .then((data) => {
+                        res.status(201).send(data);
                     });
             } else {
                 res.status(202).send(`${exerciseName} already exists.`);
