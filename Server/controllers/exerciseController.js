@@ -184,6 +184,7 @@ const updateUnitExercise = async (req, res) => {
 };
 
 const saveUnitExercise = async (req, res) => {
+    console.log('req', req.body)
     const { exerciseID, status, dateCreated, locationFrom, locationTo, travelStartDate, travelEndDate, unit, userID, personnelSum, unitCostSum } = req.body
     knex('unitexercises')
         .select("*")
@@ -203,9 +204,10 @@ const saveUnitExercise = async (req, res) => {
                         userID: userID,
                         personnelSum: personnelSum,
                         unitCostSum: unitCostSum
-                    })
+                    }, ['unitExerciseID'])
                     .then(() => {
-                        res.status(201).send(`Created entry for ${unit}'s participation in exercise with ID ${exerciseID}.`);
+                        res.status(200);
+                        // res.status(201).send(`Created entry for ${unit}'s participation in exercise with ID ${exerciseID}.`);
                     });
             } else {
                 //data returns array with one entry

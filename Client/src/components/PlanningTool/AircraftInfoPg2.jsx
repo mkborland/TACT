@@ -17,33 +17,48 @@ import CreateRow from "./CreateRow";
 import '../../styles/PlanningToolPg2.css'
 
 
-
+const dedupe = (input) => {
+  const result = [];
+  const temp = [];
+  input.forEach(i => {
+    if (!temp.includes(i.id)) {
+      temp.push(i.id);
+      result.push(i)
+    }
+  });
+  return result;
+}
 
 //each aircraft row will get a new
 const unitAircraftTemplate = { //will need multiple per unit?
-    unitExerciseID: null, //push and pull base info to fill this
-    aircraftType: "F-22", //may be the UUID for the Aircraft table
-    aircraftCount: 2,
-    personnelCount: 50,
-    commercialAirfareCount: 50,
-    commercialAirfareCost: "4000.00",
+    unitExerciseID: undefined, //push and pull base info to fill this
+    aircraftType: undefined, //may be the UUID for the Aircraft table
+    aircraftCount: 0,
+    personnelCount: 0,
+    commercialAirfareCount: 0,
+    commercialAirfareCost: 0,
     governmentAirfareCount: 0,
-    commercialLodgingCount: 20,
-    commercialLodgingCost: "2000.00",
-    governmentLodgingCount: 30,
-    governmentLodgingCost: "600.00",
+    commercialLodgingCount: 0,
+    commercialLodgingCost: 0,
+    governmentLodgingCount: 0,
+    governmentLodgingCost: 0,
     fieldLodgingCount: 0,
-    lodgingPerDiem: "600.00",
-    mealPerDiem: "400.00",
+    lodgingPerDiem: 0,
+    mealPerDiem: 0,
     mealProvidedCount: 0,
-    mealNotProvidedCount: 50
+    mealNotProvidedCount: 0
 }
+
+const newUnitAircraftObj = (unitExerciseId) => {
+  const response = unitAircraftTemplate;
+  response.unitExerciseID = unitExerciseId;
+  return response;
+}
+
 function YourPlan(props) {
   //TODO bring in data so that we can get the unitExerciseID
-  //TODO pass a setRowData to the Rows so that when one of the rows is updated it pass the
-  // so that the aircraft, number and personnel can be captured 
+
   //TODO once a row is calculated with the total number personnel - create a new obj with the template from above
-  //TODO update the total personnel counter at the bottom of the page
   //TODO what to do when Save button is pushed - write to DB?? 
     const { data, updateFileHandler } = props
     const { plans } = texts();
@@ -51,12 +66,33 @@ function YourPlan(props) {
     const [airframeList, setAirframeList] = useState([]);
     const [totalPersonnel, setTotalPersonnel] = useState(0);
     const [rows, setRows] = useState([]);
+    const [totals, setTotals] = useState([]);
+    const [perAircraftTable, setPerAircraftTable] = useState([]); //contains the different numbers for each aircraft selected
+    const [unitAircraftTable, setUnitAircraftTable] = useState([]);
 
 console.log('rows', rows)
+console.log('table', perAircraftTable)
+console.log('test', totals)
+console.log('data', data)
 
     useEffect(() => {
       fetchAircraftData();
     }, []);
+
+    //since the create rows makes a new element each time the number of aircraft is updated, 
+    //this dedupes the array so there is only one element per row
+    useEffect(() => {
+      setTotals(dedupe(perAircraftTable));
+
+    }, [perAircraftTable])
+
+    useEffect(() => {
+      let tempPersonnel = 0;
+      totals.forEach(t => {
+        tempPersonnel += t.personnel
+      });
+      setTotalPersonnel(tempPersonnel)
+    }, [totals])
 
     const fetchAircraftData = () => {
       TactApi.getAllAircraft().then((data) => {
@@ -64,45 +100,14 @@ console.log('rows', rows)
       });
     }
 
-    const handlePersonnelOnChange = (e) => {
-        let runningTotal = 0;
-        // rows.forEach((row) => {
-        //     if (row.airCraftType === e.target.name) {
-        //         row.airCraftPersonal = e.target.value;
-        //     }
-        // runningTotal += parseInt(row.airCraftPersonal);
-        // });
-        setTotalPersonnel(runningTotal);
-    };
-
-    const handleAircraftOnChange = (e) => {
-        let runningTotal = 0;
-        // rows.forEach((row) => {
-        //     if (row.airCraftType === e.target.name) {
-        //         row.airCraftAmount = e.target.value;
-        //     if (!isLoading) {
-        //         airframeList.forEach((entry) => {
-        //             if (
-        //             entry.aircraftName === row.airCraftType &&
-        //             parseInt(row.airCraftAmount) === entry.aircraftNumber
-        //             ) {
-        //             row.airCraftPersonal = entry.personnelReq;
-        //             }
-        //         });
-        //     }
-        // }
-        //     runningTotal += parseInt(row.airCraftPersonal);
-        // });
-        setTotalPersonnel(runningTotal);
-    };
-
     const handleAddAircraft = () => {
       const newRowProps = {
         rows,
         airframeList,
+        perAircraftTable,
+        setPerAircraftTable
       }
-      const newRow = CreateRow(newRowProps);
-      setRows(prev => [...prev, newRow]);
+      setRows(prev => [...prev, CreateRow(newRowProps)]);
     }
 
     const handleSaveClick = () => {

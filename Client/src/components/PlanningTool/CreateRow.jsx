@@ -12,24 +12,36 @@ const CreateRow = (props) => {
     const {
       rows,
       airframeList,
+      perAircraftTable,
+      setPerAircraftTable
     } = props;
     const numberLabels = [];
     let personnel = 0;
-    console.log('props',props)
-    console.log('personnel',personnel)
+    const tempTable = {
+      id: rows.length,
+      aircraft: undefined,
+      numberAircraft: 0,
+      personnel: 0
+    }
+
+    console.log('props', props)
 
     const aircraftLabels = airframeList ? dedupedAircraft(airframeList) : [];
     
     const handleAircraftSelect = (e) => {
         e.numbers.forEach((num) => {
         numberLabels.push(num)
-      })
+      });
+      tempTable.aircraft = e.label;
     };
 
     const handleNumberSelect = (e) => {
       console.log('handle number',e)
       personnel = e.value
-      document.getElementById(`personnel-id${rows.length}`).value = personnel
+      document.getElementById(`personnel-id${rows.length}`).value = personnel;
+      tempTable.numberAircraft = e.label;
+      tempTable.personnel = personnel;
+      setPerAircraftTable(prev => [...prev, tempTable]);
       return personnel;
     }
 

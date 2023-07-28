@@ -57,7 +57,7 @@ function PlanningTool() {
     // const previousId = usePreviousId(data);
 
     useEffect(() => {
-        fetchUserInfo()
+        fetchUserInfo();
     }, []);
 
     useEffect(() => {
@@ -125,7 +125,11 @@ function PlanningTool() {
     const { arrayInformationsStep } = texts()
 
     const validateCurrentMission = async (idValue) => {
-        const response = await TactApi.getCurrentExerciseByUnit(idValue)
+        const body = {
+            exerciseID: idValue,
+            unit: data.unit
+        }
+        const response = await TactApi.getUnitExerciseByUnit(body)
             .then((res) => {return res});
         console.log('validate mission', response)
         return response;
@@ -136,6 +140,9 @@ function PlanningTool() {
             //validate if there is an existing mission with that exId
             //if yes, then update the current 'data' with the db data
             //if no, then create a newmission
+            const temp = data;
+            temp.exerciseID = value;
+            createUnitExercise(temp);
             validateCurrentMission(value)
                 .then((res) => {
                     if (res && res.unitExerciseID) {
@@ -145,6 +152,7 @@ function PlanningTool() {
                         setData({...data, [key]: value });
                     }
                 })
+                .then(() => createUnitExercise(data))
                 .catch((err) => {
                     console.log('err in updateFileHandler', err);
                 });
