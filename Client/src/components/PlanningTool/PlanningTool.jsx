@@ -30,11 +30,11 @@ const unitExerciseTemplate = {
     exerciseID: undefined, //set from drop down of High level exercise
     status: false, // Should be an enum = 'Draft' | "Complete"
     dateCreated: new Date(),
-    locationFrom: '', //to be used with api for airfair
-    locationTo: '',
+    locationFrom: undefined, //to be used with api for airfair
+    locationTo: undefined,
     travelStartDate: new Date(), //should start with the exercise dates, but user modifiable
     travelEndDate: new Date(),
-    unit: "test3",       //exercise info (default to current user)
+    unit: "test7",       //exercise info (default to current user)
     userID: "1",    //pull from current user
     personnelSum: 0, //calculated from total aircraft
     unitCostSum: 0 //^^
@@ -54,6 +54,7 @@ function usePreviousId(value) {
 function PlanningTool() {
     const [data, setData] = useState(unitExerciseTemplate);
     const [userInfo, setUserInfo] = useState();
+    const [saved, setSaved] = useState(false);
     // const previousId = usePreviousId(data);
 
     useEffect(() => {
@@ -62,7 +63,7 @@ function PlanningTool() {
 
     useEffect(() => {
         console.log('useEffect data', data);
-    }, [data])
+    }, [data]);
 
     //when data state is updated, write to DB
     // useEffect(() => {
@@ -142,7 +143,7 @@ function PlanningTool() {
             //if no, then create a newmission
             const temp = data;
             temp.exerciseID = value;
-            createUnitExercise(temp);
+            createUnitExercise(temp).then((test) => {console.log('test create new', test)})
             validateCurrentMission(value)
                 .then((res) => {
                     if (res && res.unitExerciseID) {
@@ -164,15 +165,16 @@ function PlanningTool() {
 
 
     // get the pages of the steps
+    //TODO set up the setSave on each of the pages
     const formComponents = [
-        <ExerciseInfo data={data} updateFileHandler={updateFileHandler} />,
-        <YourPlan data={data} updateFileHandler={updateFileHandler} />,
-        <PickAddOns data={data} updateFileHandler={updateFileHandler} />,
-        <Lodging data={data} updateFileHandler={updateFileHandler}/>,
+        <ExerciseInfo data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
+        <YourPlan data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
+        <PickAddOns data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
+        <Lodging data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
         <Thanks />
     ]
 
-    const { currentStep, currentComponent, changeStep, isFarstStep} = useForm(formComponents, data)
+    const { currentStep, currentComponent, changeStep, isFarstStep} = useForm(formComponents, data, saved)
 
     // to keep the 'Next Step' button in the same place
     const styleToActions = isFarstStep ? 'end' : 'space-between'

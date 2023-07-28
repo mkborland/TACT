@@ -16,7 +16,6 @@ import CreateRow from "./CreateRow";
 // styles
 import '../../styles/PlanningToolPg2.css'
 
-
 const dedupe = (input) => {
   const result = [];
   const temp = [];
@@ -60,7 +59,7 @@ function YourPlan(props) {
 
   //TODO once a row is calculated with the total number personnel - create a new obj with the template from above
   //TODO what to do when Save button is pushed - write to DB?? 
-    const { data, updateFileHandler } = props
+    const { data, updateFileHandler, setSaved } = props
     const { plans } = texts();
 
     const [airframeList, setAirframeList] = useState([]);
@@ -104,33 +103,46 @@ console.log('data', data)
       const newRowProps = {
         rows,
         airframeList,
-        perAircraftTable,
         setPerAircraftTable
       }
       setRows(prev => [...prev, CreateRow(newRowProps)]);
     }
+    const saveUnitAircraft = () => {
+      unitAircraftTable.forEach((table) => {
+        TactApi.addExerciseAircraft(table).catch((err) => console.log('error in saving aircraft', err));
+      });
+    }
 
     const handleSaveClick = () => {
-        //save to template/db
+      setSaved(true);
+      totals.forEach((total) => {
+        const temp = newUnitAircraftObj(data.unitExerciseID);
+        temp.aircraftType = total.aircraft;
+        temp.aircraftCount = total.numberAircraft;
+        temp.personnelCount = total.personnel;
+        setUnitAircraftTable(prev => [...prev, temp]);
+      })
+      updateFileHandler('personnelSum', totalPersonnel);
+      saveUnitAircraft();
     };
 
     return (
-      <div className="form-container">
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700}} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>Airframe Types</StyledTableCell>
-                <StyledTableCell align="center">
-                  Number of Airframes
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  Number of Personnel
-                </StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{rows}</TableBody>
-          </Table>
+        <div className="form-container">
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 700}} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Airframe Types</StyledTableCell>
+                  <StyledTableCell align="center">
+                    Number of Airframes
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    Number of Personnel
+                  </StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>{rows}</TableBody>
+            </Table>
             <span>
               <Button onClick={handleAddAircraft}>Add Aircraft</Button>
               <Button onClick={() => handleSaveClick()}>Save</Button>
@@ -138,29 +150,29 @@ console.log('data', data)
                 Total Personnel: {totalPersonnel}
               </Typography>
             </span>
-        </TableContainer> 
-      </div>
+          </TableContainer>
+        </div>
     )
-    };
+};
 
-    const StyledTableCell = styled(TableCell)(({ theme }) => ({
-      [`&.${tableCellClasses.head}`]: {
-          backgroundColor: theme.palette.common.black,
-          color: theme.palette.common.white,
-      },
-      [`&.${tableCellClasses.body}`]: {
-          fontSize: 14,
-      },
-  }));
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+  },
+}));
 
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-      "&:nth-of-type(odd)": {
-          backgroundColor: theme.palette.action.hover,
-      },
-  // hide last border
-      "&:last-child td, &:last-child th": {
-      border: 0,
-      },
-  }));
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    "&:nth-of-type(odd)": {
+        backgroundColor: theme.palette.action.hover,
+    },
+// hide last border
+    "&:last-child td, &:last-child th": {
+    border: 0,
+    },
+}));
 
 export default YourPlan 

@@ -13,6 +13,7 @@ import getUnitExerciseByUnit from "./UnitExercises/get/getUnitExerciseByUnit.js"
 import SaveUnitExercise from "./UnitExercises/post/SaveUnitExercise.js";
 import UpdateUnitExercise from "./UnitExercises/post/UpdateUnitExercise.js";
 import GetUnitExercise from "./UnitExercises/get/getUnitExercise.js";
+import AddExerciseAircraft from "./ExerciseAircraft/post/AddExerciseAircraft.js";
 
 const TactApi = {
   getDashboard: GetDashboard,
@@ -30,5 +31,6 @@ const TactApi = {
   addUser: AddUser,
   getUser: GetUser,
   updateUser: UpdateUser,
+  addExerciseAircraft: AddExerciseAircraft,
 };
 export default TactApi;

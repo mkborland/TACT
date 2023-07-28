@@ -17,7 +17,7 @@ const defaultLabelValues = {
 }
 
 function YourInfo(props) {
-    const { data, updateFileHandler } = props;
+    const { data, updateFileHandler, setSaved } = props;
     const [locations, setLocations ] = useState()
     const [exercises, setExercises] = useState(undefined);
 
@@ -35,7 +35,22 @@ function YourInfo(props) {
     useEffect(() => {
         fetchLocations();
         fetchAllExercises();
+        // setSaved(false); //TODO turn this back on when figued out how to know all is saved
+        setSaved(true);
     }, [])
+
+    //check for all data complete to changed saved -> true
+    useEffect(() => {
+        if (
+            data.unitExerciseID !== undefined &&
+            data.exerciseID !== undefined  &&
+            data.dateCreated !== undefined &&
+            data.locationFrom !== undefined &&
+            data.locationTo !== undefined &&
+            data.travelStartDate !== undefined &&
+            data.travelEndDate !== undefined
+        ) setSaved(true)
+    }, [data])
 
     const exerciseLabels = exercises ? 
         exercises.map((exercise) => { return {
@@ -95,12 +110,14 @@ function YourInfo(props) {
                     <DemoContainer components={['DatePicker', 'DatePicker']}>
                         <DatePicker
                             label="Start Date"
+                            defaultValue={dayjs(data.travelStartDate)}
                             value={dayjs(data.travelStartDate)}
                             sx={{ backgroundColor: 'white' }}
                             onChange={verifyStartDateInputs}
                         />
                         <DatePicker
                             label="End Date"
+                            defaultValue={dayjs(data.travelEndDate)}
                             value={dayjs(data.travelEndDate)}
                             sx={{ backgroundColor: 'white' }}
                             onChange={verifyEndDateInputs}

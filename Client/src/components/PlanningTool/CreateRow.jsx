@@ -12,7 +12,6 @@ const CreateRow = (props) => {
     const {
       rows,
       airframeList,
-      perAircraftTable,
       setPerAircraftTable
     } = props;
     const numberLabels = [];
