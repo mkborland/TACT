@@ -57,9 +57,9 @@ export function texts() {
     }
 
     return {
-        headerText,
-        arrayInformationsStep,
-        plans,
-        services,
+        headerText: headerText,
+        arrayInformationsStep: arrayInformationsStep,
+        plans: plans,
+        services: services
     }
 }
