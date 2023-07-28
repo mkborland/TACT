@@ -33,7 +33,27 @@ const requestUnitExercise = async (req, res) => {
                     .where({ unitExerciseID: unitExerciseID })
                     .then((data) => data[0])
             } else {
-                res.status(202).send(`Unit exercise with an ID of ${unitExerciseID} could not be found.`);
+                res.status(202).send({});
+            }
+        })
+    if (exerciseobj !== undefined) {
+        res.status(200).send(exerciseobj)
+    }
+};
+
+const requestUnitExerciseByUnit = async (req, res) => {
+    const { exerciseID, unit }= req.query;
+    const exerciseobj = await knex('unitexercises')
+        .select("*")
+        .where({ exerciseID: exerciseID, unit: unit })
+        .then((data) => {
+            if (data.length !== 0) {
+                return knex('unitexercises')
+                    .select('*')
+                    .where({ exerciseID: exerciseID, unit: unit })
+                    .then((data) => data[0])
+            } else {
+                res.status(202).send({});
             }
         })
     if (exerciseobj !== undefined) {
@@ -246,4 +266,18 @@ const addExerciseAircraft = async (req, res) => {
         });
 };
 
-export { requestExercise, requestUnitExercise, requestExerciseAircraft, requestAllExercises, requestAllUnitExercises, requestAllExerciseAircraft, addExercise, saveUnitExercise,  addExerciseAircraft, updateExercise, lookupUnitExercise, updateUnitExercise }
+export { 
+    requestExercise, 
+    requestUnitExercise, 
+    requestExerciseAircraft, 
+    requestAllExercises, 
+    requestAllUnitExercises, 
+    requestAllExerciseAircraft, 
+    addExercise,
+    saveUnitExercise,
+    addExerciseAircraft,
+    updateExercise,
+    lookupUnitExercise,
+    updateUnitExercise,
+    requestUnitExerciseByUnit
+ }
