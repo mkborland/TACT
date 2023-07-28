@@ -26,8 +26,6 @@ function YourInfo(props) {
         setExercises(response);
     }
 
-    console.log('data in YourINfo', data)
-
     async function fetchLocations() {
         //TODO: point this to the db when the table is created
         const response = await Promise.resolve(travelLocations);
@@ -86,7 +84,7 @@ function YourInfo(props) {
                     placeholder={'Select an Exercise'}
                     onChange={verifyExerciseInputs}
                     isSearchable
-                    required
+                    // required
                     options={exerciseLabels}
                 />
              </div>
@@ -118,7 +116,7 @@ function YourInfo(props) {
                     id='locationFrom'
                     onChange={changeDepartLocation}
                     isSearchable
-                    required
+                    // required
                     options={locationlabels}
                 />
             </div>
@@ -130,7 +128,7 @@ function YourInfo(props) {
                     id="locationTo"
                     onChange={changeDestinationLocation}
                     isSearchable
-                    required
+                    // required
                     options={locationlabels}
                 />
             </div>
