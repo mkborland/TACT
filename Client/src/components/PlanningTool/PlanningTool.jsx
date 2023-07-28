@@ -10,10 +10,10 @@ import StepInformations from "./StepInformations"
 import '../../styles/PlanningTool.css'
 
 // hooks
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import { texts } from "../../hooks/texts"
 import { useForm } from "../../hooks/useForm"
-import TactApi from "../../api/TactApi"
+import { GetCurrentDate } from "../Util/DefinedListItem"
 
 // --------- planning layout ------------
 //pg 1 (ex Info) -> drop down with made ex's, user name and unit
@@ -26,134 +26,29 @@ import TactApi from "../../api/TactApi"
 
 
 const unitExerciseTemplate = {
-    unitExerciseID: undefined,
-    exerciseID: undefined, //set from drop down of High level exercise
-    status: false, // Should be an enum = 'Draft' | "Complete"
-    dateCreated: new Date(),
-    locationFrom: '', //to be used with api for airfair
-    locationTo: '',
-    travelStartDate: new Date(), //should start with the exercise dates, but user modifiable
-    travelEndDate: new Date(),
-    unit: "test3",       //exercise info (default to current user)
+    exerciseID: "1", //set from drop down of High level exercise
+    status: "0", // Not sure where this will be used
+    dateCreated: GetCurrentDate(),
+    locationFrom: "Phoenix, AZ", //to be used with api for airfair
+    locationTo: "St Louis, IL",
+    travelStartDate: "26 July 2023", //in airfair for api use
+    travelEndDate: "27 July 2023",
+    unit: "OL-2",       //exercise info (default to current user)
     userID: "1",    //pull from current user
-    personnelSum: 0, //calculated from total aircraft
-    unitCostSum: 0 //^^
-}
-
-function usePreviousId(value) {
-    console.log('value in usePreviousId', value)
-    const ref = useRef();
-    useEffect(() => {
-        ref.previous = ref.current;
-        ref.current = value.unitExerciseID;
-    }, [value]);
-    console.log('refs', ref.previous, ref.current, ref)
-    return ref.current;
+    personnelSum: "0", //calculated from total aircraft
+    unitCostSum: "0" //^^
 }
 
 function PlanningTool() {
-    const [data, setData] = useState(unitExerciseTemplate);
-    const [userInfo, setUserInfo] = useState();
-    // const previousId = usePreviousId(data);
+    const [data, setData] = useState(unitExerciseTemplate)
 
-    useEffect(() => {
-        fetchUserInfo()
-    }, []);
-
-    useEffect(() => {
-        console.log('useEffect data', data);
-    }, [data])
-
-    //when data state is updated, write to DB
-    // useEffect(() => {
-    //     console.log('data in useEffect', data, previousId);
-
-
-    //     if (data.unitExerciseID && previousId === data.unitExerciseID) {
-    //         console.log('id and previousId', data.unitExerciseID, previousId)
-    //         updateUnitExercise(data);
-    //         const test = getCurrentExercise('3');
-    //         console.log('test', test)
-    //     }
-    //     else if (!data.unitExerciseID && data.exerciseID) {
-    //         console.log('in the else if')
-    //         createUnitExercise(data);
-    //     }
-    // }, [data]);
-
-
-    //creates new mission in the DB with 'newMission' as the data obj 
-    const createUnitExercise = async (newMission) => {
-        const response = await TactApi.saveUnitExercise(newMission).then((res) => {return res.json()});
-        console.log('response in create',response);
-    }
-
-    const updateUnitExercise = async (changedMission) => {
-        await TactApi.updateUnitExercise(changedMission)
-            .then((res) => {
-                console.log('response in update', res)
-                return res.text()
-            })
-            .then((result) => {
-                console.log('this is what the new data should be', result)
-                // setData(result)
-            })
-            .catch((err) => {console.log(err)});       
-    }
-
-    const getCurrentExercise = async (currentExerciseId) => {
-        const result = await TactApi.getUnitExercise(currentExerciseId)
-                .catch((err) => {console.log(err)});
-        return result;
-    };
-
-    const getCurrentExerciseByUnit = async (currentExerciseId) => {
-        const req = {
-            exerciseID: currentExerciseId,
-            unit: data.unit
-        }
-        const result = await TactApi.getUnitExerciseByUnit(req)
-                .catch((err) => {console.log(err)});
-        return result;
-    };
-
-    const fetchUserInfo = async () => {
-        const response = await TactApi.getUser("admin@gmail.com");
-        setUserInfo(response)
-    }
-
-    const { arrayInformationsStep } = texts()
-
-    const validateCurrentMission = async (idValue) => {
-        const response = await TactApi.getCurrentExerciseByUnit(idValue)
-            .then((res) => {return res});
-        console.log('validate mission', response)
-        return response;
-    }
+    const { headerText, arrayInformationsStep } = texts()
 
     const updateFileHandler = (key, value) => {
-        if (key === 'exerciseID') {
-            //validate if there is an existing mission with that exId
-            //if yes, then update the current 'data' with the db data
-            //if no, then create a newmission
-            validateCurrentMission(value)
-                .then((res) => {
-                    if (res && res.unitExerciseID) {
-                        setData(res);
-                    }
-                    else {
-                        setData({...data, [key]: value });
-                    }
-                })
-                .catch((err) => {
-                    console.log('err in updateFileHandler', err);
-                });
-        } else {
-            setData({...data, [key]: value })
-        }
-
+        setData(prev => {
+            return { ...prev, [key]: value.toUpperCase() }
+        })
     }
-
 
     // get the pages of the steps
     const formComponents = [
@@ -170,23 +65,15 @@ function PlanningTool() {
     const styleToActions = isFarstStep ? 'end' : 'space-between'
     const isThankyouStep = currentStep === formComponents.length - 1 ? 'center' : 'space-between'
     const displayOff = currentStep !== formComponents.length - 1 ? 'flex' : 'none'
-    const lastNumber = formComponents.length + 1;
 
     // DeltaFox: This code was grabbed from this site: https://www.frontendmentor.io/solutions/multistep-form-isMXbZc7cy.  You can go there to see the intended functionality and original source code.
-    return  (
+    return (
         <div>
             <main className="main-container">
                 <aside>
                     <div className='step-background'>
                         <div className="step-bar">
-                            {arrayInformationsStep.map(step => 
-                                <StepInformations 
-                                    key={step.num}
-                                    array={step}
-                                    step={currentStep} 
-                                    lastNumber={lastNumber}
-                                />
-                            )}
+                            {arrayInformationsStep.map(step => <StepInformations key={step.num} array={step} step={currentStep} />)}
                         </div>
                     </div>
                 </aside>
