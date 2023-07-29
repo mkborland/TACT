@@ -34,28 +34,30 @@ const unitExerciseTemplate = {
     locationTo: undefined,
     travelStartDate: new Date(), //should start with the exercise dates, but user modifiable
     travelEndDate: new Date(),
-    unit: "test7",       //exercise info (default to current user)
+    unit: "test18",       //exercise info (default to current user)
     userID: "1",    //pull from current user
     personnelSum: 0, //calculated from total aircraft
     unitCostSum: 0 //^^
 }
 
-function usePreviousId(value) {
-    console.log('value in usePreviousId', value)
-    const ref = useRef();
-    useEffect(() => {
-        ref.previous = ref.current;
-        ref.current = value.unitExerciseID;
-    }, [value]);
-    console.log('refs', ref.previous, ref.current, ref)
-    return ref.current;
-}
+// function usePreviousId(value) {
+//     console.log('value in usePreviousId', value)
+//     const ref = useRef();
+//     useEffect(() => {
+//         ref.previous = ref.current;
+//         ref.current = value.unitExerciseID;
+//     }, [value]);
+//     console.log('refs', ref.previous, ref.current, ref)
+//     return ref.current;
+// }
 
 function PlanningTool() {
     const [data, setData] = useState(unitExerciseTemplate);
     const [userInfo, setUserInfo] = useState();
     const [saved, setSaved] = useState(false);
     // const previousId = usePreviousId(data);
+
+    console.log('saved in planning tool', saved)
 
     useEffect(() => {
         fetchUserInfo();
@@ -64,6 +66,10 @@ function PlanningTool() {
     useEffect(() => {
         console.log('useEffect data', data);
     }, [data]);
+
+    useEffect(() => {
+        if (saved) updateUnitExercise(data);
+    }, [saved, data])
 
     //when data state is updated, write to DB
     // useEffect(() => {
@@ -85,8 +91,10 @@ function PlanningTool() {
 
     //creates new mission in the DB with 'newMission' as the data obj 
     const createUnitExercise = async (newMission) => {
-        const response = await TactApi.saveUnitExercise(newMission).then((res) => {return res.json()});
-        console.log('response in create',response);
+        const response = await TactApi.saveUnitExercise(newMission);
+        // const response = await TactApi.saveUnitExercise(newMission).then((res) => {return res.json()});
+        setData(response)
+        return response;
     }
 
     const updateUnitExercise = async (changedMission) => {
@@ -102,21 +110,21 @@ function PlanningTool() {
             .catch((err) => {console.log(err)});       
     }
 
-    const getCurrentExercise = async (currentExerciseId) => {
-        const result = await TactApi.getUnitExercise(currentExerciseId)
-                .catch((err) => {console.log(err)});
-        return result;
-    };
+    // const getCurrentExercise = async (currentExerciseId) => {
+    //     const result = await TactApi.getUnitExercise(currentExerciseId)
+    //             .catch((err) => {console.log(err)});
+    //     return result;
+    // };
 
-    const getCurrentExerciseByUnit = async (currentExerciseId) => {
-        const req = {
-            exerciseID: currentExerciseId,
-            unit: data.unit
-        }
-        const result = await TactApi.getUnitExerciseByUnit(req)
-                .catch((err) => {console.log(err)});
-        return result;
-    };
+    // const getCurrentExerciseByUnit = async (currentExerciseId) => {
+    //     const req = {
+    //         exerciseID: currentExerciseId,
+    //         unit: data.unit
+    //     }
+    //     const result = await TactApi.getUnitExerciseByUnit(req)
+    //             .catch((err) => {console.log(err)});
+    //     return result;
+    // };
 
     const fetchUserInfo = async () => {
         const response = await TactApi.getUser("admin@gmail.com");
@@ -125,16 +133,16 @@ function PlanningTool() {
 
     const { arrayInformationsStep } = texts()
 
-    const validateCurrentMission = async (idValue) => {
-        const body = {
-            exerciseID: idValue,
-            unit: data.unit
-        }
-        const response = await TactApi.getUnitExerciseByUnit(body)
-            .then((res) => {return res});
-        console.log('validate mission', response)
-        return response;
-    }
+    // const validateCurrentMission = async (idValue) => {
+    //     const body = {
+    //         exerciseID: idValue,
+    //         unit: data.unit
+    //     }
+    //     const response = await TactApi.getUnitExerciseByUnit(body)
+    //         .then((res) => {return res});
+    //     console.log('validate mission', response)
+    //     return response;
+    // }
 
     const updateFileHandler = (key, value) => {
         if (key === 'exerciseID') {
@@ -143,24 +151,10 @@ function PlanningTool() {
             //if no, then create a newmission
             const temp = data;
             temp.exerciseID = value;
-            createUnitExercise(temp).then((test) => {console.log('test create new', test)})
-            validateCurrentMission(value)
-                .then((res) => {
-                    if (res && res.unitExerciseID) {
-                        setData(res);
-                    }
-                    else {
-                        setData({...data, [key]: value });
-                    }
-                })
-                .then(() => createUnitExercise(data))
-                .catch((err) => {
-                    console.log('err in updateFileHandler', err);
-                });
+            createUnitExercise(temp);
         } else {
             setData({...data, [key]: value })
         }
-
     }
 
 

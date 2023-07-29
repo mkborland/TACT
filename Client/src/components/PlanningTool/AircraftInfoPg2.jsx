@@ -97,21 +97,23 @@ console.log('data', data)
       TactApi.getAllAircraft().then((data) => {
         setAirframeList(data);
       });
-    }
+    };
 
     const handleAddAircraft = () => {
+      setSaved(false);
       const newRowProps = {
         rows,
         airframeList,
         setPerAircraftTable
       }
       setRows(prev => [...prev, CreateRow(newRowProps)]);
-    }
+    };
+
     const saveUnitAircraft = () => {
       unitAircraftTable.forEach((table) => {
         TactApi.addExerciseAircraft(table).catch((err) => console.log('error in saving aircraft', err));
       });
-    }
+    };
 
     const handleSaveClick = () => {
       setSaved(true);

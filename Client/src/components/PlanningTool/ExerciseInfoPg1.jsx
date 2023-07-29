@@ -35,9 +35,9 @@ function YourInfo(props) {
     useEffect(() => {
         fetchLocations();
         fetchAllExercises();
-        // setSaved(false); //TODO turn this back on when figued out how to know all is saved
-        setSaved(true);
-    }, [])
+        setSaved(false); //TODO turn this back on when figued out how to know all is saved
+        // setSaved(true);
+    }, [setSaved])
 
     //check for all data complete to changed saved -> true
     useEffect(() => {
@@ -49,8 +49,11 @@ function YourInfo(props) {
             data.locationTo !== undefined &&
             data.travelStartDate !== undefined &&
             data.travelEndDate !== undefined
-        ) setSaved(true)
-    }, [data])
+        ) {
+            console.log('page 1 data should be saved')
+            setSaved(true)
+        }
+    }, [data, setSaved])
 
     const exerciseLabels = exercises ? 
         exercises.map((exercise) => { return {

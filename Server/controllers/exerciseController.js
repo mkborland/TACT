@@ -204,13 +204,11 @@ const saveUnitExercise = async (req, res) => {
                         userID: userID,
                         personnelSum: personnelSum,
                         unitCostSum: unitCostSum
-                    }, ['unitExerciseID'])
-                    .then(() => {
-                        res.status(200);
-                        // res.status(201).send(`Created entry for ${unit}'s participation in exercise with ID ${exerciseID}.`);
+                    }, "*")
+                    .then((d) => {
+                        res.status(200).send(d[0]);
                     });
             } else {
-                //data returns array with one entry
                 res.status(201).send(data[0]);
             }
         });
