@@ -40,17 +40,6 @@ const unitExerciseTemplate = {
     unitCostSum: 0 //^^
 }
 
-// function usePreviousId(value) {
-//     console.log('value in usePreviousId', value)
-//     const ref = useRef();
-//     useEffect(() => {
-//         ref.previous = ref.current;
-//         ref.current = value.unitExerciseID;
-//     }, [value]);
-//     console.log('refs', ref.previous, ref.current, ref)
-//     return ref.current;
-// }
-
 function PlanningTool() {
     const [data, setData] = useState(unitExerciseTemplate);
     const [userInfo, setUserInfo] = useState();
@@ -71,30 +60,10 @@ function PlanningTool() {
         if (saved) updateUnitExercise(data);
     }, [saved, data])
 
-    //when data state is updated, write to DB
-    // useEffect(() => {
-    //     console.log('data in useEffect', data, previousId);
-
-
-    //     if (data.unitExerciseID && previousId === data.unitExerciseID) {
-    //         console.log('id and previousId', data.unitExerciseID, previousId)
-    //         updateUnitExercise(data);
-    //         const test = getCurrentExercise('3');
-    //         console.log('test', test)
-    //     }
-    //     else if (!data.unitExerciseID && data.exerciseID) {
-    //         console.log('in the else if')
-    //         createUnitExercise(data);
-    //     }
-    // }, [data]);
-
-
     //creates new mission in the DB with 'newMission' as the data obj 
     const createUnitExercise = async (newMission) => {
         const response = await TactApi.saveUnitExercise(newMission);
-        // const response = await TactApi.saveUnitExercise(newMission).then((res) => {return res.json()});
         setData(response)
-        return response;
     }
 
     const updateUnitExercise = async (changedMission) => {
@@ -110,39 +79,12 @@ function PlanningTool() {
             .catch((err) => {console.log(err)});       
     }
 
-    // const getCurrentExercise = async (currentExerciseId) => {
-    //     const result = await TactApi.getUnitExercise(currentExerciseId)
-    //             .catch((err) => {console.log(err)});
-    //     return result;
-    // };
-
-    // const getCurrentExerciseByUnit = async (currentExerciseId) => {
-    //     const req = {
-    //         exerciseID: currentExerciseId,
-    //         unit: data.unit
-    //     }
-    //     const result = await TactApi.getUnitExerciseByUnit(req)
-    //             .catch((err) => {console.log(err)});
-    //     return result;
-    // };
-
     const fetchUserInfo = async () => {
         const response = await TactApi.getUser("admin@gmail.com");
         setUserInfo(response)
     }
 
     const { arrayInformationsStep } = texts()
-
-    // const validateCurrentMission = async (idValue) => {
-    //     const body = {
-    //         exerciseID: idValue,
-    //         unit: data.unit
-    //     }
-    //     const response = await TactApi.getUnitExerciseByUnit(body)
-    //         .then((res) => {return res});
-    //     console.log('validate mission', response)
-    //     return response;
-    // }
 
     const updateFileHandler = (key, value) => {
         if (key === 'exerciseID') {
@@ -156,7 +98,6 @@ function PlanningTool() {
             setData({...data, [key]: value })
         }
     }
-
 
     // get the pages of the steps
     //TODO set up the setSave on each of the pages

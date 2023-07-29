@@ -16,10 +16,33 @@ const defaultLabelValues = {
     locations: [{ city: 'test city', state: 'test state', country: 'test country' }],
 }
 
+const generateExerciseLabels = (input) => {
+    return input ? 
+        input.map((i) => { return {
+            value: i.exerciseID,
+            label: i.exerciseName,
+        }}) :
+        defaultLabelValues.exerciseLabels;
+};
+
+const generateLocationLabels = (input) => {
+    return input ? 
+    input.map((i, index) => { return {
+        value: `${index}`,
+        label: i.state ? `${i.city}, ${i.state}` : `${i.city}, ${i.country}`
+    }}) :
+    defaultLabelValues.locations.map((location, index) => { return {
+        value: `${index}`,
+        label: location.state ? `${location.city}, ${location.state}` : `${location.city}, ${location.country}`
+    }});
+};
+
 function YourInfo(props) {
     const { data, updateFileHandler, setSaved } = props;
     const [locations, setLocations ] = useState()
     const [exercises, setExercises] = useState(undefined);
+    const [defaultToValue, setDefaultToValue] = useState();
+    const [defaultFromValue, setDefaultFromValue] = useState();
 
     const fetchAllExercises = async () => { 
         const response = await GetAllExercises();
@@ -55,23 +78,39 @@ function YourInfo(props) {
         }
     }, [data, setSaved])
 
-    const exerciseLabels = exercises ? 
-        exercises.map((exercise) => { return {
-            value: exercise.exerciseID,
-            label: exercise.exerciseName,
-        }}) :
-        defaultLabelValues.exerciseLabels;
+    const exerciseLabels = generateExerciseLabels(exercises);
 
-    const locationlabels = locations ? 
-        locations.map((location, i) => { return {
-            value: `${i}`,
-            label: location.state ? `${location.city}, ${location.state}` : `${location.city}, ${location.country}`
-        }}) :
-        defaultLabelValues.locations.map((location, i) => { return {
-            value: `${i}`,
-            label: location.state ? `${location.city}, ${location.state}` : `${location.city}, ${location.country}`
-        }})
-  
+    const locationlabels = generateLocationLabels(locations);
+
+    useEffect(() => {
+        data.locationTo 
+            ? setDefaultToValue({
+                label: data.locationTo,
+                value: locationlabels.findIndex((label) => label.label === data.locationTo)
+            })
+            : setDefaultToValue({
+                label: 'Select...',
+                value: -1
+            });
+
+        data.locationFrom 
+            ? setDefaultFromValue({
+                label: data.locationFrom,
+                value: locationlabels.findIndex((label) => label.label === data.locationFrom)
+            })
+            : setDefaultFromValue({
+                label: 'Select...',
+                value: -1
+            })            
+
+    }, [data, locationlabels] )
+
+    // const defaultToValue = data.locationTo ?
+    //      :
+    //     {label: "test label", value: "test value"}
+    
+// console.log('def to label', defaultToValue)
+
     const verifyExerciseInputs = (e) => {
         updateFileHandler("exerciseID", e.value); //fills in template based on key value pair
     };
@@ -134,9 +173,9 @@ function YourInfo(props) {
                     className='input'
                     name="departingLocation"
                     id='locationFrom'
+                    value={defaultFromValue}
                     onChange={changeDepartLocation}
                     isSearchable
-                    // required
                     options={locationlabels}
                 />
             </div>
@@ -146,9 +185,9 @@ function YourInfo(props) {
                     className="input"
                     name="destination"
                     id="locationTo"
+                    value={defaultToValue}
                     onChange={changeDestinationLocation}
                     isSearchable
-                    // required
                     options={locationlabels}
                 />
             </div>
