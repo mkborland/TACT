@@ -14,6 +14,41 @@ import TactApi from "../../api/TactApi"
 
 //styles
 import '../../styles/PlanningToolPg4.css'
+import PlanningTool from "./PlanningTool";
+
+const unitExerciseTemplate = {
+  exerciseID: "1", //set from drop down of High level exercise
+  status: "0", // Not sure where this will be used
+  // dateCreated: GetCurrentDate(),
+  locationFrom: "Phoenix, AZ", //to be used with api for airfair
+  locationTo: "St Louis, IL",
+  travelStartDate: "26 July 2023", //in airfair for api use
+  travelEndDate: "27 July 2023",
+  unit: "OL-2",       //exercise info (default to current user)
+  userID: "1",    //pull from current user
+  personnelSum: "0", //calculated from total aircraft
+  unitCostSum: "0" //^^
+}
+
+const exerciseAircraftTemplate = {
+  unitExerciseID: '4',
+  aircraftType: 'F-35',
+  aircraftCount: '2',
+  personnelCount: '70',
+  commercialAirfareCount: '100',
+  commercialAirfareCost: '30000',
+  governmentAirfareCount: '45',
+  commercialLodgingCount: '120',
+  commercialLodgingCost: '12000',
+  governmentLodgingCount: '25',
+  governmentLodgingCost: '300',
+  fieldLodgingCount: '0',
+  lodgingPerDiem: '500',
+  mealPerDiem: '300',
+  mealProvidedCount: '0',
+  mealNotProvidedCount: '145'
+}
+
 
 const Lodging = ({data, updateFileHandler}) => {
     //Initialization
