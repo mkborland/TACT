@@ -23,8 +23,6 @@ const CreateRow = (props) => {
       personnel: 0
     }
 
-    console.log('props', props)
-
     const aircraftLabels = airframeList ? dedupedAircraft(airframeList) : [];
     
     const handleAircraftSelect = (e) => {
@@ -35,7 +33,6 @@ const CreateRow = (props) => {
     };
 
     const handleNumberSelect = (e) => {
-      console.log('handle number',e)
       personnel = e.value
       document.getElementById(`personnel-id${rows.length}`).value = personnel;
       tempTable.numberAircraft = e.label;
