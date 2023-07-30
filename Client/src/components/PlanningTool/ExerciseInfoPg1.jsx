@@ -151,7 +151,7 @@ function YourInfo(props) {
                     // required
                     options={exerciseLabels}
                 />
-             </div>
+            </div>
             <div className="input-container">
                 <label htmlFor="dates" className='inputLabel'>Start / End Dates</label>
                 {/* use the DateRangePicker for this specific component  https://mui.com/x/react-date-pickers/date-range-picker/*/}
