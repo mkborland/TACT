@@ -54,11 +54,9 @@ const newUnitAircraftObj = (unitExerciseId) => {
   return response;
 }
 
-function YourPlan(props) {
-  //TODO bring in data so that we can get the unitExerciseID
+//TODO: prepopulate Rows with data from the saved aircraft info if it already exists
 
-  //TODO once a row is calculated with the total number personnel - create a new obj with the template from above
-  //TODO what to do when Save button is pushed - write to DB?? 
+function YourPlan(props) {
     const { data, updateFileHandler, setSaved } = props
     const { plans } = texts();
 
@@ -68,11 +66,6 @@ function YourPlan(props) {
     const [totals, setTotals] = useState([]);
     const [perAircraftTable, setPerAircraftTable] = useState([]); //contains the different numbers for each aircraft selected
     const [unitAircraftTable, setUnitAircraftTable] = useState([]);
-
-console.log('rows', rows)
-console.log('table', perAircraftTable)
-console.log('test', totals)
-console.log('data', data)
 
     useEffect(() => {
       fetchAircraftData();
@@ -111,7 +104,8 @@ console.log('data', data)
 
     const saveUnitAircraft = () => {
       unitAircraftTable.forEach((table) => {
-        TactApi.addExerciseAircraft(table).catch((err) => console.log('error in saving aircraft', err));
+        TactApi.addExerciseAircraft(table)
+          .catch((err) => console.log('error in saving aircraft', err));
       });
     };
 
@@ -124,7 +118,7 @@ console.log('data', data)
         temp.personnelCount = total.personnel;
         setUnitAircraftTable(prev => [...prev, temp]);
       })
-      updateFileHandler('personnelSum', totalPersonnel);
+      updateFileHandler({personnelSum: totalPersonnel});
       saveUnitAircraft();
     };
 
@@ -165,16 +159,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
   },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-        backgroundColor: theme.palette.action.hover,
-    },
-// hide last border
-    "&:last-child td, &:last-child th": {
-    border: 0,
-    },
 }));
 
 export default YourPlan 

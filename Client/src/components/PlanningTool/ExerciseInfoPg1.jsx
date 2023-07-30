@@ -41,6 +41,7 @@ function YourInfo(props) {
     const { data, updateFileHandler, setSaved } = props;
     const [locations, setLocations ] = useState()
     const [exercises, setExercises] = useState(undefined);
+    const [defaultExerciseValue, setDefaultExerciseValue] = useState();
     const [defaultToValue, setDefaultToValue] = useState();
     const [defaultFromValue, setDefaultFromValue] = useState();
 
@@ -65,15 +66,14 @@ function YourInfo(props) {
     //check for all data complete to changed saved -> true
     useEffect(() => {
         if (
-            data.unitExerciseID !== undefined &&
-            data.exerciseID !== undefined  &&
-            data.dateCreated !== undefined &&
-            data.locationFrom !== undefined &&
-            data.locationTo !== undefined &&
-            data.travelStartDate !== undefined &&
-            data.travelEndDate !== undefined
+            data.unitExerciseID &&
+            data.exerciseID &&
+            data.dateCreated &&
+            data.locationFrom &&
+            data.locationTo &&
+            data.travelStartDate &&
+            data.travelEndDate
         ) {
-            console.log('page 1 data should be saved')
             setSaved(true)
         }
     }, [data, setSaved])
@@ -82,7 +82,19 @@ function YourInfo(props) {
 
     const locationlabels = generateLocationLabels(locations);
 
+    //IF the unitExercise already exist, this populates the table values with the 
+    //pre-existing data
     useEffect(() => {
+        data.exerciseID && exercises
+        ? setDefaultExerciseValue({
+            value: data.exerciseID,
+            label: exerciseLabels.find((label) => label.value === data.exerciseID).label
+        })
+        : setDefaultExerciseValue({
+            label: 'Select an Exercise',
+            value: -1
+        }) 
+
         data.locationTo 
             ? setDefaultToValue({
                 label: data.locationTo,
@@ -103,32 +115,26 @@ function YourInfo(props) {
                 value: -1
             })            
 
-    }, [data, locationlabels] )
-
-    // const defaultToValue = data.locationTo ?
-    //      :
-    //     {label: "test label", value: "test value"}
-    
-// console.log('def to label', defaultToValue)
+    }, [data, locationlabels, exercises, exerciseLabels] )
 
     const verifyExerciseInputs = (e) => {
-        updateFileHandler("exerciseID", e.value); //fills in template based on key value pair
+        updateFileHandler({exerciseID: e.value}); //fills in template based on key value pair
     };
 
     const verifyStartDateInputs = (e) => {
-        updateFileHandler("travelStartDate", e.$d);
+        updateFileHandler({travelStartDate: e.$d});
     };
 
     const verifyEndDateInputs = (e) => {
-        updateFileHandler("travelEndDate", e.$d);
+        updateFileHandler({travelEndDate: e.$d});
     };
 
     const changeDepartLocation = (e) => {
-        updateFileHandler("locationFrom", e.label)
+        updateFileHandler({locationFrom: e.label})
     };
 
     const changeDestinationLocation = (e) => {
-        updateFileHandler("locationTo", e.label)
+        updateFileHandler({locationTo: e.label})
     };
 
     return (
@@ -139,6 +145,7 @@ function YourInfo(props) {
                     className="input"
                     name="exercise-name"
                     placeholder={'Select an Exercise'}
+                    value={defaultExerciseValue}
                     onChange={verifyExerciseInputs}
                     isSearchable
                     // required

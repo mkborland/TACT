@@ -10,7 +10,7 @@ import StepInformations from "./StepInformations"
 import '../../styles/PlanningTool.css'
 
 // hooks
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { texts } from "../../hooks/texts"
 import { useForm } from "../../hooks/useForm"
 import TactApi from "../../api/TactApi"
@@ -34,23 +34,36 @@ const unitExerciseTemplate = {
     locationTo: undefined,
     travelStartDate: new Date(), //should start with the exercise dates, but user modifiable
     travelEndDate: new Date(),
-    unit: "test18",       //exercise info (default to current user)
-    userID: "1",    //pull from current user
+    unit: undefined,       //exercise info (default to current user)
+    userID: -1,    //pull from current user
     personnelSum: 0, //calculated from total aircraft
     unitCostSum: 0 //^^
 }
 
-function PlanningTool() {
+function PlanningTool(props) {
+    const { user } = props;
     const [data, setData] = useState(unitExerciseTemplate);
     const [userInfo, setUserInfo] = useState();
     const [saved, setSaved] = useState(false);
-    // const previousId = usePreviousId(data);
 
-    console.log('saved in planning tool', saved)
+    const userEmail = user ? user.email : "admin@gmail.com";
+    //TODO: The userID should be passed from main application, 
+    //this needs to be updated once that is figured out
+    const fetchUserInfo = async () => {
+        const response = await TactApi.getUser(userEmail);
+        setUserInfo(response);
+    };
 
     useEffect(() => {
-        fetchUserInfo();
+        fetchUserInfo()
     }, []);
+
+    useEffect(() => {
+        userInfo && updateFileHandler({
+            unit: userInfo.unit,
+            userID: userInfo.userID
+        })
+    }, [userInfo]);
 
     useEffect(() => {
         console.log('useEffect data', data);
@@ -74,29 +87,28 @@ function PlanningTool() {
             })
             .then((result) => {
                 console.log('this is what the new data should be', result)
-                // setData(result)
             })
             .catch((err) => {console.log(err)});       
     }
 
-    const fetchUserInfo = async () => {
-        const response = await TactApi.getUser("admin@gmail.com");
-        setUserInfo(response)
-    }
-
     const { arrayInformationsStep } = texts()
 
-    const updateFileHandler = (key, value) => {
-        if (key === 'exerciseID') {
+    const updateFileHandler = (update) => {
+        if (Object.keys(update).includes('exerciseID')) {
             //validate if there is an existing mission with that exId
             //if yes, then update the current 'data' with the db data
             //if no, then create a newmission
             const temp = data;
-            temp.exerciseID = value;
+            temp.exerciseID = update.exerciseID;
             createUnitExercise(temp);
         } else {
-            setData({...data, [key]: value })
+            const temp = data;
+            Object.keys(update).forEach((obj) => {
+                temp[obj] = update[obj];
+            });
+            setData(temp);    
         }
+   
     }
 
     // get the pages of the steps
