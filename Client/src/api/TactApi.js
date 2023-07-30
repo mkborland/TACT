@@ -20,10 +20,6 @@ const TactApi = {
   getExercises: GetExercises,
   getAllExercises: GetAllExercises,
   getAllUnitExercises: GetAllUnitExercises,
-  getUnitExerciseByUnit: getUnitExerciseByUnit,
-  saveUnitExercise: SaveUnitExercise,
-  updateUnitExercise: UpdateUnitExercise,
-  getUnitExercise: GetUnitExercise,
   postExercises: PostExercises,
   getAllAircraft: GetAllAircraft,
   updateAircraft: UpdateAircraft,
@@ -31,6 +27,10 @@ const TactApi = {
   addUser: AddUser,
   getUser: GetUser,
   updateUser: UpdateUser,
+  getUnitExerciseByUnit: getUnitExerciseByUnit,
+  saveUnitExercise: SaveUnitExercise,
+  updateUnitExercise: UpdateUnitExercise,
+  getUnitExercise: GetUnitExercise,
   addExerciseAircraft: AddExerciseAircraft,
 };
 export default TactApi;

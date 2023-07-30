@@ -9,9 +9,9 @@ import Paper from "@mui/material/Paper";
 import { Button, Typography } from "@mui/material";
 import TactApi from "../../api/TactApi.js";
 import React, { useEffect, useState } from "react";
+import CreateRow from './CreateRow.jsx';
 // hooks
 import { texts } from '../../hooks/texts'
-import CreateRow from "./CreateRow";
 
 // styles
 import '../../styles/PlanningToolPg2.css'
@@ -141,7 +141,7 @@ function YourPlan(props) {
             </Table>
             <span>
               <Button onClick={handleAddAircraft}>Add Aircraft</Button>
-              <Button onClick={() => handleSaveClick()}>Save</Button>
+              <Button onClick={handleSaveClick}>Save</Button>
               <Typography variant="body1">
                 Total Personnel: {totalPersonnel}
               </Typography>

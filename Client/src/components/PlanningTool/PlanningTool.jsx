@@ -130,7 +130,7 @@ function PlanningTool(props) {
     const lastNumber = formComponents.length + 1;
 
     // DeltaFox: This code was grabbed from this site: https://www.frontendmentor.io/solutions/multistep-form-isMXbZc7cy.  You can go there to see the intended functionality and original source code.
-    return  (
+    return (
         <div>
             <main className="main-container">
                 <aside>

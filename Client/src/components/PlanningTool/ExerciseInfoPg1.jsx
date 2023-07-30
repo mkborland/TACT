@@ -6,10 +6,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { travelLocations } from '../Util/locations';
-import GetAllExercises from "../../api/exercises/get/GetAllExercises"
 
 // styles
 import '../../styles/PlanningToolPg1.css';
+import TactApi from '../../api/TactApi';
 
 const defaultLabelValues = {
     exerciseLabels: [{ value: undefined, label: "Select Exercise"}],
@@ -46,7 +46,7 @@ function YourInfo(props) {
     const [defaultFromValue, setDefaultFromValue] = useState();
 
     const fetchAllExercises = async () => { 
-        const response = await GetAllExercises();
+        const response = await TactApi.getAllExercises();
         setExercises(response);
     }
 
@@ -59,8 +59,7 @@ function YourInfo(props) {
     useEffect(() => {
         fetchLocations();
         fetchAllExercises();
-        setSaved(false); //TODO turn this back on when figued out how to know all is saved
-        // setSaved(true);
+        setSaved(false);
     }, [setSaved])
 
     //check for all data complete to changed saved -> true
