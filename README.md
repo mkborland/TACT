@@ -1,6 +1,8 @@
 # TACT: Travel Accommodations and Coordination Technology
 
-This project is created for Hack the Ranch 2023 
+This project is created for Hack the Ranch May 2023 
+
+Updated July 2023
 
 ## Team Members
 

@@ -10,7 +10,7 @@ export function up(knex) {
         table.string("email");
         table.string("unit");
         table.integer("roleID");
-        table.foreign("roleID").references("roles.roleID");
+        table.foreign("roleID").references("roles.roleID").onDelete("CASCADE");
     })
 };
 

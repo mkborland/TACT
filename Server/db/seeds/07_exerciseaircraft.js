@@ -22,7 +22,9 @@ export async function seed(knex) {
         lodgingPerDiem: '500',
         mealPerDiem: '300',
         mealProvidedCount: '0',
-        mealNotProvidedCount: '145'
+        mealNotProvidedCount: '145',
+        rentalCount: '15',
+        rentalCost: '600'
       }
     ]);
     await knex('exerciseaircraft').insert([
@@ -42,7 +44,9 @@ export async function seed(knex) {
         lodgingPerDiem: '600',
         mealPerDiem: '400',
         mealProvidedCount: '0',
-        mealNotProvidedCount: '50'
+        mealNotProvidedCount: '50',
+        rentalCount: '5',
+        rentalCost: '300'
       }
     ]);
   };

@@ -119,9 +119,9 @@ const addExercise = async (req, res) => {
                         userID: userID, 
                         personnelSum: personnelSum, 
                         costSum: costSum
-                    })
-                    .then(() => {
-                        res.status(201).send(`${exerciseName} has been added.`);
+                    },['exerciseID'])
+                    .then((data) => {
+                        res.status(201).send(data);
                     });
             } else {
                 res.status(202).send(`${exerciseName} already exists.`);
@@ -232,7 +232,7 @@ const lookupUnitExercise = async (req, res) => {
 };
 
 const addExerciseAircraft = async (req, res) => {
-    const { unitExerciseID, aircraftType, aircraftCount, personnelCount, commercialAirfareCount, commercialAirfareCost, governmentAirfareCount, commercialLodgingCount, commercialLodgingCost, governmentLodgingCount, governmentLodgingCost,fieldLodgingCount, lodgingPerDiem, mealPerDiem, mealProvidedCount, mealNotProvidedCount } = req.body
+    const { unitExerciseID, aircraftType, aircraftCount, personnelCount, commercialAirfareCount, commercialAirfareCost, governmentAirfareCount, commercialLodgingCount, commercialLodgingCost, governmentLodgingCount, governmentLodgingCost,fieldLodgingCount, lodgingPerDiem, mealPerDiem, mealProvidedCount, mealNotProvidedCount, rentalCount, rentalCost } = req.body
     knex('exerciseaircraft')
         .select("*")
         .where({ unitExerciseID: unitExerciseID, aircraftType: aircraftType })
@@ -255,7 +255,9 @@ const addExerciseAircraft = async (req, res) => {
                         lodgingPerDiem: lodgingPerDiem,
                         mealPerDiem: mealPerDiem,
                         mealProvidedCount: mealProvidedCount,
-                        mealNotProvidedCount: mealNotProvidedCount
+                        mealNotProvidedCount: mealNotProvidedCount,
+                        rentalCount: rentalCount,
+                        rentalCost: rentalCost
                     })
                     .then(() => {
                         res.status(201).send(`Created entry for ${aircraftType} in the unit exercise with ID ${unitExerciseID}.`);
