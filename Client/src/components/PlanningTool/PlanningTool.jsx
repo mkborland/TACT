@@ -81,13 +81,6 @@ function PlanningTool(props) {
 
     const updateUnitExercise = async (changedMission) => {
         await TactApi.updateUnitExercise(changedMission)
-            .then((res) => {
-                console.log('response in update', res)
-                return res.text()
-            })
-            .then((result) => {
-                console.log('this is what the new data should be', result)
-            })
             .catch((err) => {console.log(err)});       
     }
 
