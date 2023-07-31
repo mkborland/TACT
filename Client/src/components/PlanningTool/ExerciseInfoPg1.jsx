@@ -39,7 +39,7 @@ function YourInfo({ data, updateFileHandler }) {
                     type="text"
                     name="name"
                     id="exerciseID"
-                    value={data.exerciseID.toString() || ""}  //where the text fields update based on data object (template)
+                    value={data.exerciseID || ""}  //where the text fields update based on data object (template)
                     onChange={(e) => verifyInputs(e)}
                     placeholder="Exercise Name will auto-convert to upper-case"
                     onInvalid={verifyInputsInvalids}

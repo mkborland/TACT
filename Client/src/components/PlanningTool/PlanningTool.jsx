@@ -10,10 +10,13 @@ import StepInformations from "./StepInformations"
 import '../../styles/PlanningTool.css'
 
 // hooks
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { texts } from "../../hooks/texts"
 import { useForm } from "../../hooks/useForm"
 import { GetCurrentDate } from "../Util/DefinedListItem"
+import GetAllExercises from "../../api/exercises/get/GetAllExercises"
+import GetUser from "../../api/Users/get/GetUser"
+import GetAllUsers from "../../api/Users/get/GetAllUsers"
 
 // --------- planning layout ------------
 //pg 1 (ex Info) -> drop down with made ex's, user name and unit
@@ -27,12 +30,12 @@ import { GetCurrentDate } from "../Util/DefinedListItem"
 
 const unitExerciseTemplate = {
     exerciseID: "1", //set from drop down of High level exercise
-    status: "0", // Not sure where this will be used
+    status: "Draft", // Not sure where this will be used
     dateCreated: GetCurrentDate(),
     locationFrom: "Phoenix, AZ", //to be used with api for airfair
     locationTo: "St Louis, IL",
-    travelStartDate: "26 July 2023", //in airfair for api use
-    travelEndDate: "27 July 2023",
+    travelStartDate: new Date("26 July 2023"), //should start with the exercise dates, but user modifiable
+    travelEndDate: new Date("27 July 2023"),
     unit: "OL-2",       //exercise info (default to current user)
     userID: "1",    //pull from current user
     personnelSum: "0", //calculated from total aircraft
@@ -41,6 +44,41 @@ const unitExerciseTemplate = {
 
 function PlanningTool() {
     const [data, setData] = useState(unitExerciseTemplate)
+    const [exercises, setExercises] = useState([]);
+    const [userInfo, setUserInfo] = useState();
+
+    useEffect(() => {
+        fetchAllMissions();
+        fetchUserInfo()
+    }, []);
+
+    useEffect(() => {
+        console.log('exercises', exercises);
+        setData({...data, 
+            exerciseID: exercises[0]?.exerciseID,
+            travelStartDate: exercises[0]?.exerciseStartDate,
+            travelEndDate: exercises[0]?.exerciseEndDate,
+        })
+    }, [exercises])
+
+    useEffect(() => {
+        console.log('data', data)        
+    }, [data])
+
+
+    useEffect(() => {
+        console.log(userInfo)
+    }, [userInfo])
+
+    const fetchAllMissions = async () => { 
+        const response = await GetAllExercises();
+        setExercises(response)
+    }
+
+    const fetchUserInfo = async () => {
+        const response = await GetUser("admin@gmail.com");
+        setUserInfo(response)
+    }
 
     const { headerText, arrayInformationsStep } = texts()
 
