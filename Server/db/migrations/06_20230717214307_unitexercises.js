@@ -10,7 +10,9 @@ export function up(knex) {
         table.boolean("status");
         table.date("dateCreated");
         table.string("locationFrom");
+        // table.foreign("locationFrom").references("locations.locationID");
         table.string("locationTo");
+        // table.foreign("locationTo").references("locations.locationID");
         table.date("travelStartDate");
         table.date("travelEndDate");
         table.string("unit");
@@ -29,6 +31,8 @@ export function down(knex) {
     return knex.schema.alterTable("unitexercises", (table) => {
         table.dropForeign("userID");
         table.dropForeign("exerciseID");
+        table.dropForeign("locationFrom");
+        table.dropForeign("locationTo");
     }).then(() => {
         return knex.schema.dropTableIfExists("unitexercises");
     });
