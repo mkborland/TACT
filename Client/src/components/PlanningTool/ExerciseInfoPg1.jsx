@@ -52,7 +52,8 @@ function YourInfo(props) {
 
     async function fetchLocations() {
         //TODO: point this to the db when the table is created
-        const response = await Promise.resolve(travelLocations);
+        const response = await TactApi.getAllLocations();
+        // const response = await Promise.resolve(travelLocations);
         setLocations(response);
     };
 

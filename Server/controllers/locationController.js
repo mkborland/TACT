@@ -21,6 +21,12 @@ const populateRecommended = async (req, res) => {
         .then(data => res.status(200).json(data))
 };
 
+const requestAllLocations = async (req, res) => {
+    return knex('locations')
+        .select('*')
+        .then(data => res.status(200).json(data))
+};
+
 const requestMilitaryBases = async (req, res) => {
     return knex('locations')
         .select('*')
@@ -76,4 +82,11 @@ const requestDualUseAirports = async (req, res) => {
         .then(data => res.status(200).json(data))
 }       
 
-export { requestLocation, populateRecommended, requestMilitaryBases, requestCivilianAirports, requestDualUseAirports }
+export { 
+    requestLocation,
+    populateRecommended,
+    requestMilitaryBases,
+    requestCivilianAirports,
+    requestDualUseAirports,
+    requestAllLocations,
+ }
