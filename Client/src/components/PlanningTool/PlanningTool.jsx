@@ -13,10 +13,7 @@ import '../../styles/PlanningTool.css'
 import { useEffect, useState } from "react"
 import { texts } from "../../hooks/texts"
 import { useForm } from "../../hooks/useForm"
-import { GetCurrentDate } from "../Util/DefinedListItem"
-import GetAllExercises from "../../api/exercises/get/GetAllExercises"
-import GetUser from "../../api/Users/get/GetUser"
-import GetAllUsers from "../../api/Users/get/GetAllUsers"
+import TactApi from "../../api/TactApi"
 
 // --------- planning layout ------------
 //pg 1 (ex Info) -> drop down with made ex's, user name and unit
@@ -29,80 +26,101 @@ import GetAllUsers from "../../api/Users/get/GetAllUsers"
 
 
 const unitExerciseTemplate = {
-    exerciseID: "1", //set from drop down of High level exercise
-    status: "Draft", // Not sure where this will be used
-    dateCreated: GetCurrentDate(),
-    locationFrom: "Phoenix, AZ", //to be used with api for airfair
-    locationTo: "St Louis, IL",
-    travelStartDate: new Date("26 July 2023"), //should start with the exercise dates, but user modifiable
-    travelEndDate: new Date("27 July 2023"),
-    unit: "OL-2",       //exercise info (default to current user)
-    userID: "1",    //pull from current user
-    personnelSum: "0", //calculated from total aircraft
-    unitCostSum: "0" //^^
+    unitExerciseID: undefined,
+    exerciseID: undefined, //set from drop down of High level exercise
+    status: false, // Should be an enum = 'Draft' | "Complete"
+    dateCreated: new Date(),
+    locationFrom: undefined, //to be used with api for airfair
+    locationTo: undefined,
+    travelStartDate: new Date(), //should start with the exercise dates, but user modifiable
+    travelEndDate: new Date(),
+    unit: undefined,       //exercise info (default to current user)
+    userID: -1,    //pull from current user
+    personnelSum: 0, //calculated from total aircraft
+    unitCostSum: 0 //^^
 }
 
-function PlanningTool() {
-    const [data, setData] = useState(unitExerciseTemplate)
-    const [exercises, setExercises] = useState([]);
+function PlanningTool(props) {
+    const { user } = props;
+    const [data, setData] = useState(unitExerciseTemplate);
     const [userInfo, setUserInfo] = useState();
+    const [saved, setSaved] = useState(false);
+
+    const userEmail = user ? user.email : "admin@gmail.com";
+    //TODO: The userID should be passed from main application, 
+    //this needs to be updated once that is figured out
+    const fetchUserInfo = async () => {
+        const response = await TactApi.getUser(userEmail);
+        setUserInfo(response);
+    };
 
     useEffect(() => {
-        fetchAllMissions();
         fetchUserInfo()
     }, []);
 
     useEffect(() => {
-        console.log('exercises', exercises);
-        setData({...data, 
-            exerciseID: exercises[0]?.exerciseID,
-            travelStartDate: exercises[0]?.exerciseStartDate,
-            travelEndDate: exercises[0]?.exerciseEndDate,
+        userInfo && updateFileHandler({
+            unit: userInfo.unit,
+            userID: userInfo.userID
         })
-    }, [exercises])
+    }, [userInfo]);
 
     useEffect(() => {
-        console.log('data', data)        
-    }, [data])
-
+        console.log('useEffect data', data);
+    }, [data]);
 
     useEffect(() => {
-        console.log(userInfo)
-    }, [userInfo])
+        if (saved) updateUnitExercise(data);
+    }, [saved, data])
 
-    const fetchAllMissions = async () => { 
-        const response = await GetAllExercises();
-        setExercises(response)
+    //creates new mission in the DB with 'newMission' as the data obj 
+    const createUnitExercise = async (newMission) => {
+        const response = await TactApi.saveUnitExercise(newMission);
+        setData(response)
     }
 
-    const fetchUserInfo = async () => {
-        const response = await GetUser("admin@gmail.com");
-        setUserInfo(response)
+    const updateUnitExercise = async (changedMission) => {
+        await TactApi.updateUnitExercise(changedMission)
+            .catch((err) => {console.log(err)});       
     }
 
-    const { headerText, arrayInformationsStep } = texts()
+    const { arrayInformationsStep } = texts()
 
-    const updateFileHandler = (key, value) => {
-        setData(prev => {
-            return { ...prev, [key]: value.toUpperCase() }
-        })
+    const updateFileHandler = (update) => {
+        if (Object.keys(update).includes('exerciseID')) {
+            //validate if there is an existing mission with that exId
+            //if yes, then update the current 'data' with the db data
+            //if no, then create a newmission
+            const temp = data;
+            temp.exerciseID = update.exerciseID;
+            createUnitExercise(temp);
+        } else {
+            const temp = data;
+            Object.keys(update).forEach((obj) => {
+                temp[obj] = update[obj];
+            });
+            setData(temp);    
+        }
+   
     }
 
     // get the pages of the steps
+    //TODO set up the setSave on each of the pages
     const formComponents = [
-        <ExerciseInfo data={data} updateFileHandler={updateFileHandler} />,
-        <YourPlan data={data} updateFileHandler={updateFileHandler} />,
-        <PickAddOns data={data} updateFileHandler={updateFileHandler} />,
-        <Lodging data={data} updateFileHandler={updateFileHandler}/>,
+        <ExerciseInfo data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
+        <YourPlan data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
+        <PickAddOns data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
+        <Lodging data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
         <Thanks />
     ]
 
-    const { currentStep, currentComponent, changeStep, isFarstStep} = useForm(formComponents, data)
+    const { currentStep, currentComponent, changeStep, isFarstStep} = useForm(formComponents, data, saved)
 
     // to keep the 'Next Step' button in the same place
     const styleToActions = isFarstStep ? 'end' : 'space-between'
     const isThankyouStep = currentStep === formComponents.length - 1 ? 'center' : 'space-between'
     const displayOff = currentStep !== formComponents.length - 1 ? 'flex' : 'none'
+    const lastNumber = formComponents.length + 1;
 
     // DeltaFox: This code was grabbed from this site: https://www.frontendmentor.io/solutions/multistep-form-isMXbZc7cy.  You can go there to see the intended functionality and original source code.
     return (
@@ -111,7 +129,14 @@ function PlanningTool() {
                 <aside>
                     <div className='step-background'>
                         <div className="step-bar">
-                            {arrayInformationsStep.map(step => <StepInformations key={step.num} array={step} step={currentStep} />)}
+                            {arrayInformationsStep.map(step => 
+                                <StepInformations 
+                                    key={step.num}
+                                    array={step}
+                                    step={currentStep} 
+                                    lastNumber={lastNumber}
+                                />
+                            )}
                         </div>
                     </div>
                 </aside>
