@@ -95,14 +95,15 @@ function PlanningTool(props) {
             temp.exerciseID = update.exerciseID;
             createUnitExercise(temp);
         } else {
+            console.log('update obj', update)
             const temp = data;
             Object.keys(update).forEach((obj) => {
                 temp[obj] = update[obj];
             });
-            setData(temp);    
+            setData(temp);
+            console.log('updated data', data)    
         }
-   
-    }
+       }
 
     // get the pages of the steps
     //TODO set up the setSave on each of the pages

@@ -5,7 +5,6 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { travelLocations } from '../Util/locations';
 
 // styles
 import '../../styles/PlanningToolPg1.css';
@@ -13,7 +12,10 @@ import TactApi from '../../api/TactApi';
 
 const defaultLabelValues = {
     exerciseLabels: [{ value: undefined, label: "Select Exercise"}],
-    locations: [{ city: 'test city', state: 'test state', country: 'test country' }],
+    locations: [
+        { airport: 'test airport', region: 'test state', country: 'United States' },
+        { airport: 'OCONUS airport', region: 'test region', country: 'Germany'}
+    ],
 }
 
 const generateExerciseLabels = (input) => {
@@ -25,15 +27,19 @@ const generateExerciseLabels = (input) => {
         defaultLabelValues.exerciseLabels;
 };
 
-const generateLocationLabels = (input) => {
-    return input ? 
-    input.map((i, index) => { return {
-        value: `${index}`,
-        label: i.state ? `${i.city}, ${i.state}` : `${i.city}, ${i.country}`
+const generateLocationLabels = (inputs) => {
+    return inputs ? 
+    inputs.map((input) => { return {
+        value: input.locationID,
+        label: input.country === 'United States' 
+            ? `${input.airport}, ${input.region}`
+            : `${input.airport}, ${input.country}`
     }}) :
     defaultLabelValues.locations.map((location, index) => { return {
-        value: `${index}`,
-        label: location.state ? `${location.city}, ${location.state}` : `${location.city}, ${location.country}`
+        value: index,
+        label: location.contry === 'United States'
+        ? `${location.airport}, ${location.region}`
+        : `${location.airport}, ${location.country}`
     }});
 };
 
@@ -48,13 +54,18 @@ function YourInfo(props) {
     const fetchAllExercises = async () => { 
         const response = await TactApi.getAllExercises();
         setExercises(response);
-    }
+    };
 
-    async function fetchLocations() {
+    const fetchLocationById = async (id) => { 
+        return await TactApi.getLocationById(id);
+    };
+
+    const fetchLocations = async () => {
         //TODO: point this to the db when the table is created
         const response = await TactApi.getAllLocations();
         // const response = await Promise.resolve(travelLocations);
         setLocations(response);
+        // console.log('locations', locations)
     };
 
     useEffect(() => {
@@ -74,6 +85,7 @@ function YourInfo(props) {
             data.travelStartDate &&
             data.travelEndDate
         ) {
+            console.log('data should be saved')
             setSaved(true)
         }
     }, [data, setSaved])
@@ -95,20 +107,20 @@ function YourInfo(props) {
             value: -1
         }) 
 
-        data.locationTo 
+        data.locationTo && locationlabels 
             ? setDefaultToValue({
-                label: data.locationTo,
-                value: locationlabels.findIndex((label) => label.label === data.locationTo)
+                value: data.locationTo,
+                label: parseInt(locationlabels.find((label) => label.value === data.locationTo).label)
             })
             : setDefaultToValue({
                 label: 'Select...',
                 value: -1
             });
 
-        data.locationFrom 
+        data.locationFrom && locationlabels
             ? setDefaultFromValue({
-                label: data.locationFrom,
-                value: locationlabels.findIndex((label) => label.label === data.locationFrom)
+                value: data.locationFrom,
+                label: parseInt(locationlabels.find((label) => label.value === data.locationFrom).label)
             })
             : setDefaultFromValue({
                 label: 'Select...',
@@ -130,11 +142,12 @@ function YourInfo(props) {
     };
 
     const changeDepartLocation = (e) => {
-        updateFileHandler({locationFrom: e.label})
+        updateFileHandler({locationFrom: e.value})
+        console.log('data after updating depature locations', data)
     };
 
     const changeDestinationLocation = (e) => {
-        updateFileHandler({locationTo: e.label})
+        updateFileHandler({locationTo: e.value})
     };
 
     return (
