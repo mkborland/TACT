@@ -70,18 +70,22 @@ function PlanningTool(props) {
     }, [data]);
 
     useEffect(() => {
-        if (saved) updateUnitExercise(data);
+        if (saved) {
+            updateUnitExercise();
+        }
     }, [saved, data])
 
     //creates new mission in the DB with 'newMission' as the data obj 
     const createUnitExercise = async (newMission) => {
         const response = await TactApi.saveUnitExercise(newMission);
-        setData(response)
+        setData(response);
+        setSaved(true);
     }
 
-    const updateUnitExercise = async (changedMission) => {
-        await TactApi.updateUnitExercise(changedMission)
-            .catch((err) => {console.log(err)});       
+    const updateUnitExercise = async () => {
+        await TactApi.updateUnitExercise(data)
+            .catch((err) => {console.log(err)});
+        setSaved(true);       
     }
 
     const { arrayInformationsStep } = texts()
@@ -94,14 +98,14 @@ function PlanningTool(props) {
             const temp = data;
             temp.exerciseID = update.exerciseID;
             createUnitExercise(temp);
-        } else {
-            console.log('update obj', update)
+;        } else {
+            setSaved(false)
             const temp = data;
             Object.keys(update).forEach((obj) => {
                 temp[obj] = update[obj];
             });
             setData(temp);
-            console.log('updated data', data)    
+            if (data.unitExerciseID) updateUnitExercise();
         }
        }
 

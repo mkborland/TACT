@@ -13,6 +13,7 @@ export function useForm(steps, data, saved) {
 
         if(i < 0 || i >= steps.length) return
 
+        // setCurrentStep(i);
         saved ? setCurrentStep(i) : alert('Data not saved');
     }
 

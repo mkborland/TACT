@@ -61,11 +61,8 @@ function YourInfo(props) {
     };
 
     const fetchLocations = async () => {
-        //TODO: point this to the db when the table is created
         const response = await TactApi.getAllLocations();
-        // const response = await Promise.resolve(travelLocations);
         setLocations(response);
-        // console.log('locations', locations)
     };
 
     useEffect(() => {
@@ -73,22 +70,6 @@ function YourInfo(props) {
         fetchAllExercises();
         setSaved(false);
     }, [setSaved])
-
-    //check for all data complete to changed saved -> true
-    useEffect(() => {
-        if (
-            data.unitExerciseID &&
-            data.exerciseID &&
-            data.dateCreated &&
-            data.locationFrom &&
-            data.locationTo &&
-            data.travelStartDate &&
-            data.travelEndDate
-        ) {
-            console.log('data should be saved')
-            setSaved(true)
-        }
-    }, [data, setSaved])
 
     const exerciseLabels = generateExerciseLabels(exercises);
 
@@ -107,27 +88,27 @@ function YourInfo(props) {
             value: -1
         }) 
 
-        data.locationTo && locationlabels 
+        data.locationTo && locations && locationlabels && locationlabels.length > 0 
             ? setDefaultToValue({
                 value: data.locationTo,
-                label: parseInt(locationlabels.find((label) => label.value === data.locationTo).label)
+                label: (locationlabels.find((label) => parseInt(label.value) === parseInt(data.locationTo))).label
             })
             : setDefaultToValue({
                 label: 'Select...',
                 value: -1
             });
 
-        data.locationFrom && locationlabels
+        data.locationFrom && locations &&locationlabels && locationlabels.length > 0 
             ? setDefaultFromValue({
                 value: data.locationFrom,
-                label: parseInt(locationlabels.find((label) => label.value === data.locationFrom).label)
+                label: (locationlabels.find((label) => parseInt(label.value) === parseInt(data.locationFrom))).label
             })
             : setDefaultFromValue({
                 label: 'Select...',
                 value: -1
-            })            
+            })    
 
-    }, [data, locationlabels, exercises, exerciseLabels] )
+    }, [data, locations, locationlabels, exercises, exerciseLabels] )
 
     const verifyExerciseInputs = (e) => {
         updateFileHandler({exerciseID: e.value}); //fills in template based on key value pair
@@ -143,7 +124,6 @@ function YourInfo(props) {
 
     const changeDepartLocation = (e) => {
         updateFileHandler({locationFrom: e.value})
-        console.log('data after updating depature locations', data)
     };
 
     const changeDestinationLocation = (e) => {
@@ -161,7 +141,7 @@ function YourInfo(props) {
                     value={defaultExerciseValue}
                     onChange={verifyExerciseInputs}
                     isSearchable
-                    // required
+                    required
                     options={exerciseLabels}
                 />
             </div>
