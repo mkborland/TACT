@@ -44,7 +44,7 @@ const generateLocationLabels = (inputs) => {
 };
 
 function YourInfo(props) {
-    const { data, updateFileHandler, setSaved } = props;
+    const { data, updateFileHandler } = props;
     const [locations, setLocations ] = useState()
     const [exercises, setExercises] = useState(undefined);
     const [defaultExerciseValue, setDefaultExerciseValue] = useState();
@@ -68,8 +68,7 @@ function YourInfo(props) {
     useEffect(() => {
         fetchLocations();
         fetchAllExercises();
-        setSaved(false);
-    }, [setSaved])
+    }, [])
 
     const exerciseLabels = generateExerciseLabels(exercises);
 

@@ -13,8 +13,12 @@ export function useForm(steps, data, saved) {
 
         if(i < 0 || i >= steps.length) return
 
-        // setCurrentStep(i);
-        saved ? setCurrentStep(i) : alert('Data not saved');
+        if (saved.saved) {
+            setCurrentStep(i)
+        } else {
+            alert(saved.alert);
+        }
+            
     }
 
     steps[3] = <Lodging data={data} changeStep={changeStep}/>

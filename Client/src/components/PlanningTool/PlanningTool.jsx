@@ -44,7 +44,7 @@ function PlanningTool(props) {
     const { user } = props;
     const [data, setData] = useState(unitExerciseTemplate);
     const [userInfo, setUserInfo] = useState();
-    const [saved, setSaved] = useState(false);
+    const [saved, setSaved] = useState({saved: false, alert: 'Nothing Selected'});
 
     const userEmail = user ? user.email : "admin@gmail.com";
     //TODO: The userID should be passed from main application, 
@@ -69,23 +69,17 @@ function PlanningTool(props) {
         console.log('useEffect data', data);
     }, [data]);
 
-    useEffect(() => {
-        if (saved) {
-            updateUnitExercise();
-        }
-    }, [saved, data])
-
     //creates new mission in the DB with 'newMission' as the data obj 
     const createUnitExercise = async (newMission) => {
         const response = await TactApi.saveUnitExercise(newMission);
         setData(response);
-        setSaved(true);
+        setSaved({saved: true});
     }
 
     const updateUnitExercise = async () => {
         await TactApi.updateUnitExercise(data)
             .catch((err) => {console.log(err)});
-        setSaved(true);       
+        setSaved({saved: true});       
     }
 
     const { arrayInformationsStep } = texts()
@@ -99,13 +93,17 @@ function PlanningTool(props) {
             temp.exerciseID = update.exerciseID;
             createUnitExercise(temp);
 ;        } else {
-            setSaved(false)
+            setSaved({saved: false, alert: 'Saving Inputs'})
             const temp = data;
             Object.keys(update).forEach((obj) => {
                 temp[obj] = update[obj];
             });
             setData(temp);
-            if (data.unitExerciseID) updateUnitExercise();
+            if (data.unitExerciseID) {
+                updateUnitExercise();
+            } else {
+                setSaved({saved: false, alert: 'Must Select an Exercise'})
+            }
         }
        }
 
