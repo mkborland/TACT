@@ -93,7 +93,7 @@ function YourPlan(props) {
     };
 
     const handleAddAircraft = () => {
-      setSaved(false);
+      setSaved({saved: false, action: 'No Aircraft Selected'});
       const newRowProps = {
         rows,
         airframeList,
@@ -110,7 +110,7 @@ function YourPlan(props) {
     };
 
     const handleSaveClick = () => {
-      setSaved(true);
+      setSaved({ saved: true });
       totals.forEach((total) => {
         const temp = newUnitAircraftObj(data.unitExerciseID);
         temp.aircraftType = total.aircraft;
