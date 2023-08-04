@@ -14,6 +14,7 @@ import SaveUnitExercise from "./UnitExercises/post/SaveUnitExercise.js";
 import UpdateUnitExercise from "./UnitExercises/post/UpdateUnitExercise.js";
 import GetUnitExercise from "./UnitExercises/get/getUnitExercise.js";
 import AddExerciseAircraft from "./ExerciseAircraft/post/AddExerciseAircraft.js";
+import GetFYs from "./ExerciseAircraft/get/getFYs.js";
 
 const TactApi = {
   getDashboard: GetDashboard,
@@ -32,5 +33,6 @@ const TactApi = {
   updateUnitExercise: UpdateUnitExercise,
   getUnitExercise: GetUnitExercise,
   addExerciseAircraft: AddExerciseAircraft,
+  getFYs: GetFYs,
 };
 export default TactApi;
