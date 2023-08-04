@@ -44,7 +44,7 @@ function PlanningTool(props) {
     const { user } = props;
     const [data, setData] = useState(unitExerciseTemplate);
     const [userInfo, setUserInfo] = useState();
-    const [saved, setSaved] = useState(false);
+    const [saved, setSaved] = useState({saved: false, alert: 'Nothing Selected'});
 
     const userEmail = user ? user.email : "admin@gmail.com";
     //TODO: The userID should be passed from main application, 
@@ -69,19 +69,17 @@ function PlanningTool(props) {
         console.log('useEffect data', data);
     }, [data]);
 
-    useEffect(() => {
-        if (saved) updateUnitExercise(data);
-    }, [saved, data])
-
     //creates new mission in the DB with 'newMission' as the data obj 
     const createUnitExercise = async (newMission) => {
         const response = await TactApi.saveUnitExercise(newMission);
-        setData(response)
+        setData(response);
+        setSaved({saved: true});
     }
 
-    const updateUnitExercise = async (changedMission) => {
-        await TactApi.updateUnitExercise(changedMission)
-            .catch((err) => {console.log(err)});       
+    const updateUnitExercise = async () => {
+        await TactApi.updateUnitExercise(data)
+            .catch((err) => {console.log(err)});
+        setSaved({saved: true});       
     }
 
     const { arrayInformationsStep } = texts()
@@ -94,15 +92,20 @@ function PlanningTool(props) {
             const temp = data;
             temp.exerciseID = update.exerciseID;
             createUnitExercise(temp);
-        } else {
+;        } else {
+            setSaved({saved: false, alert: 'Saving Inputs'})
             const temp = data;
             Object.keys(update).forEach((obj) => {
                 temp[obj] = update[obj];
             });
-            setData(temp);    
+            setData(temp);
+            if (data.unitExerciseID) {
+                updateUnitExercise();
+            } else {
+                setSaved({saved: false, alert: 'Must Select an Exercise'})
+            }
         }
-   
-    }
+       }
 
     // get the pages of the steps
     //TODO set up the setSave on each of the pages

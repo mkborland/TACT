@@ -184,7 +184,6 @@ const updateUnitExercise = async (req, res) => {
 };
 
 const saveUnitExercise = async (req, res) => {
-    console.log('req', req.body)
     const { exerciseID, status, dateCreated, locationFrom, locationTo, travelStartDate, travelEndDate, unit, userID, personnelSum, unitCostSum } = req.body
     knex('unitexercises')
         .select("*")
