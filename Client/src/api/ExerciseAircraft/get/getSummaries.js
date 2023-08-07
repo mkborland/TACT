@@ -1,11 +1,11 @@
 import baseApiUrl from "../../TactApiConfig.js";
 
-const GetFYs = async (emailAddy, token='') => {
+const GetSummaries = async (email, dropdownOption, param, token='') => {
   // console.log(`GetFYs`)
   // return await response.json();
 
-  const endPoint = "/get_FYs";
-  const response = await fetch(`${baseApiUrl}${endPoint}?email=${emailAddy}`, {
+  const endPoint = "/get_summaries";
+  const response = await fetch(`${baseApiUrl}${endPoint}?email=${email}&dropdownOption=${dropdownOption}&param=${param}`, {
     method: "GET",
     headers: {
       "Content-type": "application/json",
@@ -21,4 +21,4 @@ const GetFYs = async (emailAddy, token='') => {
   }
 };
 
-export default GetFYs;
+export default GetSummaries;

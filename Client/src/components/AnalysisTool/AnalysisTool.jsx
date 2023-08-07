@@ -58,12 +58,11 @@ function AnalysisTool(props) {
     // const [byCapabilitySelected, setByCapabilitySelected] = useState(false);
     // const [byUnitSelected, setByUnitSelected] = useState(false);
     // const [byFundingTypeSelected, setByFundingTypeSelected] = useState(false);
-    const [fyList, setFYList] = useState([]);
+    const [dataOptionsList, setDataOptionsList] = useState([{ 'id': 0, 'value': '2019' }]);
     const dropdownOptionByFY = 'by FY';
     const dropdownOptionByExercise = 'by Exercise';
     const dropdownOptionByCapability = 'by Capability';
     const dropdownOptionByUnit = 'by Unit';
-    const dropdownOptionByFundingType = 'by Funding Type';
 
     const userEmail = user ? user.email : "admin@gmail.com";
     //TODO: The userID should be passed from main application,
@@ -73,43 +72,75 @@ function AnalysisTool(props) {
         setUserInfo(response);
     };
 
-    const viewingOptions = [
+    const viewingOptionsDataView = [
         { id: dropdownOptionByFY, value: 'by FY' },
         { id: dropdownOptionByExercise, value: 'by Exercise' },
         { id: dropdownOptionByCapability, value: 'by Capability' },
         { id: dropdownOptionByUnit, value: 'by Unit' },
-        { id: dropdownOptionByFundingType, value: 'by Funding Type' },
     ];
 
-    const [dropdownOptionSelected, setDropdownOptionSelected] = useState(dropdownOptionByFY);
+    const [dataViewSelected, setDataViewSelected] = useState(dropdownOptionByFY);
+    const [dataOptionsSelected, setDataOptionsSelected] = useState('2019');
 
     useEffect(() => {
         fetchUserInfo();
     }, []);
 
     const queryDropdownByFY = async () => {
-        console.log(`CALLING queryDropdownByFY`);
-               const response = await TactApi.getFYs(userEmail);
-               setFYList(response);
-        console.log(`CALLED queryDropdownByFY: ${response}`);
+        // console.log(`CALLING queryDropdownByFY`);
+
+        // Call API to populate the second dropdown list.
+        const response = await TactApi.getFYs(userEmail);
+        setDataOptionsList(response);
+        setDataOptionsSelected(response[0].value);
+        // console.log(`CALLED queryDropdownByFY: ${JSON.stringify(response)}`);
     };
 
+    const queryDropdownByExercise = async () => {
+        setDataOptionsList([{ 'id': 0, 'value': '2' }]);
+        // setDataOptionsSelected([{ 'id': 0, 'value': '2' }]);
+        setDataOptionsSelected('2');
+    };
+
+    const queryDropdownByCapability = async () => {
+        setDataOptionsList([{ 'id': 0, 'value': '3' }]);
+        // setDataOptionsSelected([{ 'id': 0, 'value': '3' }]);
+        setDataOptionsSelected('3');
+    };
+
+    const queryDropdownByUnit = async () => {
+        setDataOptionsList([{ 'id': 0, 'value': '4' }]);
+        // setDataOptionsSelected([{ 'id': 0, 'value': '4' }]);
+        setDataOptionsSelected('4');
+    };
+
+    const querySummaryData = async () => {
+        const response = await TactApi.getSummaries(userEmail, dataViewSelected, dataOptionsSelected);
+        console.log(`CALLED getSummaries: ${JSON.stringify(response)}`);
+    }
+
     useEffect(() => {
-        switch (dropdownOptionSelected) {
+        switch (dataViewSelected) {
             case dropdownOptionByFY:
                 queryDropdownByFY();
                 break;
             case dropdownOptionByExercise:
+                queryDropdownByExercise();
                 break;
             case dropdownOptionByCapability:
+                queryDropdownByCapability();
                 break;
             case dropdownOptionByUnit:
-                break;
-            case dropdownOptionByFundingType:
+                queryDropdownByUnit();
                 break;
             default:
         }
-    }, [dropdownOptionSelected]);
+    }, [dataViewSelected]);
+
+    useEffect(() => {
+        // Call API to populate the charts.
+        querySummaryData();
+    }, [dataOptionsSelected]);
 
 
     //     useEffect(() => {
@@ -177,8 +208,12 @@ function AnalysisTool(props) {
     //     const lastNumber = formComponents.length + 1;
 
     const handleDataViewChange = (event) => {
-        console.log(`HERE: ${event.target.value}`)
-        setDropdownOptionSelected(event.target.value);
+        setDataViewSelected(event.target.value);
+    };
+
+    const handleDataOptionsChange = (event) => {
+        console.log(`EVENT VAL: ${JSON.stringify(event.target.value)}`)
+        setDataOptionsSelected(event.target.value);
     };
 
     return (
@@ -187,7 +222,7 @@ function AnalysisTool(props) {
                 <Grid container alignItems='flex-end' spacing={.8} padding={.1}
                 // backgroundColor={'primary.main'}
                 >
-                    <Grid item xs={12}>
+                    <Grid item xs={6}>
                         <FormControl variant="outlined"
                             sx={{
                                 marginTop: 2,
@@ -195,7 +230,7 @@ function AnalysisTool(props) {
                             }}>
                             <InputLabel shrink>Data View</InputLabel>
                             <Select label="Data View"
-                                defaultValue={viewingOptions[0].value}
+                                defaultValue={viewingOptionsDataView[0].value}
                                 onChange={handleDataViewChange}
                                 sx={{
                                     // marginTop: 0,
@@ -203,10 +238,33 @@ function AnalysisTool(props) {
                                     height: 50,
                                 }}
                             >
-                                {viewingOptions.map((item) => <MenuItem key={item.id} value={item.value}>{item.value}
+                                {viewingOptionsDataView.map((item) => <MenuItem key={item.id} value={item.value}>{item.value}
                                 </MenuItem>)}
                             </Select>
-                            <FormHelperText>Select a color</FormHelperText>
+                            <FormHelperText>Select how to organize your data</FormHelperText>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <FormControl variant="outlined"
+                            sx={{
+                                marginTop: 2,
+                                width: 300
+                            }}>
+                            <InputLabel shrink>Data Options</InputLabel>
+                            <Select label="Data Options"
+                                value={dataOptionsSelected}
+                                defaultValue={dataOptionsSelected}
+                                onChange={handleDataOptionsChange}
+                                sx={{
+                                    // marginTop: 0,
+                                    width: 250,
+                                    height: 50,
+                                }}
+                            >
+                                {dataOptionsList.map((item) => <MenuItem key={item.id} value={item.value}>{item.value}
+                                </MenuItem>)}
+                            </Select>
+                            <FormHelperText>Select an option</FormHelperText>
                         </FormControl>
                     </Grid>
                     <Grid item xs={6}>charts go here
