@@ -8,6 +8,7 @@ import ManageUsers from "./components/ManageUsersPage/ManageUsersPage";
 import DashboardPage from "./pages/DashboardPage";
 import NewExerciseForm from "./components/NewExerciseForm/NewExerciseForm";
 import PlanningTool from "./components/PlanningTool/PlanningTool";
+import AnalysisTool from "./components/AnalysisTool/AnalysisTool";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               <Route path="EditTablesPage" element={<EditTables />} />
               <Route path="ManageUsersPage" element={<ManageUsers />} />
               <Route path="NewExerciseForm" element={<NewExerciseForm />} />
+              <Route path="AnalysisToolPage" element={<AnalysisTool />} />
             </Route>
           </Routes>
         </BrowserRouter>
