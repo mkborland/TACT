@@ -1,6 +1,6 @@
 # TACT: Travel Accommodations and Coordination Technology
 
-This project is created for Hack the Ranch May 2023 
+This project is created for Hack the Ranch May 2023
 
 Updated July 2023
 
@@ -13,7 +13,7 @@ Updated July 2023
 
 ## Problem Statement
 
-Build an automated tool that calculates PACAF O&M dollars per head count for the exercise. 
+Build an automated tool that calculates PACAF O&M dollars per head count for the exercise.
 
 ### Tool should include
 
@@ -41,18 +41,20 @@ docker-compose build
 docker-compose up
 ```
 
-- The client will be running on [localhost](http://localhost:3000 "Local port 3000")
+- The client will be running on [localhost](http://localhost:3000 'Local port 3000')
 
 ## Using PM2 for Development
 
-- Because this application is designed to run as a group of containers, development can be painful sometimes due to the nature of how docker images work. PM2 alleviates this by automating running both client and server locally while keeping the database in a container. 
+- Because this application is designed to run as a group of containers, development can be painful sometimes due to the nature of how docker images work. PM2 alleviates this by automating running both client and server locally while keeping the database in a container.
 
 - To start without changing any files, simply follow the "How to use" steps from above to start, then the following depending on if you are using Docker Desktop or just the Docker CLI
 
 ### If using Docker Desktop
-- Navigate to the GUI and click the stop button for only the client and server container. 
 
-### If using Docker CLI, run 
+- Navigate to the GUI and click the stop button for only the client and server container.
+
+### ONLY if using Docker CLI, run
+
 ```
 docker-compose up db
 ```
@@ -63,13 +65,17 @@ docker-compose up db
 docker stop tact-server-1
 ```
 
-- If done properly run 
+- If done properly run
+
 ```
-docker ps 
+docker ps
 ```
+
 - There should only be the postgres container running.
 
-- Make sure you are in the TACT directory then run 
+### Next,
+
+- Make sure you are in the TACT directory then run
 
 ```
 npm install pm2 -g
@@ -77,12 +83,13 @@ npm install pm2 -g
 
 - If you get permission errors, you may need to use sudo
 
-- Finally run 
+- Finally run
 
 ```
 ./start.sh
 ```
+
 - Once the script is finished, there should be a process list in the terminal showing both tact-api and tact-client
 
->**Warning**
->If you have a db_data_volume folder in the top directory you may need to remove it if you run into issues with the database not seeding properly.
+> **Warning**
+> If you have a db_data_volume folder in the top directory you may need to remove it if you run into issues with the database not seeding properly, or other server issues.
