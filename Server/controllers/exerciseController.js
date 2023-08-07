@@ -33,7 +33,27 @@ const requestUnitExercise = async (req, res) => {
                     .where({ unitExerciseID: unitExerciseID })
                     .then((data) => data[0])
             } else {
-                res.status(202).send(`Unit exercise with an ID of ${unitExerciseID} could not be found.`);
+                res.status(202).send({});
+            }
+        })
+    if (exerciseobj !== undefined) {
+        res.status(200).send(exerciseobj)
+    }
+};
+
+const requestUnitExerciseByUnit = async (req, res) => {
+    const { exerciseID, unit }= req.query;
+    const exerciseobj = await knex('unitexercises')
+        .select("*")
+        .where({ exerciseID: exerciseID, unit: unit })
+        .then((data) => {
+            if (data.length !== 0) {
+                return knex('unitexercises')
+                    .select('*')
+                    .where({ exerciseID: exerciseID, unit: unit })
+                    .then((data) => data[0])
+            } else {
+                res.status(202).send({});
             }
         })
     if (exerciseobj !== undefined) {
@@ -183,12 +203,11 @@ const saveUnitExercise = async (req, res) => {
                         userID: userID,
                         personnelSum: personnelSum,
                         unitCostSum: unitCostSum
-                    })
-                    .then(() => {
-                        res.status(201).send(`Created entry for ${unit}'s participation in exercise with ID ${exerciseID}.`);
+                    }, "*")
+                    .then((d) => {
+                        res.status(200).send(d[0]);
                     });
             } else {
-                //data returns array with one entry
                 res.status(201).send(data[0]);
             }
         });
@@ -212,7 +231,7 @@ const lookupUnitExercise = async (req, res) => {
 };
 
 const addExerciseAircraft = async (req, res) => {
-    const { unitExerciseID, aircraftType, aircraftCount, personnelCount, commercialAirfareCount, commercialAirfareCost, governmentAirfareCount, commercialLodgingCount, commercialLodgingCost, governmentLodgingCount, governmentLodgingCost,fieldLodgingCount, lodgingPerDiem, mealPerDiem, mealProvidedCount, mealNotProvidedCount } = req.body
+    const { unitExerciseID, aircraftType, aircraftCount, personnelCount, commercialAirfareCount, commercialAirfareCost, governmentAirfareCount, commercialLodgingCount, commercialLodgingCost, governmentLodgingCount, governmentLodgingCost,fieldLodgingCount, lodgingPerDiem, mealPerDiem, mealProvidedCount, mealNotProvidedCount, rentalCount, rentalCost } = req.body
     knex('exerciseaircraft')
         .select("*")
         .where({ unitExerciseID: unitExerciseID, aircraftType: aircraftType })
@@ -235,7 +254,9 @@ const addExerciseAircraft = async (req, res) => {
                         lodgingPerDiem: lodgingPerDiem,
                         mealPerDiem: mealPerDiem,
                         mealProvidedCount: mealProvidedCount,
-                        mealNotProvidedCount: mealNotProvidedCount
+                        mealNotProvidedCount: mealNotProvidedCount,
+                        rentalCount: rentalCount,
+                        rentalCost: rentalCost
                     })
                     .then(() => {
                         res.status(201).send(`Created entry for ${aircraftType} in the unit exercise with ID ${unitExerciseID}.`);
@@ -246,4 +267,18 @@ const addExerciseAircraft = async (req, res) => {
         });
 };
 
-export { requestExercise, requestUnitExercise, requestExerciseAircraft, requestAllExercises, requestAllUnitExercises, requestAllExerciseAircraft, addExercise, saveUnitExercise,  addExerciseAircraft, updateExercise, lookupUnitExercise, updateUnitExercise }
+export { 
+    requestExercise, 
+    requestUnitExercise, 
+    requestExerciseAircraft, 
+    requestAllExercises, 
+    requestAllUnitExercises, 
+    requestAllExerciseAircraft, 
+    addExercise,
+    saveUnitExercise,
+    addExerciseAircraft,
+    updateExercise,
+    lookupUnitExercise,
+    updateUnitExercise,
+    requestUnitExerciseByUnit
+ }

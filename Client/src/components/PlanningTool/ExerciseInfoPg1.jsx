@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
+import Select from 'react-select';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -7,99 +8,186 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 // styles
 import '../../styles/PlanningToolPg1.css';
+import TactApi from '../../api/TactApi';
 
-function YourInfo({ data, updateFileHandler }) {
-    // function to change the className of the input and
-    // label to warn that the client has not filled in that field
-    const verifyInputsInvalids = (e) => {
-        // e.target.classList.add('inputInvalid');
-        // e.target.labels[0].className = 'inputLabel beforeInputInvalid';
+const defaultLabelValues = {
+    exerciseLabels: [{ value: undefined, label: "Select Exercise"}],
+    locations: [
+        { airport: 'test airport', region: 'test state', country: 'United States' },
+        { airport: 'OCONUS airport', region: 'test region', country: 'Germany'}
+    ],
+}
+
+const generateExerciseLabels = (input) => {
+    return input ? 
+        input.map((i) => { return {
+            value: i.exerciseID,
+            label: i.exerciseName,
+        }}) :
+        defaultLabelValues.exerciseLabels;
+};
+
+const generateLocationLabels = (inputs) => {
+    return inputs ? 
+    inputs.map((input) => { return {
+        value: input.locationID,
+        label: input.country === 'United States' 
+            ? `${input.airport}, ${input.region}`
+            : `${input.airport}, ${input.country}`
+    }}) :
+    defaultLabelValues.locations.map((location, index) => { return {
+        value: index,
+        label: location.contry === 'United States'
+        ? `${location.airport}, ${location.region}`
+        : `${location.airport}, ${location.country}`
+    }});
+};
+
+function YourInfo(props) {
+    const { data, updateFileHandler } = props;
+    const [locations, setLocations ] = useState()
+    const [exercises, setExercises] = useState(undefined);
+    const [defaultExerciseValue, setDefaultExerciseValue] = useState();
+    const [defaultToValue, setDefaultToValue] = useState();
+    const [defaultFromValue, setDefaultFromValue] = useState();
+
+    const fetchAllExercises = async () => { 
+        const response = await TactApi.getAllExercises();
+        setExercises(response);
     };
 
-    //function to bring back to normal the input
-    //that the client filled in correctly
-    const verifyInputs = (e) => {
-        updateFileHandler(e.target.id, e.target.value); //fills in template based on key value pair
-        console.log(e.target)
-
-        // e.target.classList.remove("inputInvalid");
-        // e.target.labels[0].className = 'inputLabel';
-
+    const fetchLocationById = async (id) => { 
+        return await TactApi.getLocationById(id);
     };
 
-    const [startDate, setStartDate] = React.useState(dayjs(new Date().toJSON().slice(0, 10)));
-    const [endDate, setEndDate] = React.useState(dayjs(new Date().toJSON().slice(0, 10)));
+    const fetchLocations = async () => {
+        const response = await TactApi.getAllLocations();
+        setLocations(response);
+    };
+
+    useEffect(() => {
+        fetchLocations();
+        fetchAllExercises();
+    }, [])
+
+    const exerciseLabels = generateExerciseLabels(exercises);
+
+    const locationlabels = generateLocationLabels(locations);
+
+    //IF the unitExercise already exist, this populates the table values with the 
+    //pre-existing data
+    useEffect(() => {
+        data.exerciseID && exercises
+        ? setDefaultExerciseValue({
+            value: data.exerciseID,
+            label: exerciseLabels.find((label) => label.value === data.exerciseID).label
+        })
+        : setDefaultExerciseValue({
+            label: 'Select an Exercise',
+            value: -1
+        }) 
+
+        data.locationTo && locations && locationlabels && locationlabels.length > 0 
+            ? setDefaultToValue({
+                value: data.locationTo,
+                label: (locationlabels.find((label) => parseInt(label.value) === parseInt(data.locationTo))).label
+            })
+            : setDefaultToValue({
+                label: 'Select...',
+                value: -1
+            });
+
+        data.locationFrom && locations &&locationlabels && locationlabels.length > 0 
+            ? setDefaultFromValue({
+                value: data.locationFrom,
+                label: (locationlabels.find((label) => parseInt(label.value) === parseInt(data.locationFrom))).label
+            })
+            : setDefaultFromValue({
+                label: 'Select...',
+                value: -1
+            })    
+
+    }, [data, locations, locationlabels, exercises, exerciseLabels] )
+
+    const verifyExerciseInputs = (e) => {
+        updateFileHandler({exerciseID: e.value}); //fills in template based on key value pair
+    };
+
+    const verifyStartDateInputs = (e) => {
+        updateFileHandler({travelStartDate: e.$d});
+    };
+
+    const verifyEndDateInputs = (e) => {
+        updateFileHandler({travelEndDate: e.$d});
+    };
+
+    const changeDepartLocation = (e) => {
+        updateFileHandler({locationFrom: e.value})
+    };
+
+    const changeDestinationLocation = (e) => {
+        updateFileHandler({locationTo: e.value})
+    };
 
     return (
         <div className="form-container">
             <div className="input-container">
                 <label htmlFor="name" className='inputLabel'>Exercise Name</label>
-                <input
+                <Select
                     className="input"
-                    type="text"
-                    name="name"
-                    id="exerciseID"
-                    value={data.exerciseID.toString() || ""}  //where the text fields update based on data object (template)
-                    onChange={(e) => verifyInputs(e)}
-                    placeholder="Exercise Name will auto-convert to upper-case"
-                    onInvalid={verifyInputsInvalids}
+                    name="exercise-name"
+                    placeholder={'Select an Exercise'}
+                    value={defaultExerciseValue}
+                    onChange={verifyExerciseInputs}
+                    isSearchable
                     required
+                    options={exerciseLabels}
                 />
             </div>
-
             <div className="input-container">
                 <label htmlFor="dates" className='inputLabel'>Start / End Dates</label>
-
+                {/* use the DateRangePicker for this specific component  https://mui.com/x/react-date-pickers/date-range-picker/*/}
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker', 'DatePicker']}>
                         <DatePicker
                             label="Start Date"
-                            value={startDate}
+                            defaultValue={dayjs(data.travelStartDate)}
+                            value={dayjs(data.travelStartDate)}
                             sx={{ backgroundColor: 'white' }}
-                            //onChange={(e) => verifyInputs(e)}
-                            onChange={(newValue) => setStartDate(newValue)}
-                            //onInvalid={verifyInputsInvalids}
-                            />
+                            onChange={verifyStartDateInputs}
+                        />
                         <DatePicker
                             label="End Date"
-                            value={endDate}
+                            defaultValue={dayjs(data.travelEndDate)}
+                            value={dayjs(data.travelEndDate)}
                             sx={{ backgroundColor: 'white' }}
-                            // onChange={(e) => verifyInputs(e)}
-                            onChange={(newValue) => setEndDate(newValue)}
-                            // onInvalid={verifyInputsInvalids}
-                            />
+                            onChange={verifyEndDateInputs}
+                        />
                     </DemoContainer>
                 </LocalizationProvider>
             </div>
-
-
             <div className="input-container">
                 <label htmlFor="departingLocation" className='inputLabel'>Departing Location</label>
-                <input
-                    className="input"
-                    type="text"
+                <Select
+                    className='input'
                     name="departingLocation"
-                    id="locationFrom"
-                    value={data.locationFrom || ""}
-                    onChange={(e) => verifyInputs(e)}
-                    placeholder="e.g. March ARB, CA"
-                    onInvalid={verifyInputsInvalids}
-                    required
+                    id='locationFrom'
+                    value={defaultFromValue}
+                    onChange={changeDepartLocation}
+                    isSearchable
+                    options={locationlabels}
                 />
             </div>
-
             <div className="input-container">
                 <label htmlFor="destination" className='inputLabel'>Destination</label>
-                <input
+                <Select
                     className="input"
-                    type="text"
                     name="destination"
                     id="locationTo"
-                    value={data.locationTo || ""}
-                    onChange={(e) => verifyInputs(e)}
-                    placeholder="Name of military installation, airfield, city, or region"
-                    onInvalid={verifyInputsInvalids}
-                    required
+                    value={defaultToValue}
+                    onChange={changeDestinationLocation}
+                    isSearchable
+                    options={locationlabels}
                 />
             </div>
         </div>

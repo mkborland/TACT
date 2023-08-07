@@ -35,7 +35,7 @@ const requestUser = (req, res) => {
                     .select('*')
                     .where({ email: email })
                     .innerJoin("roles", "users.roleID", "roles.roleID")
-                    .then(data => res.status(200).json(data))
+                    .then(data => res.status(200).json(data[0]))
             } else {
                 res.status(202).send(`${email} could not be found.`);
             }
