@@ -31,8 +31,8 @@ export function down(knex) {
     return knex.schema.alterTable("unitexercises", (table) => {
         table.dropForeign("userID");
         table.dropForeign("exerciseID");
-        table.dropForeign("locationFrom");
-        table.dropForeign("locationTo");
+//        table.dropForeign("locationFrom");
+//        table.dropForeign("locationTo");
     }).then(() => {
         return knex.schema.dropTableIfExists("unitexercises");
     });

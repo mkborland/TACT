@@ -14,8 +14,8 @@ export async function seed(knex) {
       exerciseStartDate: '17 July 2023',
       exerciseEndDate: '28 July 2023',
       userID: '1',
-      personnelSum: '',
-      costSum: ''
+      personnelSum: '0',
+      costSum: '0'
     }
   ]);
   await knex('exercises').insert([
@@ -27,8 +27,8 @@ export async function seed(knex) {
       exerciseStartDate: '18 July 2022',
       exerciseEndDate: '29 July 2022',
       userID: '1',
-      personnelSum: '',
-      costSum: ''
+      personnelSum: '0',
+      costSum: '0'
     }
   ]);
   await knex('exercises').insert([
@@ -40,8 +40,8 @@ export async function seed(knex) {
       exerciseStartDate: '11 November 2021',
       exerciseEndDate: '27 November 2021',
       userID: '1',
-      personnelSum: '',
-      costSum: ''
+      personnelSum: '0',
+      costSum: '0'
     }
   ]);
   await knex('exercises').insert([
@@ -53,8 +53,8 @@ export async function seed(knex) {
       exerciseStartDate: '4 December 2022',
       exerciseEndDate: '10 December 2022',
       userID: '1',
-      personnelSum: '',
-      costSum: ''
+      personnelSum: '0',
+      costSum: '0'
     }
   ]);
   await knex('exercises').insert([
@@ -66,8 +66,8 @@ export async function seed(knex) {
       exerciseStartDate: '26 January 2024',
       exerciseEndDate: '3 February 2024',
       userID: '1',
-      personnelSum: '',
-      costSum: ''
+      personnelSum: '0',
+      costSum: '0'
     }
   ]);
 };

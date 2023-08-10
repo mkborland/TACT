@@ -16,8 +16,8 @@ export async function seed(knex) {
       travelEndDate: '31 July 2023',
       unit: '167 AW',
       userID: '2',
-      personnelSum: '',
-      unitCostSum: ''
+      personnelSum: '0',
+      unitCostSum: '0'
     }
   ]);
   await knex('unitexercises').insert([
@@ -31,8 +31,8 @@ export async function seed(knex) {
       travelEndDate: '30 July 2023',
       unit: '158 FW',
       userID: '2',
-      personnelSum: '',
-      unitCostSum: ''
+      personnelSum: '0',
+      unitCostSum: '0'
     }
   ]);
   await knex('unitexercises').insert([
@@ -46,8 +46,8 @@ export async function seed(knex) {
       travelEndDate: '3 August 2022',
       unit: '165 AW',
       userID: '2',
-      personnelSum: '',
-      unitCostSum: ''
+      personnelSum: '0',
+      unitCostSum: '0'
     }
   ]);
   await knex('unitexercises').insert([
@@ -61,8 +61,8 @@ export async function seed(knex) {
       travelEndDate: '31 July 2022',
       unit: '183 WG',
       userID: '2',
-      personnelSum: '',
-      unitCostSum: ''
+      personnelSum: '0',
+      unitCostSum: '0'
     }
   ]);
   await knex('unitexercises').insert([
@@ -76,8 +76,8 @@ export async function seed(knex) {
       travelEndDate: '30 November 2021',
       unit: '169 FW',
       userID: '2',
-      personnelSum: '',
-      unitCostSum: ''
+      personnelSum: '0',
+      unitCostSum: '0'
     }
   ]);
   await knex('unitexercises').insert([
@@ -91,8 +91,8 @@ export async function seed(knex) {
       travelEndDate: '13 December 2022',
       unit: '146 AW',
       userID: '2',
-      personnelSum: '',
-      unitCostSum: ''
+      personnelSum: '0',
+      unitCostSum: '0'
     }
   ]);
   await knex('unitexercises').insert([
@@ -106,8 +106,8 @@ export async function seed(knex) {
       travelEndDate: '12 December 2022',
       unit: '171 ARW',
       userID: '2',
-      personnelSum: '',
-      unitCostSum: ''
+      personnelSum: '0',
+      unitCostSum: '0'
     }
   ]);
   await knex('unitexercises').insert([
@@ -121,8 +121,8 @@ export async function seed(knex) {
       travelEndDate: '12 December 2022',
       unit: '162 FW',
       userID: '2',
-      personnelSum: '',
-      unitCostSum: ''
+      personnelSum: '0',
+      unitCostSum: '0'
     }
   ]);
   await knex('unitexercises').insert([
@@ -136,8 +136,8 @@ export async function seed(knex) {
       travelEndDate: '7 February 2024',
       unit: '164 AW',
       userID: '2',
-      personnelSum: '',
-      unitCostSum: ''
+      personnelSum: '0',
+      unitCostSum: '0'
     }
   ]);
   await knex('unitexercises').insert([
@@ -151,8 +151,8 @@ export async function seed(knex) {
       travelEndDate: '7 February 2024',
       unit: '192 FW',
       userID: '2',
-      personnelSum: '',
-      unitCostSum: ''
+      personnelSum: '0',
+      unitCostSum: '0'
     }
   ]);
 };
