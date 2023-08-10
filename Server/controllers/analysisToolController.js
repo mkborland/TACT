@@ -4,7 +4,7 @@ const requestCostSummaries = async (req, res) => {
     // Here's the flow:
     // 1) Determine the user role,
     // 2) Structure the "where" clause based on how the data needs to be structured (by FY, by exercise, etc),
-    // 3) Query to get the summary data available for that user's unit
+    // 3) Run a set of queries to get the summary data available for that user's unit ("exerciseaircraft" tbl), based on the structure requested
     //      IF COCOM planner, query for all exercises, capabilities, etc
     //      ELSE only query for exercises, capabilities, etc tied to that user's unit
     // 4) Calculate totals then send the data.
@@ -36,12 +36,36 @@ const requestCostSummaries = async (req, res) => {
             else if (data[0].roleID === roleUser) {
                 role = roleUser;
             }
-        })
+            else {
+                res.status(200).json(`Error: Unable to determine user role -- \"${data[0].roleID}\"`);
+            }
+        });
 
     // Structure the "where" clause.
     switch (dropdownOption) {
         case dropdownOptionByFY:
-            whereClause = `{ unitExerciseID: unitExerciseID, aircraftType: aircraftType }`;
+            if (role === roleAdmin)
+                whereClause = `{ unitExerciseID: unitExerciseID, aircraftType: aircraftType }`;
+            else if (role === roleUser)
+                whereClause = `{ unitExerciseID: unitExerciseID, aircraftType: aircraftType }`;
+
+            // Query all the exercises that began in the FY passed.
+            console.log(`DATES: 10-01-${param - 1}`, `09-30-${param}`)
+            // await knex('exercises')
+            // .select('exerciseID')
+            // .whereBetween('exerciseStartDate', [`10-01-${param - 1}`, `09-30-${param}`])
+            // .then((data) => {
+            //     console.log(`DATA: ${JSON.stringify(data)}`)
+
+            //     // query unitexercises now.
+            //     .select('exerciseID')
+            //     .whereBetween('exerciseStartDate', [`10-01-${param - 1}`, `09-30-${param}`])
+            //     .then((data) => {
+            //         console.log(`DATA: ${JSON.stringify(data)}`)
+
+            //         // query exerciseaircraft now.
+
+            // });
             break;
         case dropdownOptionByExercise:
             whereClause = '';
@@ -61,10 +85,10 @@ const requestCostSummaries = async (req, res) => {
     // .then((data) => {
     //     })
 
-    const data = [{'whereClause': whereClause, 'userRole': role}]
+    const data = [{ 'whereClause': whereClause, 'userRole': role }];
     res.status(200).json(data);
     // res.status(200).json(data);
-}
+};
 
 const requestFYs = async (req, res) => {
     // Here's the flow:
@@ -121,7 +145,7 @@ const requestFYs = async (req, res) => {
 
                             // Create a new array containing only one instance of each year, filtering out duplicates.
                             if (row !== prevYear) {
-                                uniqueYears.push({'id': id, 'value': row});
+                                uniqueYears.push({ 'id': id, 'value': row });
                                 prevYear = row;
                                 id++;
                             }
@@ -140,66 +164,6 @@ const requestFYs = async (req, res) => {
             }
 
         });
-
-
-
-    // res.status(200).json(data));
-
-
-
-    //        .then((data) => res.status(200).json(data[0]))
 };
-
-// const addUser = async (req, res) => {
-//     const { firstName, lastName, email, unit } = req.body
-//     const userdata = await knex("users")
-//         .select("*")
-//         .where({ email: email })
-//         .then((data) => {
-//             if (data.length === 0) {
-//                 return knex("users")
-//                     .insert({ firstName: firstName, lastName: lastName, email: email, unit: unit, roleID: '11111' })
-//                     .then(res.status(201).send(`${firstName} ${lastName}'s account has been submitted for approval.`))
-//             } else {
-//                 res.status(202).send(`${email} is already in use, please use a new email or log in with an existing one.`);
-//             }
-//         });
-// };
-
-// const requestUser = (req, res) => {
-//     const email = req.query.email
-//     knex("users")
-//         .select("*")
-//         .where({ email: email })
-//         .then((data) => {
-//             if (data.length !== 0) {
-//                 return knex("users")
-//                     .select('*')
-//                     .where({ email: email })
-//                     .innerJoin("roles", "users.roleID", "roles.roleID")
-//                     .then(data => res.status(200).json(data[0]))
-//             } else {
-//                 res.status(202).send(`${email} could not be found.`);
-//             }
-//         })
-// }
-
-// const updateUser = (req, res) => {
-//     const { firstName, lastName, email, unit, roleID } = req.body
-//     knex("users")
-//         .select("*")
-//         .where({ email: email })
-//         .then((data) => {
-//             if (data.length !== 0) {
-//                 return knex("users")
-//                     .select('*')
-//                     .where({ email: email })
-//                     .update({ firstName: firstName, lastName: lastName, unit: unit, roleID: roleID })
-//                     .then(res.status(200).send(`User with the email ${email} has been updated successfully.`))
-//             } else {
-//                 res.status(202).send(`User with the email ${email} could not be found.`);
-//             }
-//         })
-// }
 
 export { requestCostSummaries, requestFYs };
