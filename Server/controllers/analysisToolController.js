@@ -1,5 +1,7 @@
 import knex from "../db/db.js";
 
+let totals = [];
+
 const requestCostSummaries = async (req, res) => {
     // Here's the flow:
     // 1) Determine the user role,
@@ -24,6 +26,7 @@ const requestCostSummaries = async (req, res) => {
     const dropdownOption = req.query.dropdownOption;
     const param = req.query.param;
     let whereClause = '';
+    let exerciseaircraftData = [];
 
     // Determine user role.
     await knex('users')
@@ -50,22 +53,84 @@ const requestCostSummaries = async (req, res) => {
                 whereClause = `{ unitExerciseID: unitExerciseID, aircraftType: aircraftType }`;
 
             // Query all the exercises that began in the FY passed.
-            console.log(`DATES: 10-01-${param - 1}`, `09-30-${param}`)
-            // await knex('exercises')
-            // .select('exerciseID')
-            // .whereBetween('exerciseStartDate', [`10-01-${param - 1}`, `09-30-${param}`])
-            // .then((data) => {
-            //     console.log(`DATA: ${JSON.stringify(data)}`)
+            console.log(`DATES: 10-01-${param - 1}`, `09-30-${param}`);
+            const exerciseData = await knex('exercises')
+                .select('exerciseID', 'exerciseName')
+                .whereBetween('exerciseStartDate', [`10-01-${param - 1}`, `09-30-${param}`]);
 
-            //     // query unitexercises now.
-            //     .select('exerciseID')
-            //     .whereBetween('exerciseStartDate', [`10-01-${param - 1}`, `09-30-${param}`])
-            //     .then((data) => {
-            //         console.log(`DATA: ${JSON.stringify(data)}`)
+            console.log(`exerciseData: ${JSON.stringify(exerciseData)}`);
+            console.log(`exerciseData.length: ${exerciseData.length}`);
 
-            //         // query exerciseaircraft now.
+            // query unitexercises now.
+            if (exerciseData.length > 0) {
+                // let j = await knex('exerciseaircraft')
+                //     .select('*')
+                //     .whereIn('unitExerciseID', function () {
+                //         this.select('unitExerciseID')
+                //             .from('unitexercises')
+                //             .whereIn("exerciseID", function () {
+                //                 this.select('exerciseID')
+                //                     .from('exercises')
+                //                     .whereBetween('exerciseStartDate', [`10-01-${param - 1}`, `09-30-${param}`])
+                //                     ;
 
-            // });
+                //             });
+                //     });
+
+                // //                        )}`)
+
+
+                exerciseaircraftData = await knex
+                    .select(
+                        'e.exerciseName',
+                        'ea.*',
+                        'ue.travelStartDate',
+                        'ue.travelEndDate',
+                    )
+                    .from('exerciseaircraft AS ea')
+                    .leftJoin('unitexercises AS ue', 'ue.unitExerciseID', 'ea.unitExerciseID')
+                    .leftJoin('exercises AS e', 'e.exerciseID', 'ue.exerciseID')
+                    .whereBetween('exerciseStartDate', [`10-01-${param - 1}`, `09-30-${param}`])
+                    // .first()
+                    ;
+
+
+                console.log(`J: ${JSON.stringify(exerciseaircraftData)}`);
+
+                exerciseaircraftData.map((airframeData) => {
+                    // First calculate costPerDay, which includes lodging/per-diem/meals.  DON'T FORGET TO INCLUDE PER-DIEM, WHICH IS CURRENTLY MISSING FROM THIS TBL!!!
+                    const costPerDay = (airframeData.commercialLodgingCost * airframeData.commercialLodgingCount) + (airframeData.governmentLodgingCost * airframeData.governmentLodgingCount) + (airframeData.lodgingPerDiem * airframeData.fieldLodgingCount) + (airframeData.mealPerDiem * airframeData.mealNotProvidedCount)
+                        // + (ADD PER DIEM HERE!!!)
+                        ;
+
+                    // Now calculate costPerHead, which we're interpreting to just include travel costs for all personnel.  Per specs, gov't travel is $0.
+                    const costTravel = (airframeData.commercialAirfareCost * airframeData.commercialAirfareCount)
+                        // + (ADD GOV'T AIRFARE HERE!!!)
+                        ;
+
+                    // Now calculate Manpower Cost, which we're interpreting as the costs to get out there and back (travel) plus the costs for daily ops for all days total.
+                    const travelDuration = (airframeData.travelEndDate - airframeData.travelStartDate) + 1;
+                    const manpowerCost = ((costPerDay * travelDuration) + costTravel);
+
+                    // Now build the return JSON like this; the "perAirframe" section will repeat for each airframe.
+                    totals.push(
+                        {
+                            'allAirframes': {
+                                'totalCost': '',
+                            },
+                            'perAirframe': {
+                                'aircraftType': airframeData.aircraftType,
+                                'daysSupported': travelDuration,
+                                'costPerDay': costPerDay,
+                                'costTravel': costTravel,
+                                'manpowerCost': manpowerCost,
+                                'costPerAircraft': manpowerCost / airframeData.aircraftCount,
+                            },
+                        });
+                });
+
+                console.log(`RETURN: ${JSON.stringify(totals)}`)
+            }
             break;
         case dropdownOptionByExercise:
             whereClause = '';
