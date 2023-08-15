@@ -12,6 +12,10 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import { Select, MenuItem, FormControl, InputLabel, FormHelperText } from "@mui/material";
+// import { BarChart } from '@mui/x-charts/BarChart';
+// import { PieChart } from '@mui/x-charts/PieChart';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
 
 //styles
 //import '../../styles/PlanningTool.css';
@@ -30,6 +34,8 @@ import TactApi from "../../api/TactApi";
 //pg 5 (meals) -> ^^ above but if meals provided
 
 // find where to join unit exercise db with used aircraft db for calculations
+
+ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 const theme = createTheme(AnalysisToolTheme('dark'));
 
@@ -63,6 +69,17 @@ function AnalysisTool(props) {
     const dropdownOptionByExercise = 'by Exercise';
     const dropdownOptionByCapability = 'by Capability';
     const dropdownOptionByUnit = 'by Unit';
+    let totalsByAirframe = [];
+    let barColors = [
+        "rgba(255,99,132,0.2)",
+        "rgba(54,162,235,0.2)",
+        "rgba(255,206,86,0.2)",
+      ];
+      let barBorderColors = [
+        "rgba(255,99,132,1)",
+        "rgba(54,162,235,1)",
+        "rgba(255,206,86,1)",
+      ]
 
     const userEmail = user ? user.email : "admin@gmail.com";
     //TODO: The userID should be passed from main application,
@@ -81,6 +98,7 @@ function AnalysisTool(props) {
 
     const [dataViewSelected, setDataViewSelected] = useState(dropdownOptionByFY);
     const [dataOptionsSelected, setDataOptionsSelected] = useState('2019');
+    const [totalsForFY, setTotalsForFY] = useState([]);
 
     useEffect(() => {
         fetchUserInfo();
@@ -115,9 +133,8 @@ function AnalysisTool(props) {
     };
 
     const querySummaryData = async () => {
-        const response = await TactApi.getSummaries(userEmail, dataViewSelected, dataOptionsSelected);
-        console.log(`CALLED getSummaries: ${JSON.stringify(response)}`);
-    }
+        setTotalsForFY(await TactApi.getSummaries(userEmail, dataViewSelected, dataOptionsSelected));
+    };
 
     useEffect(() => {
         switch (dataViewSelected) {
@@ -142,139 +159,185 @@ function AnalysisTool(props) {
         querySummaryData();
     }, [dataOptionsSelected]);
 
-
-    //     useEffect(() => {
-    //         userInfo && updateFileHandler({
-    //             unit: userInfo.unit,
-    //             userID: userInfo.userID
-    //         })
-    //     }, [userInfo]);
-
-    //     useEffect(() => {
-    //         console.log('useEffect data', data);
-    //     }, [data]);
-
-    //     useEffect(() => {
-    //         if (saved) updateUnitExercise(data);
-    //     }, [saved, data])
-
-    //     //creates new mission in the DB with 'newMission' as the data obj
-    //     const createUnitExercise = async (newMission) => {
-    //         const response = await TactApi.saveUnitExercise(newMission);
-    //         setData(response)
-    //     }
-
-    //     const updateUnitExercise = async (changedMission) => {
-    //         await TactApi.updateUnitExercise(changedMission)
-    //             .catch((err) => {console.log(err)});
-    //     }
-
-    //     const { arrayInformationsStep } = texts()
-
-    //     const updateFileHandler = (update) => {
-    //         if (Object.keys(update).includes('exerciseID')) {
-    //             //validate if there is an existing mission with that exId
-    //             //if yes, then update the current 'data' with the db data
-    //             //if no, then create a newmission
-    //             const temp = data;
-    //             temp.exerciseID = update.exerciseID;
-    //             createUnitExercise(temp);
-    //         } else {
-    //             const temp = data;
-    //             Object.keys(update).forEach((obj) => {
-    //                 temp[obj] = update[obj];
-    //             });
-    //             setData(temp);
-    //         }
-
-    //     }
-
-    //     // get the pages of the steps
-    //     //TODO set up the setSave on each of the pages
-    //     const formComponents = [
-    //         <ExerciseInfo data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
-    //         <YourPlan data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
-    //         <PickAddOns data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
-    //         <Lodging data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
-    //         <Thanks />
-    //     ]
-
-    //     const { currentStep, currentComponent, changeStep, isFarstStep} = useForm(formComponents, data, saved)
-
-    //     // to keep the 'Next Step' button in the same place
-    //     const styleToActions = isFarstStep ? 'end' : 'space-between'
-    //     const isThankyouStep = currentStep === formComponents.length - 1 ? 'center' : 'space-between'
-    //     const displayOff = currentStep !== formComponents.length - 1 ? 'flex' : 'none'
-    //     const lastNumber = formComponents.length + 1;
-
     const handleDataViewChange = (event) => {
         setDataViewSelected(event.target.value);
     };
 
     const handleDataOptionsChange = (event) => {
-        console.log(`EVENT VAL: ${JSON.stringify(event.target.value)}`)
+        console.log(`EVENT VAL: ${JSON.stringify(event.target.value)}`);
         setDataOptionsSelected(event.target.value);
     };
 
-    return (
-        <ThemeProvider theme={theme} >
-            <div className="header-and-form-container">
-                <Grid container alignItems='flex-end' spacing={.8} padding={.1}
-                // backgroundColor={'primary.main'}
-                >
-                    <Grid item xs={6}>
-                        <FormControl variant="outlined"
-                            sx={{
-                                marginTop: 2,
-                                width: 300
-                            }}>
-                            <InputLabel shrink>Data View</InputLabel>
-                            <Select label="Data View"
-                                defaultValue={viewingOptionsDataView[0].value}
-                                onChange={handleDataViewChange}
+    console.log(`DATA DUMP: ${JSON.stringify(totalsForFY)}`);
+    let j = 0;
+    let manpowerTotal = 0;
+    totalsForFY.map((rec) => {
+        console.log(`REC ${j}: ${JSON.stringify(rec)}`);
+
+        if (rec.acftTotals) {
+            console.log(`YEP!`);
+            manpowerTotal = rec.acftTotals.totalManpowerCost;
+        } else if (rec.wingAcft) {
+            console.log(`NOPE!`);
+            totalsByAirframe.push({ 'id': j, 'label': rec.wingAcft.aircraftType, 'value': rec.wingAcft.manpowerCost });
+            //     totalsByAirframe[j].id = j;
+            //     totalsByAirframe[j].label = rec.wingAcft.aircraftType;
+            //     totalsByAirframe[j].value = rec.wingAcft.manpowerCost;
+        }
+        else {
+            totalsByAirframe.push({ id: 0, label: 'undefined', value: 0 });
+        }
+
+        j++;
+    });
+
+    console.log(`TOTALSARRAY: ${JSON.stringify(totalsByAirframe)}`);
+
+    const options = {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: `Total Annual Spending:`,
+            font: {
+              size: 20
+            }
+          },
+        },
+      };
+
+      const display = {
+        labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Unspent Allocations'],
+        datasets: [
+          {
+            label: 'Total',
+            data: totalsByAirframe,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)',
+            ],
+            borderWidth: 1,
+          },
+        ],
+      };
+
+      if (totalsByAirframe) {
+        return (
+            <ThemeProvider theme={theme} >
+                <div className="header-and-form-container">
+                    <Grid container alignItems='flex-end' spacing={.8} padding={.1}
+                    // backgroundColor={'primary.main'}
+                    >
+                        <Grid item xs={6}>
+                            <FormControl variant="outlined"
                                 sx={{
-                                    // marginTop: 0,
-                                    width: 250,
-                                    height: 50,
-                                }}
-                            >
-                                {viewingOptionsDataView.map((item) => <MenuItem key={item.id} value={item.value}>{item.value}
-                                </MenuItem>)}
-                            </Select>
-                            <FormHelperText>Select how to organize your data</FormHelperText>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <FormControl variant="outlined"
-                            sx={{
-                                marginTop: 2,
-                                width: 300
-                            }}>
-                            <InputLabel shrink>Data Options</InputLabel>
-                            <Select label="Data Options"
-                                value={dataOptionsSelected}
-                                defaultValue={dataOptionsSelected}
-                                onChange={handleDataOptionsChange}
+                                    marginTop: 2,
+                                    width: 300
+                                }}>
+                                <InputLabel shrink>Data View</InputLabel>
+                                <Select label="Data View"
+                                    defaultValue={viewingOptionsDataView[0].value}
+                                    onChange={handleDataViewChange}
+                                    sx={{
+                                        // marginTop: 0,
+                                        width: 250,
+                                        height: 50,
+                                    }}
+                                >
+                                    {viewingOptionsDataView.map((item) => <MenuItem key={item.id} value={item.value}>{item.value}
+                                    </MenuItem>)}
+                                </Select>
+                                <FormHelperText>Select how to organize your data</FormHelperText>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <FormControl variant="outlined"
                                 sx={{
-                                    // marginTop: 0,
-                                    width: 250,
-                                    height: 50,
-                                }}
-                            >
-                                {dataOptionsList.map((item) => <MenuItem key={item.id} value={item.value}>{item.value}
-                                </MenuItem>)}
-                            </Select>
-                            <FormHelperText>Select an option</FormHelperText>
-                        </FormControl>
+                                    marginTop: 2,
+                                    width: 300
+                                }}>
+                                <InputLabel shrink>Data Options</InputLabel>
+                                <Select label="Data Options"
+                                    value={dataOptionsSelected}
+                                    defaultValue={dataOptionsSelected}
+                                    onChange={handleDataOptionsChange}
+                                    sx={{
+                                        // marginTop: 0,
+                                        width: 250,
+                                        height: 50,
+                                    }}
+                                >
+                                    {dataOptionsList.map((item) => <MenuItem key={item.id} value={item.value}>{item.value}
+                                    </MenuItem>)}
+                                </Select>
+                                <FormHelperText>Select an option</FormHelperText>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={6}>charts go here
+
+                            <Pie data={display} options={options}/>
+
+
+                            {/* <PieChart
+                            colors={barColors}
+                            borderColors={barBorderColors}
+                            borderWidth={11}
+                            series={[
+                                    {
+                                        data:
+                                            totalsByAirframe
+                                        ,
+                                        borderWidth: 1,
+                                                                        innerRadius: 3,
+                                        // outerRadius: 100,
+                                        paddingAngle: 0,
+                                        cornerRadius: 5,
+                                        // startAngle: -90,
+                                        // endAngle: 180,
+                                        // cx: 150,
+                                        // cy: 150,
+
+                                    },
+                                ]}
+                                width={400}
+                                height={200}
+                            /> */}
+
+
+
+
+                            {/* <BarChart
+                            width={500}
+                            height={300}
+                            series={[
+                                { data: pData, label: 'pv', id: 'pvId', stack: 'total' },
+                                { data: uData, label: 'uv', id: 'uvId', stack: 'total' },
+                            ]}
+                            xAxis={[{ data: xLabels, scaleType: 'band' }]}
+                        /> */}
+                        </Grid>
+                        <Grid item xs={6}>reports go here
+                        </Grid>
                     </Grid>
-                    <Grid item xs={6}>charts go here
-                    </Grid>
-                    <Grid item xs={6}>reports go here
-                    </Grid>
-                </Grid>
-            </div>
-        </ThemeProvider>
-    );
+                </div>
+            </ThemeProvider>
+        );
+    }
 }
 
 export default AnalysisTool;

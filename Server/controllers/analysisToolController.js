@@ -1,7 +1,5 @@
 import knex from "../db/db.js";
 
-let totals = [];
-
 const requestCostSummaries = async (req, res) => {
     // Here's the flow:
     // 1) Determine the user role,
@@ -27,6 +25,24 @@ const requestCostSummaries = async (req, res) => {
     const param = req.query.param;
     let whereClause = '';
     let exerciseaircraftData = [];
+    let costTally = 0;
+    let travelDuration = 0;
+    let endDateTemp = 0;
+    let startDateTemp = 0;
+
+    let totals = [];
+    let totalAircraftType = 'All Acft';
+    let totalDaysSupported = 0;
+    let totalCostLodging = 0;
+    let totalCostMeals = 0;
+    //    let totalCostPerDiem = 0;
+    let totalCostPerDay = 0;
+    let totalCostTravel = 0;
+    let totalManpowerCost = 0;
+    let totalCostPerAircraft = 0;
+
+
+
 
     // Determine user role.
     await knex('users')
@@ -99,37 +115,69 @@ const requestCostSummaries = async (req, res) => {
 
                 exerciseaircraftData.map((airframeData) => {
                     // First calculate costPerDay, which includes lodging/per-diem/meals.  DON'T FORGET TO INCLUDE PER-DIEM, WHICH IS CURRENTLY MISSING FROM THIS TBL!!!
-                    const costPerDay = (airframeData.commercialLodgingCost * airframeData.commercialLodgingCount) + (airframeData.governmentLodgingCost * airframeData.governmentLodgingCount) + (airframeData.lodgingPerDiem * airframeData.fieldLodgingCount) + (airframeData.mealPerDiem * airframeData.mealNotProvidedCount)
-                        // + (ADD PER DIEM HERE!!!)
-                        ;
+                    const lodging = (airframeData.commercialLodgingCost * airframeData.commercialLodgingCount) + (airframeData.governmentLodgingCost * airframeData.governmentLodgingCount) + (airframeData.lodgingPerDiem * airframeData.fieldLodgingCount);
+
+                    const meals = (airframeData.mealPerDiem * airframeData.mealNotProvidedCount);
+
+                    //                    const perDiem = ????????????????;
+
+                    const costPerDay = lodging + meals;
+                    //                    + perDiem
+                    ;
+                    ;
 
                     // Now calculate costPerHead, which we're interpreting to just include travel costs for all personnel.  Per specs, gov't travel is $0.
-                    const costTravel = (airframeData.commercialAirfareCost * airframeData.commercialAirfareCount)
-                        // + (ADD GOV'T AIRFARE HERE!!!)
-                        ;
+                    const costTravel = (airframeData.commercialAirfareCost * airframeData.commercialAirfareCount);
+                    // + (ADD GOV'T AIRFARE HERE!!!)
+                    ;
+
+                    // Now calculate the amount of exercise days, including the first travel day; by converting the dates to timestamps, subtracting them out, then converting the resulting timestamp to a number of days.
+                    endDateTemp = new Date(airframeData.travelEndDate).getTime();
+                    startDateTemp = new Date(airframeData.travelStartDate).getTime();
+                    travelDuration = ((endDateTemp - startDateTemp) / (1000 * 60 * 60 * 24)) + 1;
 
                     // Now calculate Manpower Cost, which we're interpreting as the costs to get out there and back (travel) plus the costs for daily ops for all days total.
-                    const travelDuration = (airframeData.travelEndDate - airframeData.travelStartDate) + 1;
                     const manpowerCost = ((costPerDay * travelDuration) + costTravel);
 
                     // Now build the return JSON like this; the "perAirframe" section will repeat for each airframe.
                     totals.push(
                         {
-                            'allAirframes': {
-                                'totalCost': '',
-                            },
-                            'perAirframe': {
+                            'wingAcft': {
                                 'aircraftType': airframeData.aircraftType,
                                 'daysSupported': travelDuration,
-                                'costPerDay': costPerDay,
+                                'dailyCosts': {
+                                    'lodging': lodging,
+                                    'meals': meals,
+                                    // ADD PER-DIEM HERE.                                    'perdiem': '',
+                                    'costPerDay': costPerDay,
+                                },
                                 'costTravel': costTravel,
                                 'manpowerCost': manpowerCost,
                                 'costPerAircraft': manpowerCost / airframeData.aircraftCount,
                             },
-                        });
+                        },);
+
+                    totalDaysSupported += travelDuration;
+                    totalCostLodging += lodging;
+                    totalCostMeals += meals;
+                    //                        totalCostPerDiem += perDiem;
+                    totalCostPerDay += costPerDay;
+                    totalCostTravel += costTravel;
+
+                    totalManpowerCost += manpowerCost;
+                    totalCostPerAircraft += manpowerCost / airframeData.aircraftCount;
                 });
 
-                console.log(`RETURN: ${JSON.stringify(totals)}`)
+                // Lastly, add Total Cost to the array object then send this puppy!
+                totals.push(
+                    // totals.unshift(
+                    {
+                        'acftTotals': {
+                            'aircraftType': totalAircraftType,
+                            'totalManpowerCost': totalManpowerCost,
+                        },
+                    },);
+                console.log(`RETURN: ${JSON.stringify(totals)}`);
             }
             break;
         case dropdownOptionByExercise:
@@ -144,14 +192,7 @@ const requestCostSummaries = async (req, res) => {
         default:
     }
 
-    // await knex('exerciseaircraft')
-    // .select("*")
-    // .where(whereClause)
-    // .then((data) => {
-    //     })
-
-    const data = [{ 'whereClause': whereClause, 'userRole': role }];
-    res.status(200).json(data);
+    res.status(200).json(totals);
     // res.status(200).json(data);
 };
 
