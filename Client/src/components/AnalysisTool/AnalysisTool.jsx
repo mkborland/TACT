@@ -15,7 +15,14 @@ import { Select, MenuItem, FormControl, InputLabel, FormHelperText } from "@mui/
 // import { BarChart } from '@mui/x-charts/BarChart';
 // import { PieChart } from '@mui/x-charts/PieChart';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
+import { Pie, Doughnut } from 'react-chartjs-2';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import { Button, CardActionArea, CardActions } from '@mui/material';
+import CurrencyFormat from 'react-currency-format';
+import { Bar } from 'react-chartjs-2';
 
 //styles
 //import '../../styles/PlanningTool.css';
@@ -74,12 +81,12 @@ function AnalysisTool(props) {
         "rgba(255,99,132,0.2)",
         "rgba(54,162,235,0.2)",
         "rgba(255,206,86,0.2)",
-      ];
-      let barBorderColors = [
+    ];
+    let barBorderColors = [
         "rgba(255,99,132,1)",
         "rgba(54,162,235,1)",
         "rgba(255,206,86,1)",
-      ]
+    ];
 
     const userEmail = user ? user.email : "admin@gmail.com";
     //TODO: The userID should be passed from main application,
@@ -171,6 +178,7 @@ function AnalysisTool(props) {
     console.log(`DATA DUMP: ${JSON.stringify(totalsForFY)}`);
     let j = 0;
     let manpowerTotal = 0;
+    let airframeLabels = [];
     totalsForFY.map((rec) => {
         console.log(`REC ${j}: ${JSON.stringify(rec)}`);
 
@@ -180,28 +188,76 @@ function AnalysisTool(props) {
         } else if (rec.wingAcft) {
             console.log(`NOPE!`);
             totalsByAirframe.push({ 'id': j, 'label': rec.wingAcft.aircraftType, 'value': rec.wingAcft.manpowerCost });
+            airframeLabels.push(rec.wingAcft.aircraftType);
             //     totalsByAirframe[j].id = j;
             //     totalsByAirframe[j].label = rec.wingAcft.aircraftType;
             //     totalsByAirframe[j].value = rec.wingAcft.manpowerCost;
         }
         else {
-            totalsByAirframe.push({ id: 0, label: 'undefined', value: 0 });
+            console.log(`UNDEFINED!`);
+            totalsByAirframe.push({ id: 0, label: 'undef', value: 0 });
         }
 
         j++;
     });
 
     console.log(`TOTALSARRAY: ${JSON.stringify(totalsByAirframe)}`);
+    console.log(`airframeLabels: ${JSON.stringify(airframeLabels)}`);
 
     const options = {
         responsive: true,
+        cutout: '10%',
+        plugins: {
+            legend: {
+                position: 'bottom',
+            },
+            title: {
+                display: true,
+                text: `Total FY Spending, per Airframe:`,
+                font: {
+                    size: 20
+                }
+            },
+        },
+    };
+
+    const display = {
+        labels: airframeLabels,
+        datasets: [
+            {
+                label: '$',
+                data: totalsByAirframe,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                ],
+                borderWidth: 1,
+            },
+        ],
+    };
+
+    const barOptions = {
+        responsive: true,
+
         plugins: {
           legend: {
             position: 'top',
           },
           title: {
             display: true,
-            text: `Total Annual Spending:`,
+            text: 'Spending by Quarter',
             font: {
               size: 20
             }
@@ -209,34 +265,35 @@ function AnalysisTool(props) {
         },
       };
 
-      const display = {
-        labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Unspent Allocations'],
+      const barDisplay = {
+       airframeLabels,
+        // datasets: [
+        //   {
+        //     label: 'Total Spending',
+        //     data: totalsByAirframe ? [totalsByAirframe] : [],
+        //     backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        //   },
+        //   {
+        //     label: 'Total Allocation',
+        //     data: totalsByAirframe ? [totalsByAirframe] : [],
+        //     backgroundColor: 'rgba(81, 122, 235, 0.5)',
+        //   },
+        // ],
         datasets: [
-          {
-            label: 'Total',
-            data: totalsByAirframe,
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)',
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)',
-            ],
-            borderWidth: 1,
-          },
-        ],
-      };
+            // {
+            //   label: 'Total Spending',
+            //   data: totalsByAirframe ? [1,2,3,4,5] : [1,2,3,4,5],
+            //   backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            // },
+            {
+              label: 'Total Allocation',
+              data: totalsByAirframe ? [1,2,3,4,5] : [1,2,3,4,5],
+              backgroundColor: 'rgba(81, 122, 235, 0.5)',
+            },
+          ],
+        };
 
-      if (totalsByAirframe) {
+    if (totalsByAirframe) {
         return (
             <ThemeProvider theme={theme} >
                 <div className="header-and-form-container">
@@ -288,40 +345,12 @@ function AnalysisTool(props) {
                                 <FormHelperText>Select an option</FormHelperText>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={6}>charts go here
+                        <Grid container xs={12} alignItems='center'>
+                            <Grid item xs={6} padding={5}>
 
-                            <Pie data={display} options={options}/>
+                                <Pie data={display} options={options} />
 
-
-                            {/* <PieChart
-                            colors={barColors}
-                            borderColors={barBorderColors}
-                            borderWidth={11}
-                            series={[
-                                    {
-                                        data:
-                                            totalsByAirframe
-                                        ,
-                                        borderWidth: 1,
-                                                                        innerRadius: 3,
-                                        // outerRadius: 100,
-                                        paddingAngle: 0,
-                                        cornerRadius: 5,
-                                        // startAngle: -90,
-                                        // endAngle: 180,
-                                        // cx: 150,
-                                        // cy: 150,
-
-                                    },
-                                ]}
-                                width={400}
-                                height={200}
-                            /> */}
-
-
-
-
-                            {/* <BarChart
+                                {/* <BarChart
                             width={500}
                             height={300}
                             series={[
@@ -330,9 +359,43 @@ function AnalysisTool(props) {
                             ]}
                             xAxis={[{ data: xLabels, scaleType: 'band' }]}
                         /> */}
+                            </Grid>
+                            <Grid item xs={6} padding={5}>
+                                <Card sx={{ minWidth: 100, padding: '8px' }} variant='outlined' >
+                                    <CardContent>
+                                        <Grid container xs={12}>
+                                            <Grid item xs={6} padding={5}>
+                                                {
+                                                    totalsByAirframe.map((airframe) => {
+                                                        return <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                            {airframe.label}
+                                                        </Typography>;
+                                                    })
+                                                }
+                                            </Grid>
+                                            <Grid item xs={6} padding={5} spacing={5} align={'right'}>
+                                                {
+                                                    totalsByAirframe.map((airframe) => {
+                                                        return <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                            <CurrencyFormat value={airframe.value} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />
+                                                        </Typography>;
+                                                    })
+                                                }
+                                            </Grid>
+                                        </Grid>
+                                    </CardContent>
+                                </Card>
+
+                            </Grid>
                         </Grid>
-                        <Grid item xs={6}>reports go here
+
+                        <Grid container xs={12} alignItems='center'>
+                            <Grid item xs={6} padding={5}>
+
+                                <Bar data={barDisplay} options={barOptions} />
+                            </Grid>
                         </Grid>
+
                     </Grid>
                 </div>
             </ThemeProvider>
