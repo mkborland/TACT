@@ -1,10 +1,3 @@
-// components
-// import ExerciseInfo from "./ExerciseInfoPg1"
-// import YourPlan from "./AircraftInfoPg2"
-// import PickAddOns from "./AirfareInfoPg3"
-// import Lodging from "./PlanningToolPg4"
-// import Thanks from "./PlanningToolPg5"
-// import StepInformations from "./StepInformations"
 import AnalysisToolTheme from "../../styles/AnalysisToolTheme";
 import { ThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
@@ -12,9 +5,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import { Select, MenuItem, FormControl, InputLabel, FormHelperText } from "@mui/material";
-// import { BarChart } from '@mui/x-charts/BarChart';
-// import { PieChart } from '@mui/x-charts/PieChart';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from 'chart.js';
+import 'chart.js/auto';
 import { Pie, Doughnut } from 'react-chartjs-2';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -22,15 +13,14 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import CurrencyFormat from 'react-currency-format';
-import { Bar } from 'react-chartjs-2';
+import { Bar, ArcElement, CategoryScale } from 'react-chartjs-2';
+import { Divider } from '@mui/material';
 
 //styles
 //import '../../styles/PlanningTool.css';
 
 // hooks
 import { useEffect, useState } from "react";
-// import { texts } from "../../hooks/texts"
-// import { useForm } from "../../hooks/useForm"
 import TactApi from "../../api/TactApi";
 
 // --------- planning layout ------------
@@ -42,7 +32,7 @@ import TactApi from "../../api/TactApi";
 
 // find where to join unit exercise db with used aircraft db for calculations
 
-ChartJS.register(ArcElement, Tooltip, Legend, Title);
+//ChartJS.register(ArcElement, Tooltip, Legend, Title, CategoryScale, LinearScale);
 
 const theme = createTheme(AnalysisToolTheme('dark'));
 
@@ -179,6 +169,7 @@ function AnalysisTool(props) {
     let j = 0;
     let manpowerTotal = 0;
     let airframeLabels = [];
+    let airframeValues = [];
     totalsForFY.map((rec) => {
         console.log(`REC ${j}: ${JSON.stringify(rec)}`);
 
@@ -189,9 +180,7 @@ function AnalysisTool(props) {
             console.log(`NOPE!`);
             totalsByAirframe.push({ 'id': j, 'label': rec.wingAcft.aircraftType, 'value': rec.wingAcft.manpowerCost });
             airframeLabels.push(rec.wingAcft.aircraftType);
-            //     totalsByAirframe[j].id = j;
-            //     totalsByAirframe[j].label = rec.wingAcft.aircraftType;
-            //     totalsByAirframe[j].value = rec.wingAcft.manpowerCost;
+            airframeValues.push(rec.wingAcft.manpowerCost);
         }
         else {
             console.log(`UNDEFINED!`);
@@ -206,7 +195,7 @@ function AnalysisTool(props) {
 
     const options = {
         responsive: true,
-        cutout: '10%',
+        cutout: '5%',
         plugins: {
             legend: {
                 position: 'bottom',
@@ -252,54 +241,36 @@ function AnalysisTool(props) {
         responsive: true,
 
         plugins: {
-          legend: {
-            position: 'top',
-          },
-          title: {
-            display: true,
-            text: 'Spending by Quarter',
-            font: {
-              size: 20
-            }
-          },
-        },
-      };
-
-      const barDisplay = {
-       airframeLabels,
-        // datasets: [
-        //   {
-        //     label: 'Total Spending',
-        //     data: totalsByAirframe ? [totalsByAirframe] : [],
-        //     backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        //   },
-        //   {
-        //     label: 'Total Allocation',
-        //     data: totalsByAirframe ? [totalsByAirframe] : [],
-        //     backgroundColor: 'rgba(81, 122, 235, 0.5)',
-        //   },
-        // ],
-        datasets: [
-            // {
-            //   label: 'Total Spending',
-            //   data: totalsByAirframe ? [1,2,3,4,5] : [1,2,3,4,5],
-            //   backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            // },
-            {
-              label: 'Total Allocation',
-              data: totalsByAirframe ? [1,2,3,4,5] : [1,2,3,4,5],
-              backgroundColor: 'rgba(81, 122, 235, 0.5)',
+            legend: {
+                position: 'top',
             },
-          ],
-        };
+            title: {
+                display: true,
+                text: 'Spending by Quarter',
+                font: {
+                    size: 20
+                }
+            },
+        },
+    };
+
+    console.log(`airframeValues: ${airframeValues}`);
+    const barDisplay = {
+        labels: airframeLabels,
+        datasets: [
+            {
+                label: 'Total Spending',
+                data: airframeValues,
+                backgroundColor: 'rgba(81, 122, 235, 0.5)',
+            },
+        ],
+    };
 
     if (totalsByAirframe) {
         return (
             <ThemeProvider theme={theme} >
                 <div className="header-and-form-container">
-                    <Grid container alignItems='flex-end' spacing={.8} padding={.1}
-                    // backgroundColor={'primary.main'}
-                    >
+                    <Grid container alignItems='flex-end' spacing={.8} padding={.1}>
                         <Grid item xs={6}>
                             <FormControl variant="outlined"
                                 sx={{
@@ -322,6 +293,8 @@ function AnalysisTool(props) {
                                 <FormHelperText>Select how to organize your data</FormHelperText>
                             </FormControl>
                         </Grid>
+
+
                         <Grid item xs={6}>
                             <FormControl variant="outlined"
                                 sx={{
@@ -345,20 +318,11 @@ function AnalysisTool(props) {
                                 <FormHelperText>Select an option</FormHelperText>
                             </FormControl>
                         </Grid>
+
+
                         <Grid container xs={12} alignItems='center'>
                             <Grid item xs={6} padding={5}>
-
                                 <Pie data={display} options={options} />
-
-                                {/* <BarChart
-                            width={500}
-                            height={300}
-                            series={[
-                                { data: pData, label: 'pv', id: 'pvId', stack: 'total' },
-                                { data: uData, label: 'uv', id: 'uvId', stack: 'total' },
-                            ]}
-                            xAxis={[{ data: xLabels, scaleType: 'band' }]}
-                        /> */}
                             </Grid>
                             <Grid item xs={6} padding={5}>
                                 <Card sx={{ minWidth: 100, padding: '8px' }} variant='outlined' >
@@ -389,12 +353,27 @@ function AnalysisTool(props) {
                             </Grid>
                         </Grid>
 
+
+                        <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                            <Divider
+                                variant="fullWidth" borderTop="thin solid green"
+                            />
+                        </Box>
+
+
                         <Grid container xs={12} alignItems='center'>
                             <Grid item xs={6} padding={5}>
-
                                 <Bar data={barDisplay} options={barOptions} />
                             </Grid>
                         </Grid>
+
+
+                        <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                            <Divider
+                                variant="fullWidth" borderTop="thin solid green"
+                            />
+                        </Box>
+
 
                     </Grid>
                 </div>
