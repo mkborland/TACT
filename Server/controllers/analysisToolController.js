@@ -79,23 +79,6 @@ const requestCostSummaries = async (req, res) => {
 
             // query unitexercises now.
             if (exerciseData.length > 0) {
-                // let j = await knex('exerciseaircraft')
-                //     .select('*')
-                //     .whereIn('unitExerciseID', function () {
-                //         this.select('unitExerciseID')
-                //             .from('unitexercises')
-                //             .whereIn("exerciseID", function () {
-                //                 this.select('exerciseID')
-                //                     .from('exercises')
-                //                     .whereBetween('exerciseStartDate', [`10-01-${param - 1}`, `09-30-${param}`])
-                //                     ;
-
-                //             });
-                //     });
-
-                // //                        )}`)
-
-
                 exerciseaircraftData = await knex
                     .select(
                         'e.exerciseName',
@@ -114,46 +97,43 @@ const requestCostSummaries = async (req, res) => {
                 console.log(`J: ${JSON.stringify(exerciseaircraftData)}`);
 
                 exerciseaircraftData.map((airframeData) => {
-                    // First calculate costPerDay, which includes lodging/per-diem/meals.  DON'T FORGET TO INCLUDE PER-DIEM, WHICH IS CURRENTLY MISSING FROM THIS TBL!!!
-                    const lodging = (airframeData.commercialLodgingCost * airframeData.commercialLodgingCount) + (airframeData.governmentLodgingCost * airframeData.governmentLodgingCount) + (airframeData.lodgingPerDiem * airframeData.fieldLodgingCount);
-
-                    const meals = (airframeData.mealPerDiem * airframeData.mealNotProvidedCount);
-
-                    //                    const perDiem = ????????????????;
-
-                    const costPerDay = lodging + meals;
-                    //                    + perDiem
-                    ;
-                    ;
-
-                    // Now calculate costPerHead, which we're interpreting to just include travel costs for all personnel.  Per specs, gov't travel is $0.
-                    const costTravel = (airframeData.commercialAirfareCost * airframeData.commercialAirfareCount);
-                    // + (ADD GOV'T AIRFARE HERE!!!)
-                    ;
-
-                    // Now calculate the amount of exercise days, including the first travel day; by converting the dates to timestamps, subtracting them out, then converting the resulting timestamp to a number of days.
+                    // First calculate the amount of exercise days, including the first travel day; by converting the dates to timestamps, subtracting them out, then converting the resulting timestamp to a number of days.
                     endDateTemp = new Date(airframeData.travelEndDate).getTime();
                     startDateTemp = new Date(airframeData.travelStartDate).getTime();
                     travelDuration = ((endDateTemp - startDateTemp) / (1000 * 60 * 60 * 24)) + 1;
 
-                    // Now calculate Manpower Cost, which we're interpreting as the costs to get out there and back (travel) plus the costs for daily ops for all days total.
-                    const manpowerCost = ((costPerDay * travelDuration) + costTravel);
+                    // Now calculate total manpower cost, which includes lodging/per-diem/meals times X number of days.  DON'T FORGET TO INCLUDE PER-DIEM, WHICH IS CURRENTLY MISSING FROM THIS TBL!!!
+                    const lodging = Number(airframeData.commercialLodgingCost) + Number(airframeData.governmentLodgingCost) + Number(airframeData.lodgingPerDiem);
+
+                    const meals = Number(airframeData.mealPerDiem);
+
+//                    const perDiem = ????????????????;
+
+                    // Now calculate costPerHead, which we're interpreting to just include travel costs for all personnel.  Per specs, gov't travel is $0.
+                    const costTravelComm = Number(airframeData.commercialAirfareCost);
+                    const costTravelGov = 50000; // Hard-coded per specs, but modified to be $50k instead of $0 for better-looking reports.
+                    const costTravel = (Number(costTravelComm) + Number(costTravelGov));
+                    const manpowerCost = lodging + meals + costTravel;
 
                     // Now build the return JSON like this; the "perAirframe" section will repeat for each airframe.
                     totals.push(
                         {
                             'wingAcft': {
                                 'aircraftType': airframeData.aircraftType,
+                                // ADD THE HEAD COUNT HERE.
                                 'daysSupported': travelDuration,
-                                'dailyCosts': {
+                                'onSiteCosts': {
                                     'lodging': lodging,
                                     'meals': meals,
                                     // ADD PER-DIEM HERE.                                    'perdiem': '',
-                                    'costPerDay': costPerDay,
                                 },
-                                'costTravel': costTravel,
+                                'costTravel': {
+                                    costTravelComm,
+                                    costTravelGov,
+                                },
                                 'manpowerCost': manpowerCost,
                                 'costPerAircraft': manpowerCost / airframeData.aircraftCount,
+                                'travelDuration': travelDuration,
                             },
                         },);
 
@@ -161,7 +141,6 @@ const requestCostSummaries = async (req, res) => {
                     totalCostLodging += lodging;
                     totalCostMeals += meals;
                     //                        totalCostPerDiem += perDiem;
-                    totalCostPerDay += costPerDay;
                     totalCostTravel += costTravel;
 
                     totalManpowerCost += manpowerCost;

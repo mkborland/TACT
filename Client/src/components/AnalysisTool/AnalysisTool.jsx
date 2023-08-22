@@ -237,33 +237,269 @@ function AnalysisTool(props) {
         ],
     };
 
-    const barOptions = {
-        responsive: true,
+    const displayBarChartsAndReports = () => {
+        let dataSetTravelComm = [];
+        let dataSetTravelGov = [];
+        let dataSetLodging = [];
+        let dataSetMeals = [];
+        let dataSetPerDiem = [];
+        let costLabels = [];
+        return totalsForFY.map((airframe) => {
+            if (typeof airframe?.wingAcft?.aircraftType !== 'undefined') {
+                if (airframe.wingAcft.aircraftType !== 'All') {
+                    console.log(`airframe.wingAcft.costTravelComm: ${airframe.wingAcft.costTravel.costTravelComm}`);
+                    dataSetTravelComm = [airframe.wingAcft.costTravel.costTravelComm
+                    ];
+                    dataSetTravelGov = [airframe.wingAcft.costTravel.costTravelGov
+                    ];
+                    dataSetLodging = [
+                        airframe.wingAcft.onSiteCosts.lodging,
+                    ];
+                    dataSetMeals = [
+                        airframe.wingAcft.onSiteCosts.meals,
+                    ];
+                    dataSetPerDiem = [
+                        5000,  // ADD PER DIEM HERE!!!!!!!!!!!!!!!!!!
+                    ];
+                    costLabels = [
+                        'Travel Costs   |   On-Site Costs'
+                    ];
 
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: true,
-                text: 'Spending by Quarter',
-                font: {
-                    size: 20
+
+                    return (
+                        <Grid container xs={12}>
+                            <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                                <Divider
+                                    variant="fullWidth" borderTop="thin solid green"
+                                />
+                            </Box>
+                            <Grid container xs={12} alignItems='center'>
+                                <Grid item xs={6} padding={5}>
+                                    <Bar
+                                        data={{
+                                            labels: costLabels,
+                                            datasets: [
+                                                {
+                                                    label: 'Commercial Travel',
+                                                    data: dataSetTravelComm,
+                                                    // data: airframeValues,
+                                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                                    borderWidth: 1,
+                                                    stack: 'Stack 0',
+                                                },
+                                                {
+                                                    label: 'Gov\'t Travel',
+                                                    data: dataSetTravelGov,
+                                                    // data: airframeValues,
+                                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                                    borderWidth: 1,
+                                                    stack: 'Stack 0',
+                                                },
+                                                {
+                                                    label: 'Lodging',
+                                                    data: dataSetLodging,
+                                                    // data: airframeValues,
+                                                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                                                    borderColor: 'rgba(255, 206, 86, 1)',
+                                                    borderWidth: 1,
+                                                    stack: 'Stack 1',
+                                                },
+                                                {
+                                                    label: 'Meals',
+                                                    data: dataSetMeals,
+                                                    // data: airframeValues,
+                                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                                    borderWidth: 1,
+                                                    stack: 'Stack 1',
+                                                },
+                                                {
+                                                    label: 'Per-Diem',
+                                                    data: dataSetPerDiem,
+                                                    // data: airframeValues,
+                                                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                                                    borderColor: 'rgba(153, 102, 255, 1)',
+                                                    borderWidth: 1,
+                                                    stack: 'Stack 1',
+                                                },
+                                            ],
+                                        }}
+                                        options={{
+                                            responsive: true,
+                                            plugins: {
+                                                title: { display: true, text:
+                                                    'Total FY Spending, ' +
+                                                    airframe.wingAcft.aircraftType +
+                                                    ', ' +
+                                                    airframe.wingAcft.travelDuration +
+                                                    ' Days',
+                                                    font: { size: 20 } },
+                                                legend: {
+                                                    position: 'bottom'
+                                                },
+                                                tooltip: {
+                                                    callbacks: {
+                                                        title: function (tooltipItems, data) {
+                                                            return '';
+                                                        }, label: function (context) {
+                                                            let label = context.dataset.label || '';
+
+                                                            if (label) {
+                                                                label += ': ';
+                                                            }
+                                                            if (context.parsed.y !== null) {
+                                                                label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                                                            }
+                                                            return label;
+                                                        }
+                                                    }
+                                                },
+                                            },
+                                            scales: {
+                                                x: {
+                                                    stacked: true,
+                                                },
+                                                y: {
+                                                    stacked: true
+                                                }
+                                            }
+                                        }} />
+                                </Grid>
+                                <Grid item xs={6} padding={5}>
+                                    <Card sx={{ minWidth: 100, padding: '8px' }} variant='outlined' >
+                                        <CardContent>
+                                            <Grid container xs={12}>
+                                            <Typography gutterBottom variant="h4" component="div" align='center'>
+                                            Total FY Spending,{' '}
+                                                    {airframe.wingAcft.aircraftType}
+                                                    {', '}
+                                                    {airframe.wingAcft.travelDuration}
+                                                    {' '}
+                                                    Days
+                                                        </Typography>
+                                                <Grid item xs={6} padding={5}>
+                                                    {
+                                                        <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                            Travel Costs
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                            Commercial:
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                            Government:
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                            <br />
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                            On-Site Costs
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                            Lodging:
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                            Meals:
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                            Per-Diem:
+                                                        </Typography>
+                                                    }
+                                                    <Divider
+                                                        variant="fullWidth" borderTop="thin solid green"
+                                                    />
+                                                    {
+                                                        <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                            <br />
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                            Total:
+                                                        </Typography>
+                                                    }
+                                                </Grid>
+                                                <Grid item xs={6} padding={5} spacing={5} align={'right'}>
+                                                    {
+                                                        <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                            <br />
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                            {<CurrencyFormat value={airframe.wingAcft.costTravel.costTravelComm} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                            {<CurrencyFormat value={airframe.wingAcft.costTravel.costTravelGov} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                            <br />
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                            <br />
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                            {<CurrencyFormat value={airframe.wingAcft.onSiteCosts.lodging} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                            {<CurrencyFormat value={airframe.wingAcft.onSiteCosts.meals} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                            {<CurrencyFormat value='00000' displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
+                                                        </Typography>
+                                                    }
+                                                    <Divider
+                                                        variant="fullWidth" borderTop="thin solid green"
+                                                    />
+                                                    {
+                                                        <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                            <br />
+                                                        </Typography>
+                                                    }
+                                                    {
+                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                            {<CurrencyFormat value={airframe.wingAcft.manpowerCost} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
+                                                        </Typography>
+                                                    }
+                                                </Grid>
+                                            </Grid>
+                                        </CardContent>
+                                    </Card>
+
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    );
                 }
-            },
-        },
-    };
-
-    console.log(`airframeValues: ${airframeValues}`);
-    const barDisplay = {
-        labels: airframeLabels,
-        datasets: [
-            {
-                label: 'Total Spending',
-                data: airframeValues,
-                backgroundColor: 'rgba(81, 122, 235, 0.5)',
-            },
-        ],
+            }
+        });
     };
 
     if (totalsByAirframe) {
@@ -354,18 +590,7 @@ function AnalysisTool(props) {
                         </Grid>
 
 
-                        <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                            <Divider
-                                variant="fullWidth" borderTop="thin solid green"
-                            />
-                        </Box>
-
-
-                        <Grid container xs={12} alignItems='center'>
-                            <Grid item xs={6} padding={5}>
-                                <Bar data={barDisplay} options={barOptions} />
-                            </Grid>
-                        </Grid>
+                        {displayBarChartsAndReports()}
 
 
                         <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
