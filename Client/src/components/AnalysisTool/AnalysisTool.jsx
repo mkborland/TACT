@@ -9,7 +9,6 @@ import 'chart.js/auto';
 import { Pie, Doughnut } from 'react-chartjs-2';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import CurrencyFormat from 'react-currency-format';
@@ -23,61 +22,19 @@ import { Divider } from '@mui/material';
 import { useEffect, useState } from "react";
 import TactApi from "../../api/TactApi";
 
-// --------- planning layout ------------
-//pg 1 (ex Info) -> drop down with made ex's, user name and unit
-//pg 2 (Aircraft) -> Amount of aircraft + personnel attached .... list or table
-//pg 3 (airfair) -> api needs dates and location ---- steal for unit info
-//pg 4 (lodging) -> perdiem api used with total personnel
-//pg 5 (meals) -> ^^ above but if meals provided
-
-// find where to join unit exercise db with used aircraft db for calculations
-
-//ChartJS.register(ArcElement, Tooltip, Legend, Title, CategoryScale, LinearScale);
-
 const theme = createTheme(AnalysisToolTheme('dark'));
-
-const unitExerciseTemplate = {
-    unitExerciseID: undefined,
-    exerciseID: undefined, //set from drop down of High level exercise
-    status: false, // Should be an enum = 'Draft' | "Complete"
-    dateCreated: new Date(),
-    locationFrom: undefined, //to be used with api for airfair
-    locationTo: undefined,
-    travelStartDate: new Date(), //should start with the exercise dates, but user modifiable
-    travelEndDate: new Date(),
-    unit: undefined,       //exercise info (default to current user)
-    userID: -1,    //pull from current user
-    personnelSum: 0, //calculated from total aircraft
-    unitCostSum: 0 //^^
-};
 
 function AnalysisTool(props) {
     const { user } = props;
-    // const [data, setData] = useState(unitExerciseTemplate);
     const [userInfo, setUserInfo] = useState();
-    // const [saved, setSaved] = useState(false);
-    // const [byFYSelected, setByFYSelected] = useState(false);
-    // const [byExerciseSelected, setByExerciseSelected] = useState(false);
-    // const [byCapabilitySelected, setByCapabilitySelected] = useState(false);
-    // const [byUnitSelected, setByUnitSelected] = useState(false);
-    // const [byFundingTypeSelected, setByFundingTypeSelected] = useState(false);
     const [dataOptionsList, setDataOptionsList] = useState([{ 'id': 0, 'value': '2019' }]);
     const dropdownOptionByFY = 'by FY';
     const dropdownOptionByExercise = 'by Exercise';
     const dropdownOptionByCapability = 'by Capability';
     const dropdownOptionByUnit = 'by Unit';
     let totalsByAirframe = [];
-    let barColors = [
-        "rgba(255,99,132,0.2)",
-        "rgba(54,162,235,0.2)",
-        "rgba(255,206,86,0.2)",
-    ];
-    let barBorderColors = [
-        "rgba(255,99,132,1)",
-        "rgba(54,162,235,1)",
-        "rgba(255,206,86,1)",
-    ];
 
+    // Hard-coded for now, 'til the Login functionality is complete and user data is passed into the Analysis logic as Props.
     const userEmail = user ? user.email : "admin@gmail.com";
     //TODO: The userID should be passed from main application,
     //this needs to be updated once that is figured out
@@ -94,7 +51,7 @@ function AnalysisTool(props) {
     ];
 
     const [dataViewSelected, setDataViewSelected] = useState(dropdownOptionByFY);
-    const [dataOptionsSelected, setDataOptionsSelected] = useState('2019');
+    const [dataOptionsSelected, setDataOptionsSelected] = useState({ 'id': '0', 'value': '2019' });
     const [totalsForFY, setTotalsForFY] = useState([]);
 
     useEffect(() => {
@@ -102,31 +59,26 @@ function AnalysisTool(props) {
     }, []);
 
     const queryDropdownByFY = async () => {
-        // console.log(`CALLING queryDropdownByFY`);
-
         // Call API to populate the second dropdown list.
         const response = await TactApi.getFYs(userEmail);
         setDataOptionsList(response);
-        setDataOptionsSelected(response[0].value);
-        // console.log(`CALLED queryDropdownByFY: ${JSON.stringify(response)}`);
+        setDataOptionsSelected({ 'id': 0, 'value': response[0].value });
     };
 
     const queryDropdownByExercise = async () => {
-        setDataOptionsList([{ 'id': 0, 'value': '2' }]);
-        // setDataOptionsSelected([{ 'id': 0, 'value': '2' }]);
-        setDataOptionsSelected('2');
+        const response = await TactApi.getExerciseList(userEmail);
+        setDataOptionsList(response);
+        setDataOptionsSelected({ 'id': response[0].id, 'value': response[0].value });
     };
 
     const queryDropdownByCapability = async () => {
         setDataOptionsList([{ 'id': 0, 'value': '3' }]);
-        // setDataOptionsSelected([{ 'id': 0, 'value': '3' }]);
-        setDataOptionsSelected('3');
+        setDataOptionsSelected({ 'id': 0, 'value': '3' });
     };
 
     const queryDropdownByUnit = async () => {
         setDataOptionsList([{ 'id': 0, 'value': '4' }]);
-        // setDataOptionsSelected([{ 'id': 0, 'value': '4' }]);
-        setDataOptionsSelected('4');
+        setDataOptionsSelected({ 'id': 0, 'value': '4' });
     };
 
     const querySummaryData = async () => {
@@ -154,44 +106,54 @@ function AnalysisTool(props) {
     useEffect(() => {
         // Call API to populate the charts.
         querySummaryData();
-    }, [dataOptionsSelected]);
+    }, [dataOptionsSelected.value]);
 
     const handleDataViewChange = (event) => {
         setDataViewSelected(event.target.value);
     };
 
     const handleDataOptionsChange = (event) => {
-        console.log(`EVENT VAL: ${JSON.stringify(event.target.value)}`);
-        setDataOptionsSelected(event.target.value);
+        let param = {};
+        let ctr = 1;
+
+        switch (dataViewSelected) {
+            case dropdownOptionByFY:
+                param = { 'id': 0, 'value': event.target.value };
+                break;
+            case dropdownOptionByExercise:
+                // Need to correlate the exercise name selected from the dropdown with its ID so we can pass the ID to the Summary API.
+                dataOptionsList.map((exerciseNames) => {
+                    if (exerciseNames.value === event.target.value) {
+                        param = { 'id': ctr, 'value': exerciseNames.value };
+                    }
+                    ctr++;
+                });
+                break;
+            default:
+        }
+
+        setDataOptionsSelected(param);
     };
 
-    console.log(`DATA DUMP: ${JSON.stringify(totalsForFY)}`);
     let j = 0;
     let manpowerTotal = 0;
     let airframeLabels = [];
     let airframeValues = [];
     totalsForFY.map((rec) => {
-        console.log(`REC ${j}: ${JSON.stringify(rec)}`);
 
         if (rec.acftTotals) {
-            console.log(`YEP!`);
             manpowerTotal = rec.acftTotals.totalManpowerCost;
         } else if (rec.wingAcft) {
-            console.log(`NOPE!`);
             totalsByAirframe.push({ 'id': j, 'label': rec.wingAcft.aircraftType, 'value': rec.wingAcft.manpowerCost });
             airframeLabels.push(rec.wingAcft.aircraftType);
             airframeValues.push(rec.wingAcft.manpowerCost);
         }
         else {
-            console.log(`UNDEFINED!`);
             totalsByAirframe.push({ id: 0, label: 'undef', value: 0 });
         }
 
         j++;
     });
-
-    console.log(`TOTALSARRAY: ${JSON.stringify(totalsByAirframe)}`);
-    console.log(`airframeLabels: ${JSON.stringify(airframeLabels)}`);
 
     const options = {
         responsive: true,
@@ -247,7 +209,6 @@ function AnalysisTool(props) {
         return totalsForFY.map((airframe) => {
             if (typeof airframe?.wingAcft?.aircraftType !== 'undefined') {
                 if (airframe.wingAcft.aircraftType !== 'All') {
-                    console.log(`airframe.wingAcft.costTravelComm: ${airframe.wingAcft.costTravel.costTravelComm}`);
                     dataSetTravelComm = [airframe.wingAcft.costTravel.costTravelComm
                     ];
                     dataSetTravelGov = [airframe.wingAcft.costTravel.costTravelGov
@@ -265,15 +226,15 @@ function AnalysisTool(props) {
                         'Travel Costs   |   On-Site Costs'
                     ];
 
-
+                    // JSX for the charts and reports.
                     return (
-                        <Grid container xs={12}>
+                        <Grid container>
                             <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
                                 <Divider
-                                    variant="fullWidth" borderTop="thin solid green"
+                                    variant="fullWidth"
                                 />
                             </Box>
-                            <Grid container xs={12} alignItems='center'>
+                            <Grid container alignItems='center'>
                                 <Grid item xs={6} padding={5}>
                                     <Bar
                                         data={{
@@ -282,7 +243,6 @@ function AnalysisTool(props) {
                                                 {
                                                     label: 'Commercial Travel',
                                                     data: dataSetTravelComm,
-                                                    // data: airframeValues,
                                                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                                                     borderColor: 'rgba(255, 99, 132, 1)',
                                                     borderWidth: 1,
@@ -291,7 +251,6 @@ function AnalysisTool(props) {
                                                 {
                                                     label: 'Gov\'t Travel',
                                                     data: dataSetTravelGov,
-                                                    // data: airframeValues,
                                                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                                                     borderColor: 'rgba(54, 162, 235, 1)',
                                                     borderWidth: 1,
@@ -300,7 +259,6 @@ function AnalysisTool(props) {
                                                 {
                                                     label: 'Lodging',
                                                     data: dataSetLodging,
-                                                    // data: airframeValues,
                                                     backgroundColor: 'rgba(255, 206, 86, 0.2)',
                                                     borderColor: 'rgba(255, 206, 86, 1)',
                                                     borderWidth: 1,
@@ -309,7 +267,6 @@ function AnalysisTool(props) {
                                                 {
                                                     label: 'Meals',
                                                     data: dataSetMeals,
-                                                    // data: airframeValues,
                                                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                                                     borderColor: 'rgba(75, 192, 192, 1)',
                                                     borderWidth: 1,
@@ -318,7 +275,6 @@ function AnalysisTool(props) {
                                                 {
                                                     label: 'Per-Diem',
                                                     data: dataSetPerDiem,
-                                                    // data: airframeValues,
                                                     backgroundColor: 'rgba(153, 102, 255, 0.2)',
                                                     borderColor: 'rgba(153, 102, 255, 1)',
                                                     borderWidth: 1,
@@ -329,13 +285,15 @@ function AnalysisTool(props) {
                                         options={{
                                             responsive: true,
                                             plugins: {
-                                                title: { display: true, text:
-                                                    'Total FY Spending, ' +
-                                                    airframe.wingAcft.aircraftType +
-                                                    ', ' +
-                                                    airframe.wingAcft.travelDuration +
-                                                    ' Days',
-                                                    font: { size: 20 } },
+                                                title: {
+                                                    display: true, text:
+                                                        'Total FY Spending, ' +
+                                                        airframe.wingAcft.aircraftType +
+                                                        ', ' +
+                                                        airframe.wingAcft.travelDuration +
+                                                        ' Days',
+                                                    font: { size: 20 }
+                                                },
                                                 legend: {
                                                     position: 'bottom'
                                                 },
@@ -370,121 +328,121 @@ function AnalysisTool(props) {
                                 <Grid item xs={6} padding={5}>
                                     <Card sx={{ minWidth: 100, padding: '8px' }} variant='outlined' >
                                         <CardContent>
-                                            <Grid container xs={12}>
-                                            <Typography gutterBottom variant="h4" component="div" align='center'>
-                                            Total FY Spending,{' '}
+                                            <Grid container>
+                                                <Typography gutterBottom key="1" variant="h4" component="div" align='center'>
+                                                    Total FY Spending,{' '}
                                                     {airframe.wingAcft.aircraftType}
                                                     {', '}
                                                     {airframe.wingAcft.travelDuration}
                                                     {' '}
                                                     Days
-                                                        </Typography>
+                                                </Typography>
                                                 <Grid item xs={6} padding={5}>
                                                     {
-                                                        <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                        <Typography gutterBottom key="2"variant="h5" component="div" align='right'>
                                                             Travel Costs
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="3" variant="h6" component="div" align='right'>
                                                             Commercial:
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="20" variant="h6" component="div" align='right'>
                                                             Government:
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                        <Typography gutterBottom key="21" variant="h5" component="div" align='right'>
                                                             <br />
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                        <Typography gutterBottom key="4" variant="h5" component="div" align='right'>
                                                             On-Site Costs
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="5" variant="h6" component="div" align='right'>
                                                             Lodging:
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="6" variant="h6" component="div" align='right'>
                                                             Meals:
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="7" variant="h6" component="div" align='right'>
                                                             Per-Diem:
                                                         </Typography>
                                                     }
                                                     <Divider
-                                                        variant="fullWidth" borderTop="thin solid green"
+                                                        variant="fullWidth"
                                                     />
                                                     {
-                                                        <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                        <Typography gutterBottom key="8" variant="h5" component="div" align='right'>
                                                             <br />
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="9" variant="h6" component="div" align='right'>
                                                             Total:
                                                         </Typography>
                                                     }
                                                 </Grid>
-                                                <Grid item xs={6} padding={5} spacing={5} align={'right'}>
+                                                <Grid item xs={6} padding={5} align={'right'}>
                                                     {
-                                                        <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                        <Typography gutterBottom key="10" variant="h5" component="div" align='right'>
                                                             <br />
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="11" variant="h6" component="div" align='right'>
                                                             {<CurrencyFormat value={airframe.wingAcft.costTravel.costTravelComm} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="12" variant="h6" component="div" align='right'>
                                                             {<CurrencyFormat value={airframe.wingAcft.costTravel.costTravelGov} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="13" variant="h6" component="div" align='right'>
                                                             <br />
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                        <Typography gutterBottom key="14" variant="h5" component="div" align='right'>
                                                             <br />
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="15" variant="h6" component="div" align='right'>
                                                             {<CurrencyFormat value={airframe.wingAcft.onSiteCosts.lodging} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="16" variant="h6" component="div" align='right'>
                                                             {<CurrencyFormat value={airframe.wingAcft.onSiteCosts.meals} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="17" variant="h6" component="div" align='right'>
                                                             {<CurrencyFormat value='00000' displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
                                                         </Typography>
                                                     }
                                                     <Divider
-                                                        variant="fullWidth" borderTop="thin solid green"
+                                                        variant="fullWidth"
                                                     />
                                                     {
-                                                        <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                        <Typography gutterBottom key="18" variant="h5" component="div" align='right'>
                                                             <br />
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="19" variant="h6" component="div" align='right'>
                                                             {<CurrencyFormat value={airframe.wingAcft.manpowerCost} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
                                                         </Typography>
                                                     }
@@ -502,10 +460,11 @@ function AnalysisTool(props) {
         });
     };
 
+    // JSX for the two dropdowns.
     if (totalsByAirframe) {
         return (
             <ThemeProvider theme={theme} >
-                <div className="header-and-form-container">
+                <div  key="22" className="header-and-form-container">
                     <Grid container alignItems='flex-end' spacing={.8} padding={.1}>
                         <Grid item xs={6}>
                             <FormControl variant="outlined"
@@ -518,7 +477,6 @@ function AnalysisTool(props) {
                                     defaultValue={viewingOptionsDataView[0].value}
                                     onChange={handleDataViewChange}
                                     sx={{
-                                        // marginTop: 0,
                                         width: 250,
                                         height: 50,
                                     }}
@@ -539,11 +497,10 @@ function AnalysisTool(props) {
                                 }}>
                                 <InputLabel shrink>Data Options</InputLabel>
                                 <Select label="Data Options"
-                                    value={dataOptionsSelected}
-                                    defaultValue={dataOptionsSelected}
+                                    value={dataOptionsSelected.value}
+                                    defaultValue={dataOptionsSelected.value}
                                     onChange={handleDataOptionsChange}
                                     sx={{
-                                        // marginTop: 0,
                                         width: 250,
                                         height: 50,
                                     }}
@@ -556,27 +513,27 @@ function AnalysisTool(props) {
                         </Grid>
 
 
-                        <Grid container xs={12} alignItems='center'>
+                        <Grid container alignItems='center'>
                             <Grid item xs={6} padding={5}>
                                 <Pie data={display} options={options} />
                             </Grid>
                             <Grid item xs={6} padding={5}>
                                 <Card sx={{ minWidth: 100, padding: '8px' }} variant='outlined' >
                                     <CardContent>
-                                        <Grid container xs={12}>
+                                        <Grid container>
                                             <Grid item xs={6} padding={5}>
                                                 {
                                                     totalsByAirframe.map((airframe) => {
-                                                        return <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                        return <Typography gutterBottom key={airframe.id} variant="h5" component="div" align='right'>
                                                             {airframe.label}
                                                         </Typography>;
                                                     })
                                                 }
                                             </Grid>
-                                            <Grid item xs={6} padding={5} spacing={5} align={'right'}>
+                                            <Grid item xs={6} padding={5} align={'right'}>
                                                 {
                                                     totalsByAirframe.map((airframe) => {
-                                                        return <Typography gutterBottom variant="h5" component="div" align='right'>
+                                                        return <Typography gutterBottom key={airframe.id} variant="h5" component="div" align='right'>
                                                             <CurrencyFormat value={airframe.value} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />
                                                         </Typography>;
                                                     })
@@ -595,11 +552,9 @@ function AnalysisTool(props) {
 
                         <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
                             <Divider
-                                variant="fullWidth" borderTop="thin solid green"
+                                variant="fullWidth"
                             />
                         </Box>
-
-
                     </Grid>
                 </div>
             </ThemeProvider>
