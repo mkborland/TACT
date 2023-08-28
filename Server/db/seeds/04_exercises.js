@@ -7,7 +7,7 @@ export async function seed(knex) {
   await knex('exercises').del()
   await knex('exercises').insert([
     {
-      exerciseName: 'DEEPEST OCEAN',
+      exerciseName: 'DEEPEST OCEAN 23',
       status: '1',
       dateCreated: '15 May 2023',
       location: 'Philippines',
@@ -20,7 +20,7 @@ export async function seed(knex) {
   ]);
   await knex('exercises').insert([
     {
-      exerciseName: 'PEACEFUL MAGELLAN',
+      exerciseName: 'PEACEFUL MAGELLAN 22',
       status: '0',
       dateCreated: '16 May 2023',
       location: 'Hawaii',
@@ -33,7 +33,7 @@ export async function seed(knex) {
   ]);
   await knex('exercises').insert([
     {
-      exerciseName: 'SHRINKING INCH',
+      exerciseName: 'STUDIO TURKEY 22',
       status: '1',
       dateCreated: '15 May 2023',
       location: 'Japan',
@@ -46,7 +46,7 @@ export async function seed(knex) {
   ]);
   await knex('exercises').insert([
     {
-      exerciseName: 'STUDIO TURKEY',
+      exerciseName: 'STUDIO TURKEY 23',
       status: '1',
       dateCreated: '15 May 2023',
       location: 'Australia',
@@ -59,7 +59,7 @@ export async function seed(knex) {
   ]);
   await knex('exercises').insert([
     {
-      exerciseName: 'ORNERY TURTLE',
+      exerciseName: 'ORNERY TURTLE 24',
       status: '1',
       dateCreated: '15 May 2023',
       location: 'Guam',

@@ -29,7 +29,7 @@ export async function seed(knex) {
     ]);
     await knex('exerciseaircraft').insert([
       {
-        unitExerciseID: '1',
+        unitExerciseID: '2',
         aircraftType: 'F-15C',
         aircraftCount: '6',
         personnelCount: '90',
@@ -51,7 +51,7 @@ export async function seed(knex) {
     ]);
     await knex('exerciseaircraft').insert([
       {
-        unitExerciseID: '2',
+        unitExerciseID: '3',
         aircraftType: 'C-130',
         aircraftCount: '2',
         personnelCount: '145',
@@ -73,7 +73,7 @@ export async function seed(knex) {
     ]);
     await knex('exerciseaircraft').insert([
       {
-        unitExerciseID: '2',
+        unitExerciseID: '4',
         aircraftType: 'F-15C',
         aircraftCount: '8',
         personnelCount: '145',
@@ -95,7 +95,7 @@ export async function seed(knex) {
     ]);
     await knex('exerciseaircraft').insert([
       {
-        unitExerciseID: '3',
+        unitExerciseID: '5',
         aircraftType: 'F-15C',
         aircraftCount: '6',
         personnelCount: '145',
@@ -117,7 +117,7 @@ export async function seed(knex) {
     ]);
     await knex('exerciseaircraft').insert([
       {
-        unitExerciseID: '4',
+        unitExerciseID: '6',
         aircraftType: 'C-130',
         aircraftCount: '2',
         personnelCount: '145',
@@ -139,7 +139,7 @@ export async function seed(knex) {
     ]);
     await knex('exerciseaircraft').insert([
       {
-        unitExerciseID: '4',
+        unitExerciseID: '7',
         aircraftType: 'KC-135',
         aircraftCount: '2',
         personnelCount: '145',
@@ -161,7 +161,7 @@ export async function seed(knex) {
     ]);
     await knex('exerciseaircraft').insert([
       {
-        unitExerciseID: '4',
+        unitExerciseID: '8',
         aircraftType: 'F-15C',
         aircraftCount: '6',
         personnelCount: '145',
@@ -183,7 +183,7 @@ export async function seed(knex) {
     ]);
     await knex('exerciseaircraft').insert([
       {
-        unitExerciseID: '5',
+        unitExerciseID: '9',
         aircraftType: 'C-17',
         aircraftCount: '2',
         personnelCount: '145',
@@ -205,7 +205,7 @@ export async function seed(knex) {
     ]);
     await knex('exerciseaircraft').insert([
       {
-        unitExerciseID: '5',
+        unitExerciseID: '10',
         aircraftType: 'F-22',
         aircraftCount: '4',
         personnelCount: '145',
