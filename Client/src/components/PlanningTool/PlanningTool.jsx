@@ -14,6 +14,7 @@ import { useEffect, useState } from "react"
 import { texts } from "../../hooks/texts"
 import { useForm } from "../../hooks/useForm"
 import TactApi from "../../api/TactApi"
+import GetExerciseAircraftById from "../../api/ExerciseAircraft/get/getExerciseAircraftById"
 
 // --------- planning layout ------------
 //pg 1 (ex Info) -> drop down with made ex's, user name and unit
@@ -43,8 +44,10 @@ const unitExerciseTemplate = {
 function PlanningTool(props) {
     const { user } = props;
     const [data, setData] = useState(unitExerciseTemplate);
+    const [aircraftData, setAircraftData] = useState([]);
     const [userInfo, setUserInfo] = useState();
     const [saved, setSaved] = useState({saved: false, alert: 'Nothing Selected'});
+    const [airframeList, setAirframeList] = useState([]);
 
     const userEmail = user ? user.email : "admin@gmail.com";
     //TODO: The userID should be passed from main application, 
@@ -52,11 +55,17 @@ function PlanningTool(props) {
     const fetchUserInfo = async () => {
         const response = await TactApi.getUser(userEmail);
         setUserInfo(response);
+        const response2 = await TactApi.getAllAircraft();
+        setAirframeList(response2);
+        const response3 = data?.unitExerciseID && await GetExerciseAircraftById(data.unitExerciseID);
+        //currently the aircraftData comes as an array. 
+        //TODO: make sure only one aircraftData per unitExerciseID
+        setAircraftData(response3);
     };
 
     useEffect(() => {
         fetchUserInfo()
-    }, []);
+    }, [data]);
 
     useEffect(() => {
         userInfo && updateFileHandler({
@@ -67,7 +76,8 @@ function PlanningTool(props) {
 
     useEffect(() => {
         console.log('useEffect data', data);
-    }, [data]);
+        console.log('useEffect aircraft data', aircraftData)
+    }, [data, aircraftData]);
 
     //creates new mission in the DB with 'newMission' as the data obj 
     const createUnitExercise = async (newMission) => {
@@ -105,15 +115,49 @@ function PlanningTool(props) {
                 setSaved({saved: false, alert: 'Must Select an Exercise'})
             }
         }
-       }
+    };
+
+    const updateUnitExerciseAircraft = async (input) => {
+        console.log('in updateUnitExerciseAircraft', input)
+        if (aircraftData.length > 0 && aircraftData[0].unitExerciseID === input.unitExerciseID) {
+            await TactApi.updateExerciseAircraft(input)
+        } else {
+            await TactApi.addExerciseAircraft(input);
+        }
+        const response4 = await GetExerciseAircraftById(data.unitExerciseID);
+        setAircraftData(response4);
+    }
 
     // get the pages of the steps
     //TODO set up the setSave on each of the pages
     const formComponents = [
-        <ExerciseInfo data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
-        <YourPlan data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
-        <PickAddOns data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
-        <Lodging data={data} updateFileHandler={updateFileHandler} setSaved={setSaved}/>,
+        <ExerciseInfo 
+            data={data}
+            updateFileHandler={updateFileHandler}
+            setSaved={setSaved}
+        />,
+        <YourPlan 
+            data={data}
+            updateFileHandler={updateFileHandler}
+            setSaved={setSaved}
+            aircraftData={aircraftData}
+            setAircraftData={updateUnitExerciseAircraft}
+            airframeList={airframeList}
+            />,
+        <PickAddOns 
+            data={data}
+            updateFileHandler={updateFileHandler}
+            setSaved={setSaved}
+            aircraftData={aircraftData}
+            setAircraftData={updateUnitExerciseAircraft}                
+        />,
+        <Lodging 
+            data={data}
+            updateFileHandler={updateFileHandler}
+            setSaved={setSaved}
+            aircraftData={aircraftData}
+            setAircraftData={updateUnitExerciseAircraft}                
+        />,
         <Thanks />
     ]
 

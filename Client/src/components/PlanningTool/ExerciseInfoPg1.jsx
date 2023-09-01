@@ -5,17 +5,13 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
 // styles
 import '../../styles/PlanningToolPg1.css';
 import TactApi from '../../api/TactApi';
+import { LocationField } from './location-field';
 
 const defaultLabelValues = {
     exerciseLabels: [{ value: undefined, label: "Select Exercise"}],
-    locations: [
-        { airport: 'test airport', region: 'test state', country: 'United States' },
-        { airport: 'OCONUS airport', region: 'test region', country: 'Germany'}
-    ],
 }
 
 const generateExerciseLabels = (input) => {
@@ -27,52 +23,21 @@ const generateExerciseLabels = (input) => {
         defaultLabelValues.exerciseLabels;
 };
 
-const generateLocationLabels = (inputs) => {
-    return inputs ? 
-    inputs.map((input) => { return {
-        value: input.locationID,
-        label: input.country === 'United States' 
-            ? `${input.airport}, ${input.region}`
-            : `${input.airport}, ${input.country}`
-    }}) :
-    defaultLabelValues.locations.map((location, index) => { return {
-        value: index,
-        label: location.contry === 'United States'
-        ? `${location.airport}, ${location.region}`
-        : `${location.airport}, ${location.country}`
-    }});
-};
-
 function YourInfo(props) {
     const { data, updateFileHandler } = props;
-    const [locations, setLocations ] = useState()
     const [exercises, setExercises] = useState(undefined);
     const [defaultExerciseValue, setDefaultExerciseValue] = useState();
-    const [defaultToValue, setDefaultToValue] = useState();
-    const [defaultFromValue, setDefaultFromValue] = useState();
 
     const fetchAllExercises = async () => { 
         const response = await TactApi.getAllExercises();
         setExercises(response);
     };
 
-    const fetchLocationById = async (id) => { 
-        return await TactApi.getLocationById(id);
-    };
-
-    const fetchLocations = async () => {
-        const response = await TactApi.getAllLocations();
-        setLocations(response);
-    };
-
     useEffect(() => {
-        fetchLocations();
         fetchAllExercises();
     }, [])
 
     const exerciseLabels = generateExerciseLabels(exercises);
-
-    const locationlabels = generateLocationLabels(locations);
 
     //IF the unitExercise already exist, this populates the table values with the 
     //pre-existing data
@@ -86,28 +51,7 @@ function YourInfo(props) {
             label: 'Select an Exercise',
             value: -1
         }) 
-
-        data.locationTo && locations && locationlabels && locationlabels.length > 0 
-            ? setDefaultToValue({
-                value: data.locationTo,
-                label: (locationlabels.find((label) => parseInt(label.value) === parseInt(data.locationTo))).label
-            })
-            : setDefaultToValue({
-                label: 'Select...',
-                value: -1
-            });
-
-        data.locationFrom && locations &&locationlabels && locationlabels.length > 0 
-            ? setDefaultFromValue({
-                value: data.locationFrom,
-                label: (locationlabels.find((label) => parseInt(label.value) === parseInt(data.locationFrom))).label
-            })
-            : setDefaultFromValue({
-                label: 'Select...',
-                value: -1
-            })    
-
-    }, [data, locations, locationlabels, exercises, exerciseLabels] )
+    }, [data, exercises, exerciseLabels] )
 
     const verifyExerciseInputs = (e) => {
         updateFileHandler({exerciseID: e.value}); //fills in template based on key value pair
@@ -150,14 +94,14 @@ function YourInfo(props) {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker', 'DatePicker']}>
                         <DatePicker
-                            label="Start Date"
+                            label="Depart Date"
                             defaultValue={dayjs(data.travelStartDate)}
                             value={dayjs(data.travelStartDate)}
                             sx={{ backgroundColor: 'white' }}
                             onChange={verifyStartDateInputs}
                         />
                         <DatePicker
-                            label="End Date"
+                            label="Return Date"
                             defaultValue={dayjs(data.travelEndDate)}
                             value={dayjs(data.travelEndDate)}
                             sx={{ backgroundColor: 'white' }}
@@ -166,31 +110,21 @@ function YourInfo(props) {
                     </DemoContainer>
                 </LocalizationProvider>
             </div>
-            <div className="input-container">
-                <label htmlFor="departingLocation" className='inputLabel'>Departing Location</label>
-                <Select
-                    className='input'
-                    name="departingLocation"
-                    id='locationFrom'
-                    value={defaultFromValue}
-                    onChange={changeDepartLocation}
-                    isSearchable
-                    options={locationlabels}
-                />
-            </div>
-            <div className="input-container">
-                <label htmlFor="destination" className='inputLabel'>Destination</label>
-                <Select
-                    className="input"
-                    name="destination"
-                    id="locationTo"
-                    value={defaultToValue}
-                    onChange={changeDestinationLocation}
-                    isSearchable
-                    options={locationlabels}
-                />
-            </div>
-        </div>
+            <LocationField 
+                inputLabel='Departing Location'
+                name='departingLocation'
+                id='locationFrom'
+                onChange={changeDepartLocation}
+                locationId={data.locationFrom}
+            />
+            <LocationField 
+                inputLabel='Destination Location'
+                name='destination'
+                id='locationTo'
+                onChange={changeDestinationLocation}
+                locationId={data.locationTo}
+            />
+         </div>
     );
 }
 

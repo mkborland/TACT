@@ -18,6 +18,7 @@ import GetAllLocations from "./Locations/get/GetAllLocations.js";
 import GetLocationById from "./Locations/get/GetLocationById.js";
 import GetFYs from "./ExerciseAircraft/get/getFYs.js";
 import GetSummaries from "./ExerciseAircraft/get/getSummaries.js";
+import UpdateExerciseAircraft from "./ExerciseAircraft/post/UpdateExerciseAircraft.js";
 
 const TactApi = {
   getDashboard: GetDashboard,
@@ -36,6 +37,7 @@ const TactApi = {
   updateUnitExercise: UpdateUnitExercise,
   getUnitExercise: GetUnitExercise,
   addExerciseAircraft: AddExerciseAircraft,
+  updateExerciseAircraft: UpdateExerciseAircraft,
   getAllLocations: GetAllLocations,
   getLocationById: GetLocationById,
   getFYs: GetFYs,
