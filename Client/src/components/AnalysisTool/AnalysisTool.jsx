@@ -14,24 +14,23 @@ import { Button, CardActionArea, CardActions } from '@mui/material';
 import CurrencyFormat from 'react-currency-format';
 import { Bar, ArcElement, CategoryScale } from 'react-chartjs-2';
 import { Divider } from '@mui/material';
-
 //styles
 //import '../../styles/PlanningTool.css';
+import AnalysisToolStyle from "../../styles/AnalysisToolStyle";
 
 // hooks
 import { useEffect, useState } from "react";
 import TactApi from "../../api/TactApi";
 
 const theme = createTheme(AnalysisToolTheme('dark'));
-
 function AnalysisTool(props) {
     const { user } = props;
     const [userInfo, setUserInfo] = useState();
     const [dataOptionsList, setDataOptionsList] = useState([{ 'id': 0, 'value': '2019' }]);
     const dropdownOptionByFY = 'by FY';
     const dropdownOptionByExercise = 'by Exercise';
-    const dropdownOptionByCapability = 'by Capability';
-    const dropdownOptionByUnit = 'by Unit';
+
+
     let totalsByAirframe = [];
 
     // Hard-coded for now, 'til the Login functionality is complete and user data is passed into the Analysis logic as Props.
@@ -46,8 +45,6 @@ function AnalysisTool(props) {
     const viewingOptionsDataView = [
         { id: dropdownOptionByFY, value: 'by FY' },
         { id: dropdownOptionByExercise, value: 'by Exercise' },
-        { id: dropdownOptionByCapability, value: 'by Capability' },
-        { id: dropdownOptionByUnit, value: 'by Unit' },
     ];
 
     const [dataViewSelected, setDataViewSelected] = useState(dropdownOptionByFY);
@@ -61,6 +58,7 @@ function AnalysisTool(props) {
     const queryDropdownByFY = async () => {
         // Call API to populate the second dropdown list.
         const response = await TactApi.getFYs(userEmail);
+        console.log(response[0])
         setDataOptionsList(response);
         setDataOptionsSelected({ 'id': 0, 'value': response[0].value });
     };
@@ -71,18 +69,10 @@ function AnalysisTool(props) {
         setDataOptionsSelected({ 'id': response[0].id, 'value': response[0].value });
     };
 
-    const queryDropdownByCapability = async () => {
-        setDataOptionsList([{ 'id': 0, 'value': '3' }]);
-        setDataOptionsSelected({ 'id': 0, 'value': '3' });
-    };
-
-    const queryDropdownByUnit = async () => {
-        setDataOptionsList([{ 'id': 0, 'value': '4' }]);
-        setDataOptionsSelected({ 'id': 0, 'value': '4' });
-    };
-
     const querySummaryData = async () => {
         setTotalsForFY(await TactApi.getSummaries(userEmail, dataViewSelected, dataOptionsSelected));
+        const mm = await TactApi.getSummaries(userEmail, dataViewSelected, dataOptionsSelected);
+        console.log(mm)
     };
 
     useEffect(() => {
@@ -92,12 +82,6 @@ function AnalysisTool(props) {
                 break;
             case dropdownOptionByExercise:
                 queryDropdownByExercise();
-                break;
-            case dropdownOptionByCapability:
-                queryDropdownByCapability();
-                break;
-            case dropdownOptionByUnit:
-                queryDropdownByUnit();
                 break;
             default:
         }
@@ -154,47 +138,67 @@ function AnalysisTool(props) {
 
         j++;
     });
-
+ 
     const options = {
         responsive: true,
         cutout: '5%',
         plugins: {
             legend: {
+                display:true, // option to enable or disable the legend
                 position: 'bottom',
+                // adding label to address the style more specific
+                labels:{  
+                    font:{
+                        size:16,
+                        
+                    },
+                    color: 'rgba(255, 255, 255, 1)',
+                    padding:15,
+                },
+                
             },
             title: {
                 display: true,
                 text: `Total FY Spending, per Airframe:`,
                 font: {
-                    size: 20
-                }
+                    size: 20,
+                    weight:1, // Font weight is adjusted
+                },
+                color: 'rgba(255, 255, 255, 1)', // Color changed to white
+                padding: { // Adding to seperate the Pie chart from the drop down menu
+                       bottom:30,
+                       top:30,
+                    }
             },
         },
     };
 
     const display = {
         labels: airframeLabels,
+        // labels: ['S12', 'F22', 'G33','T44'], // for testing purposes!
         datasets: [
             {
                 label: '$',
                 data: totalsByAirframe,
+                // data: [23, 44, 122, 412,76], // for testing purposes!
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 99, 132, 0.45)', // from 0.2 to 0.45 to make it more less transparent
+                    'rgba(72, 223, 237, 0.45)', //'rgba(54, 162, 235, 0.45)',
+                    'rgba(255, 206, 86, 0.45)',
+                    'rgba(75, 192, 192, 0.45)',
+                    'rgba(153, 102, 255, 0.45)',
+                    'rgba(255, 159, 64, 0.45)',
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
+                    'rgba(72, 223, 237, 1)',//'rgba(54, 162, 235, 0.45)',
                     'rgba(255, 206, 86, 1)',
                     'rgba(75, 192, 192, 1)',
                     'rgba(153, 102, 255, 1)',
                     'rgba(255, 159, 64, 1)',
                 ],
-                borderWidth: 1,
+                borderWidth: 2.5, // adjusted to 3 from 1
+                
             },
         ],
     };
@@ -224,18 +228,19 @@ function AnalysisTool(props) {
                     ];
                     costLabels = [
                         'Travel Costs   |   On-Site Costs'
-                    ];
+                     ];
 
                     // JSX for the charts and reports.
                     return (
-                        <Grid container>
-                            <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                        <Grid container >
+                            <Box sx={AnalysisToolStyle.DividerBox}>
                                 <Divider
                                     variant="fullWidth"
                                 />
                             </Box>
-                            <Grid container alignItems='center'>
-                                <Grid item xs={6} padding={5}>
+
+                            <Grid container alignItems='center'  >
+                                <Grid item xs={7} padding={1} >  {/*The padding is decreased, and extra small (xs) screen changed from 6 to 7 to increase the bar chart size*/}
                                     <Bar
                                         data={{
                                             labels: costLabels,
@@ -243,41 +248,41 @@ function AnalysisTool(props) {
                                                 {
                                                     label: 'Commercial Travel',
                                                     data: dataSetTravelComm,
-                                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                                    backgroundColor: 'rgba(255, 99, 132, 0.45)',
                                                     borderColor: 'rgba(255, 99, 132, 1)',
-                                                    borderWidth: 1,
+                                                    borderWidth: 2.5, // Border width adjusted
                                                     stack: 'Stack 0',
                                                 },
                                                 {
                                                     label: 'Gov\'t Travel',
                                                     data: dataSetTravelGov,
-                                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                                    borderColor: 'rgba(54, 162, 235, 1)',
-                                                    borderWidth: 1,
+                                                    backgroundColor: 'rgba(72, 223, 237, 0.45)', // Original color -> 'rgba(54, 162, 235, 0.45)',
+                                                    borderColor: 'rgba(72, 223, 237, 1)', //Original color -> 'rgba(54, 162, 235, 1)',
+                                                    borderWidth: 2.5,// Border width adjusted
                                                     stack: 'Stack 0',
                                                 },
                                                 {
                                                     label: 'Lodging',
                                                     data: dataSetLodging,
-                                                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                                                    backgroundColor: 'rgba(255, 206, 86, 0.45)',
                                                     borderColor: 'rgba(255, 206, 86, 1)',
-                                                    borderWidth: 1,
+                                                    borderWidth: 2.5,// Border width adjusted
                                                     stack: 'Stack 1',
                                                 },
                                                 {
                                                     label: 'Meals',
                                                     data: dataSetMeals,
-                                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                                    backgroundColor: 'rgba(75, 192, 192, 0.45)',
                                                     borderColor: 'rgba(75, 192, 192, 1)',
-                                                    borderWidth: 1,
+                                                    borderWidth: 2.5,// Border width adjusted
                                                     stack: 'Stack 1',
                                                 },
                                                 {
                                                     label: 'Per-Diem',
                                                     data: dataSetPerDiem,
-                                                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                                                    backgroundColor: 'rgba(153, 102, 255, 0.45)',
                                                     borderColor: 'rgba(153, 102, 255, 1)',
-                                                    borderWidth: 1,
+                                                    borderWidth: 2.5,// Border width adjusted
                                                     stack: 'Stack 1',
                                                 },
                                             ],
@@ -292,11 +297,30 @@ function AnalysisTool(props) {
                                                         ', ' +
                                                         airframe.wingAcft.travelDuration +
                                                         ' Days',
-                                                    font: { size: 20 }
+                                                    font: { 
+                                                        size: 20, 
+                                                        weight:1, // Font weight is adjusted 
+                                                    },
+                                                    padding: { // Adding to seperate the Pie chart from the drop down menu
+                                                        bottom:30
+                                                     },
+                                                    color: 'rgba(255, 255, 255, 1)', // color changed to 'white'
                                                 },
+
                                                 legend: {
-                                                    position: 'bottom'
+                                                    display:true, // option to enable or disable the legend
+                                                    position: 'bottom',
+                                                    // adding label to address the style more specific
+                                                    labels:{  
+                                                        font:{
+                                                            size:15,
+                                                            
+                                                        },
+                                                        color: 'rgba(255, 255, 255, 1)',
+                                                        // padding:10
+                                                    },
                                                 },
+                                                width: 0.1,
                                                 tooltip: {
                                                     callbacks: {
                                                         title: function (tooltipItems, data) {
@@ -315,21 +339,38 @@ function AnalysisTool(props) {
                                                     }
                                                 },
                                             },
+                                            
+                                            // Bar chart tick and grid color set to white and adjusted their transparency
                                             scales: {
                                                 x: {
                                                     stacked: true,
+                                                    ticks: {
+                                                        color: 'rgba(255, 255, 255, 0.6)', 
+                                                    },
+                                                    grid: {
+                                                        color: 'rgba(255, 255, 255, 0.1)', 
+                                                    },
                                                 },
                                                 y: {
-                                                    stacked: true
-                                                }
+                                                    stacked: true,
+                                                    ticks: {
+                                                        color: 'rgba(255, 255, 255, 0.6)',  
+                                                    },
+                                                    grid: {
+                                                        color: 'rgba(255, 255, 255, 0.1)', 
+                                                    },
+                                                },
+                                                
                                             }
                                         }} />
                                 </Grid>
-                                <Grid item xs={6} padding={5}>
-                                    <Card sx={{ minWidth: 100, padding: '8px' }} variant='outlined' >
+                                <Grid item xs={5} padding={3}>
+                                    {/* Boarder color changed to 'white' */}
+                                    <Card sx={AnalysisToolStyle.BarChartCardReport} variant='outlined' >
                                         <CardContent>
                                             <Grid container>
-                                                <Typography gutterBottom key="1" variant="h4" component="div" align='center'>
+                                                {/* Add style to cards' title */}
+                                                <Typography sx={AnalysisToolStyle.TypographyTitleCardReport} gutterBottom key="1" variant="h4" component="div" align='center'>
                                                     Total FY Spending,{' '}
                                                     {airframe.wingAcft.aircraftType}
                                                     {', '}
@@ -337,48 +378,55 @@ function AnalysisTool(props) {
                                                     {' '}
                                                     Days
                                                 </Typography>
-                                                <Grid item xs={6} padding={5}>
+
+                                                <Grid item {...AnalysisToolStyle.gridItem}>
                                                     {
-                                                        <Typography gutterBottom key="2"variant="h5" component="div" align='right'>
+                                                        /* Added style to Travel Cost */
+                                                        <Typography sx={AnalysisToolStyle.TypographySubtitleCardReport} gutterBottom key="2"variant="h5" component="div" align='right'>
                                                             Travel Costs
                                                         </Typography>
                                                     }
+
+                                                    {/*Change the align from 'right' to 'center' for all three Typography below*/}
                                                     {
-                                                        <Typography gutterBottom key="3" variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="3" variant="h6" component="div" align='center'>
                                                             Commercial:
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom key="20" variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="20" variant="h6" component="div" align='center'>
                                                             Government:
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom key="21" variant="h5" component="div" align='right'>
+                                                        <Typography sx={{paddingTop:'9px'}} gutterBottom key="21" variant="h5" component="div" align='center'>
                                                             <br />
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom key="4" variant="h5" component="div" align='right'>
+                                                        /* Added style to On-Site Cost */
+                                                        <Typography sx={AnalysisToolStyle.TypographySubtitleCardReport} gutterBottom key="4" variant="h5" component="div" align='right'>
                                                             On-Site Costs
                                                         </Typography>
                                                     }
+
+                                                    {/*Change the align from 'right' to 'center' for all three Typography below*/}
                                                     {
-                                                        <Typography gutterBottom key="5" variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="5" variant="h6" component="div" align='center'>
                                                             Lodging:
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom key="6" variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="6" variant="h6" component="div" align='center'>
                                                             Meals:
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom key="7" variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="7" variant="h6" component="div" align='center'>
                                                             Per-Diem:
                                                         </Typography>
                                                     }
-                                                    <Divider
+                                                    <Divider sx={AnalysisToolStyle.DividerBarChart}
                                                         variant="fullWidth"
                                                     />
                                                     {
@@ -387,12 +435,12 @@ function AnalysisTool(props) {
                                                         </Typography>
                                                     }
                                                     {
-                                                        <Typography gutterBottom key="9" variant="h6" component="div" align='right'>
+                                                        <Typography gutterBottom key="9" variant="h6" component="div" align='center'>
                                                             Total:
                                                         </Typography>
                                                     }
                                                 </Grid>
-                                                <Grid item xs={6} padding={5} align={'right'}>
+                                                <Grid item {...AnalysisToolStyle.gridItem} align={'right'}>
                                                     {
                                                         <Typography gutterBottom key="10" variant="h5" component="div" align='right'>
                                                             <br />
@@ -433,9 +481,10 @@ function AnalysisTool(props) {
                                                             {<CurrencyFormat value='00000' displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
                                                         </Typography>
                                                     }
-                                                    <Divider
+                                                    <Divider sx={AnalysisToolStyle.DividerBarChart}
                                                         variant="fullWidth"
                                                     />
+
                                                     {
                                                         <Typography gutterBottom key="18" variant="h5" component="div" align='right'>
                                                             <br />
@@ -461,25 +510,22 @@ function AnalysisTool(props) {
     };
 
     // JSX for the two dropdowns.
+    //
     if (totalsByAirframe) {
         return (
             <ThemeProvider theme={theme} >
-                <div  key="22" className="header-and-form-container">
-                    <Grid container alignItems='flex-end' spacing={.8} padding={.1}>
-                        <Grid item xs={6}>
+                
+                <div  key="22" className="header-and-form-container" > 
+                    <Grid container alignItems='flex-end' spacing={2} padding={.1} >
+                        <Grid item xs={6} >
                             <FormControl variant="outlined"
-                                sx={{
-                                    marginTop: 2,
-                                    width: 300
-                                }}>
+                                sx={AnalysisToolStyle.DropdownFormControl}
+                                >
                                 <InputLabel shrink>Data View</InputLabel>
                                 <Select label="Data View"
                                     defaultValue={viewingOptionsDataView[0].value}
                                     onChange={handleDataViewChange}
-                                    sx={{
-                                        width: 250,
-                                        height: 50,
-                                    }}
+                                    sx={AnalysisToolStyle.DropDownData}
                                 >
                                     {viewingOptionsDataView.map((item) => <MenuItem key={item.id} value={item.value}>{item.value}
                                     </MenuItem>)}
@@ -489,21 +535,15 @@ function AnalysisTool(props) {
                         </Grid>
 
 
-                        <Grid item xs={6}>
+                        <Grid item xs={6} >
                             <FormControl variant="outlined"
-                                sx={{
-                                    marginTop: 2,
-                                    width: 300
-                                }}>
+                                sx={AnalysisToolStyle.DropdownFormControl}>
                                 <InputLabel shrink>Data Options</InputLabel>
                                 <Select label="Data Options"
                                     value={dataOptionsSelected.value}
                                     defaultValue={dataOptionsSelected.value}
                                     onChange={handleDataOptionsChange}
-                                    sx={{
-                                        width: 250,
-                                        height: 50,
-                                    }}
+                                    sx={AnalysisToolStyle.DropDownData}
                                 >
                                     {dataOptionsList.map((item) => <MenuItem key={item.id} value={item.value}>{item.value}
                                     </MenuItem>)}
@@ -513,27 +553,31 @@ function AnalysisTool(props) {
                         </Grid>
 
 
-                        <Grid container alignItems='center'>
-                            <Grid item xs={6} padding={5}>
+                        <Grid container alignItems='center' spacing={2}  >
+                            <Grid item {...AnalysisToolStyle.gridItem} >
                                 <Pie data={display} options={options} />
                             </Grid>
-                            <Grid item xs={6} padding={5}>
-                                <Card sx={{ minWidth: 100, padding: '8px' }} variant='outlined' >
+                            
+                            <Grid item {...AnalysisToolStyle.gridItem}>
+                                {/* The card report has been adjusted properly to resemble bar report styling*/}
+                                <Card sx={AnalysisToolStyle.PieChartCardReport} variant='outlined' >
                                     <CardContent>
-                                        <Grid container>
-                                            <Grid item xs={6} padding={5}>
+                                        <Grid container alig >
+                                            <Grid item {...AnalysisToolStyle.gridItem}>
                                                 {
                                                     totalsByAirframe.map((airframe) => {
-                                                        return <Typography gutterBottom key={airframe.id} variant="h5" component="div" align='right'>
+                                                        // Typography text alignment and font size added (left column)
+                                                        return <Typography sx={AnalysisToolStyle.PieChartTypographyCardReportLeft} gutterBottom key={airframe.id} variant="h5" component="div" align='right'>
                                                             {airframe.label}
                                                         </Typography>;
                                                     })
                                                 }
                                             </Grid>
-                                            <Grid item xs={6} padding={5} align={'right'}>
+                                            <Grid item {...AnalysisToolStyle.gridItem}>
                                                 {
                                                     totalsByAirframe.map((airframe) => {
-                                                        return <Typography gutterBottom key={airframe.id} variant="h5" component="div" align='right'>
+                                                        // Typography text alignment and font size added (right column)
+                                                        return <Typography sx={AnalysisToolStyle.PieChartTypographyCardReportRight} gutterBottom key={airframe.id} variant="h5" component="div" align='right'>
                                                             <CurrencyFormat value={airframe.value} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />
                                                         </Typography>;
                                                     })
@@ -550,7 +594,7 @@ function AnalysisTool(props) {
                         {displayBarChartsAndReports()}
 
 
-                        <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                        <Box sx={AnalysisToolStyle.DividerBox}>
                             <Divider
                                 variant="fullWidth"
                             />
