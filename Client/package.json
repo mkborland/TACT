@@ -21,6 +21,7 @@
     "chart.js": "^4.3.3",
     "dayjs": "^1.11.7",
     "http-proxy-middleware": "^2.0.6",
+    "keycloak-js": "^22.0.1",
     "luxon": "^3.3.0",
     "nodemon": "^3.0.1",
     "query-string": "^8.1.0",

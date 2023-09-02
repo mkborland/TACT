@@ -9,6 +9,7 @@ import DashboardPage from "./pages/DashboardPage";
 import NewExerciseForm from "./components/NewExerciseForm/NewExerciseForm";
 import PlanningTool from "./components/PlanningTool/PlanningTool";
 import AnalysisTool from "./components/AnalysisTool/AnalysisTool";
+import PrivateRoute from "./PrivateRoute";
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
       <div className="App-header">
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<LoginCard />} />
+            <Route exact path="/" element={<PrivateRoute />} />
+            {/* <Route path="/" element={<LoginCard />} /> */}
             <Route path="/signup" element={<SignUp />} />
             <Route path="/Dashboard" element={<PersistentDrawerLeft />}>
               <Route path="DashboardPage" element={<DashboardPage />} />
