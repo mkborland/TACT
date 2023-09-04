@@ -29,9 +29,6 @@ services:
       - POSTGRES_DB=TACT_DB
   client:
     build: ./Client
-    # build:
-    #   context: ./Client
-    #   dockerfile: Dockerfile
     restart: always
     environment:
       - REACT_APP_PORT=3000
@@ -51,4 +48,3 @@ services:
       - --import-realm
     volumes:
       - ./Client/keycloak-export:/opt/keycloak/data/import
-      # - /home/j/proj/pacaf/TACT/Client/keycloak-export/keycloak-realm-config.json":/opt/keycloak/data/import/keycloak-realm-config.json
