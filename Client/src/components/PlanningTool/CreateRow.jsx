@@ -57,17 +57,34 @@ const CreateRow = (props) => {
       setter({id: rowData.unitExerciseID, key: 'aircraftType', value: e.label, newRecord: rowData.newRecord})
     };
 
+  
+    const updatePersonnel = (totalPersonnel) => {
+      if (!rowData.commercialAirfareCount) {
+        setter({id: rowData.unitExerciseID, key: 'commercialAirfareCount', value: 0, newRecord: rowData.newRecord});
+        setter({id: rowData.unitExerciseID, key: 'governmentAirfareCount', value: totalPersonnel, newRecord: rowData.newRecord})    
+      } else {
+        setter({
+          id: rowData.unitExerciseID,
+          key: 'governmentAirfareCount',
+          value: totalPersonnel - rowData.commercialAirfareCount,
+          newRecord: rowData.newRecord
+        })   
+      }
+    };
+
     const handleNumberAircraftSelect = (e) => {
       //set the Number of personnel to the selected matching pair of aircraft
       personnel = e.number
+      updatePersonnel(personnel)
       document.getElementById(`personnel-id${rowData.unitExerciseID}`).value = personnel;
       //to the parent component
       setter({id: rowData.unitExerciseID, key: 'aircraftCount', value: e.label, newRecord: rowData.newRecord})
-      setter({id: rowData.unitExerciseID, key: 'personnelCount', value: e.number, newRecord: rowData.newRecord})
+      setter({id: rowData.unitExerciseID, key: 'personnelCount', value: personnel, newRecord: rowData.newRecord})
     }
 
     const handlePersonnelChange = (e) => {
       const value = isNaN(parseInt(e.target.value)) ? 0 : parseInt(e.target.value);
+      updatePersonnel(value)
       //to the parent component
       setter({id: rowData.unitExerciseID, key: 'personnelCount', value: value, newRecord: rowData.newRecord})
     }

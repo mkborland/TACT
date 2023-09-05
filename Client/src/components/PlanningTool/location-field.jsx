@@ -5,21 +5,21 @@ import TactApi from "../../api/TactApi";
 const defaultLabelValues = {
     exerciseLabels: [{ value: undefined, label: "Select Exercise"}],
     locations: [
-        { airport: 'test airport', region: 'test state', country: 'United States' },
-        { airport: 'OCONUS airport', region: 'test region', country: 'Germany'}
+        { airport: 'test airport', region: 'test state', country: 'United States', iata: `tst` },
+        { airport: 'OCONUS airport', region: 'test region', country: 'Germany', iata: 'ost'}
     ],
 }
 
 const generateLocationLabels = (inputs) => {
     return inputs ? 
     inputs.map((input) => { return {
-        value: input.locationID,
+        value: input.iata,
         label: input.country === 'United States' 
             ? `${input.airport}, ${input.region} (${input.iata})`
             : `${input.airport}, ${input.country} (${input.iata})`
     }}) :
     defaultLabelValues.locations.map((location, index) => { return {
-        value: index,
+        value: `${index}`,
         label: location.contry === 'United States'
         ? `${location.airport}, ${location.region}`
         : `${location.airport}, ${location.country}`
@@ -40,14 +40,22 @@ export const LocationField = (props) => {
             label: 'Select...',
             value: -1
         });
-    const [locationlabels, setLocationLabels] = useState();
+    const [locationLabels, setLocationLabels] = useState();
+    const [locationArray, setLocationArray] = useState([
+        {
+            locationID: 0,
+            region: 'Test Region',
+            iata: 'TST',
+            icao: 'KTST',
+            airport: 'Test Airport',
+            country: 'Test'
+        }
+    ])
 
     const fetchLocations = async () => {
-        // const response = await TactApi.getAllLocations();
-        // setLocations(response);
         await TactApi.getAllLocations()
             .then(response => {
-                setLocationLabels(generateLocationLabels(response))
+                setLocationArray(response)
             });
         ;
     };
@@ -57,12 +65,23 @@ export const LocationField = (props) => {
     }, [])
 
     useEffect(() => {
-        if (locationId && locationlabels)
-        setLocationValue({
-            value: locationId,
-            label: (locationlabels.find((label) => parseInt(label.value) === parseInt(locationId))).label
-        })
-    }, [locationId, locationlabels])
+        setLocationLabels(generateLocationLabels(locationArray))
+    }, [locationArray])
+
+    const findLabel = () => {
+        if (locationLabels) {
+            const result = locationLabels.find((label) => label.value === locationId);
+            return result;
+        }
+
+    }
+
+    useEffect(() => {
+        if (locationId && locationLabels && locationLabels.length > 3) {
+            const test = findLabel();
+            setLocationValue(test)
+        }
+    }, [locationId, locationLabels])
 
     const filterConfig = {
         ignoreCase: true,
@@ -81,7 +100,7 @@ export const LocationField = (props) => {
                 onChange={onChange}
                 filterOption={createFilter(filterConfig)}
                 isSearchable
-                options={locationlabels}
+                options={locationLabels}
             />
         </div>
     )
