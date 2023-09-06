@@ -58,7 +58,7 @@ function AnalysisTool(props) {
     const queryDropdownByFY = async () => {
         // Call API to populate the second dropdown list.
         const response = await TactApi.getFYs(userEmail);
-        console.log(response[0])
+        //console.log(response[0])
         setDataOptionsList(response);
         setDataOptionsSelected({ 'id': 0, 'value': response[0].value });
     };
@@ -296,7 +296,10 @@ function AnalysisTool(props) {
                                                         airframe.wingAcft.aircraftType +
                                                         ', ' +
                                                         airframe.wingAcft.travelDuration +
-                                                        ' Days',
+                                                        ' Days' +
+                                                        ', ' +
+                                                        airframe.wingAcft.personnel +
+                                                        ' Pers',
                                                     font: { 
                                                         size: 20, 
                                                         weight:1, // Font weight is adjusted 
@@ -377,6 +380,10 @@ function AnalysisTool(props) {
                                                     {airframe.wingAcft.travelDuration}
                                                     {' '}
                                                     Days
+                                                    {', '}
+                                                    {airframe.wingAcft.personnel}
+                                                    {' '}
+                                                    Pers
                                                 </Typography>
 
                                                 <Grid item {...AnalysisToolStyle.gridItem}>

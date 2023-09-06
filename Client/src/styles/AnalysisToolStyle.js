@@ -68,7 +68,7 @@ const AnalysisToolStyle ={
     TypographyTitleCardReport:{
         width: '100%',                       // Width of the title
         color: 'rgba(237, 220, 72, 0.8)',    // Text color
-        fontSize: 25,                        // Font size
+        fontSize: 22,                        // Font size
         fontWeight: 'bold',                  // Font weight
         letterSpacing: 1,                    // Letter spacing
     },

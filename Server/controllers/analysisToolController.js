@@ -146,7 +146,7 @@ const requestCostSummaries = async (req, res) => {
         const costTravelGov = 50000; // Hard-coded per specs, but modified to be $50k instead of $0 for better-looking reports.
         const costTravel = (Number(costTravelComm) + Number(costTravelGov));
         const manpowerCost = lodging + meals + costTravel;
-
+        const personnel = airframeData.personnelCount;
         // Now build the return JSON like this; the "perAirframe" section will repeat for each airframe.
         totals.push(
             {
@@ -154,6 +154,7 @@ const requestCostSummaries = async (req, res) => {
                     'aircraftType': airframeData.aircraftType,
                     // ADD THE HEAD COUNT HERE.
                     'daysSupported': travelDuration,
+                    'personnel' : personnel, // personnel count is added 
                     'onSiteCosts': {
                         'lodging': lodging,
                         'meals': meals,
@@ -190,7 +191,7 @@ const requestCostSummaries = async (req, res) => {
         },);
 
     console.log(`RETURN: ${JSON.stringify(totals)}`);
-
+    // console.log('aircraft type: ' ${airframeData});
     res.status(200).json(totals);
 };
 
