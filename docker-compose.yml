@@ -42,6 +42,10 @@ services:
       KEYCLOAK_ADMIN: kcadmin
       KEYCLOAK_ADMIN_PASSWORD: kcpasswd
       KEYCLOAK_IMPORT: /opt/keycloak/data/import/keycloak-realm-config.json
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/keycloak_db
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: admin
     command:
       - start-dev
       - --http-port=8180
