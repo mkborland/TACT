@@ -71,8 +71,8 @@ function AnalysisTool(props) {
 
     const querySummaryData = async () => {
         setTotalsForFY(await TactApi.getSummaries(userEmail, dataViewSelected, dataOptionsSelected));
-        const mm = await TactApi.getSummaries(userEmail, dataViewSelected, dataOptionsSelected);
-        console.log(mm)
+        // const mm = await TactApi.getSummaries(userEmail, dataViewSelected, dataOptionsSelected);
+        // console.log(mm)
     };
 
     useEffect(() => {
