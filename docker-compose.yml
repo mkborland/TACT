@@ -7,10 +7,11 @@ services:
       POSTGRES_PORT: 5432
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: TACT_DB
+      POSTGRES_MULTIPLE_DATABASES: TACT_DB,keycloak_db
     ports:
       - "5432:5432"
     volumes:
+      - "./Server/db/postgres_db_creation:/docker-entrypoint-initdb.d"
       - "./db_data_volume:/var/lib/postgresql/data"
     links:
       - server
