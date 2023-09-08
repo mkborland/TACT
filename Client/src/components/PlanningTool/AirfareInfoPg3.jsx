@@ -1,9 +1,8 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { LocationField } from "./location-field";
 import FlightTable from "../FlightTable/FlightTable.js";
 import { getFlightOffers } from "../../api/amadeus.api.js";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -13,72 +12,59 @@ import Grid from "@mui/material/Grid";
 import Slider from "@mui/material/Slider";
 import MuiInput from "@mui/material/Input";
 import { styled } from "@mui/material/styles";
-import { Button, TextField } from "@mui/material";
-import { Paper } from "@mui/material";
-import { calculateUnitCostSum } from './utils'
+import { Button, TextField, Paper } from "@mui/material";
+import { calculateUnitCostSum } from "./utils";
 
 // styles
-import "../../styles/PlanningToolPg3.css"
+import "../../styles/PlanningToolPg3.css";
 
-function PickAddOns(props) { 
-  const { 
+function PickAddOns(props) {
+  const {
     data,
     updateFileHandler,
     setSaved,
     aircraftData,
     setAircraftData,
-    updateUnitExerciseAircraft
-  } = props
+    updateUnitExerciseAircraft,
+  } = props;
 
-  const [count, setCount] = useState(0);
   const [flightData, setFlightData] = useState([]);
-  const [inputs, setInputs] = useState({
-    departureDate: dayjs(data.travelStartDate).format("YYYY-MM-DD"),
-    returnDate: dayjs(data.travelEndDate).format("YYYY-MM-DD"),
-    locationDeparture: data.locationFrom,
-    locationArrival: data.locationTo
-  });
-  const [flightdisable, setFlightDisable] = useState(
-    aircraftData.commercialAirfareCount > 0 
-      ? false
-      : true
-  );
+  const [inputs, setInputs] = useState();
+  const [flightdisable, setFlightDisable] = useState();
   const [flightsloading, setFlightsLoading] = useState(false);
+  const [flightCost, setFlightCost] = useState();
 
-  //TODO set saved to false if there are any changes on this page instead of 
+  //TODO set saved to false if there are any changes on this page instead of
   // the default when page is loaded.
-  // In the case that this was already built, and the user just wants to navigate 
+  // In the case that this was already built, and the user just wants to navigate
   // to the next page, then they should be able to do this
   useEffect(() => {
-    setSaved({saved: false, alert: 'Getting Airfare Costs'})
-  }, []);
+    setSaved({ saved: false, alert: "Getting Airfare Costs" });
+  });
 
   useEffect(() => {
     setInputs({
       departureDate: dayjs(data.travelStartDate).format("YYYY-MM-DD"),
       returnDate: dayjs(data.travelEndDate).format("YYYY-MM-DD"),
       locationDeparture: data.locationFrom,
-      locationArrival: data.locationTo      
+      locationArrival: data.locationTo,
     });
   }, [data]);
 
   useEffect(() => {
     if (aircraftData[0].commercialAirfareCount > 0) {
-        setFlightDisable(false);
+      setFlightDisable(false);
     } else {
-        setFlightDisable(true);
+      setFlightDisable(true);
     }
+    setFlightCost(aircraftData[0].commercialAirfareCost);
   }, [aircraftData]);
-
-  // useEffect(() => {
-  //   console.log('data in PickAddOns', data);
-  // }, [inputs, data])
 
   //need to figure out if airfare is going to be per plane or per unit, will change which table/context we use here
 
   const Input = styled(MuiInput)`
-      width: 42px;
-` ;
+    width: 42px;
+  `;
 
   const handleSliderChange = (event, newValue) => {
     const temp = aircraftData[0];
@@ -101,56 +87,64 @@ function PickAddOns(props) {
     setAircraftData([temp]);
   };
 
-//For the flight finder
-  useEffect(() => {
-    if (count > 0) {
-      setFlightsLoading(true);
-      const { out, source } = getFlightOffers(inputs);
+  //For the flight finder
+  const findFlights = async () => {
+    setFlightsLoading(true);
+    getFlightOffers(inputs)
+      .then((res) => {
+        if (res.data && res.data.length > 0) {
+          setFlightData(res.data);
+        } else {
+          alert("No flights found, try another day or city pairing");
+        }
+        setFlightsLoading(false);
+      })
+      .catch((err) => {
+        alert(`error in finding flights ${err}`);
+        setFlightsLoading(false);
+      });
+  };
 
-      out
-        .then((res) => {
-          if (!res.data.code) {
-            setFlightData(res.data);
-          }
-          setFlightsLoading(false);
-        })
-        .catch((err) => {
-          axios.isCancel(err);
-          console.log('error in finding flights', err)
-          setFlightsLoading(false);
-        });
-
-      return () => {
-        source.cancel();
-      };
-    }
-  }, [count]);
-
+  //TODO for each of the data elements that change
+  // also need to update the inputs and invalidate the
+  // current cost per person since the values will have changed
   const updateStartDate = (e) => {
-    updateFileHandler({travelStartDate: e.$d});
-  }
+    updateFileHandler({ travelStartDate: e.$d });
+    setInputs({ ...inputs, departureDate: dayjs(e.$d).format("YYYY-MM-DD") });
+    updateFileHandler({ commercialAirfareCost: 0 });
+    setFlightCost(0);
+  };
 
   const updateEndDate = (e) => {
-    updateFileHandler({travelEndDate: e.$d});
+    updateFileHandler({ travelEndDate: e.$d });
+    setInputs({ ...inputs, returnDate: dayjs(e.$d).format("YYYY-MM-DD") });
+    updateFileHandler({ commercialAirfareCost: 0 });
+    setFlightCost(0);
   };
 
-  const changeDepartLocation = async (e) => {
-    updateFileHandler({locationFrom: e.value})
+  const changeDepartLocation = (e) => {
+    updateFileHandler({ locationFrom: e.value });
+    setInputs({ ...inputs, locationDeparture: e.value });
+    updateFileHandler({ commercialAirfareCost: 0 });
+    setFlightCost(0);
   };
 
-  const changeDestinationLocation = async (e) => {
-    updateFileHandler({locationTo: e.value})
+  const changeDestinationLocation = (e) => {
+    updateFileHandler({ locationTo: e.value });
+    setInputs({ ...inputs, locationArrival: e.value });
+    updateFileHandler({ commercialAirfareCost: 0 });
+    setFlightCost(0);
   };
 
   const updateExerciseAircraft = (e) => {
     const temp = aircraftData[0];
     temp[e.key] = e.value;
     setAircraftData([temp]);
-  }
+  };
 
   const handleOnSubmit = () => {
-    updateFileHandler({unitCostSum: calculateUnitCostSum(aircraftData[0])})
-    setSaved({saved: true, alert: 'Saving commercial airfare '})
+    updateFileHandler({ unitCostSum: calculateUnitCostSum(aircraftData[0]) });
+    setSaved({ saved: true, alert: "Saving commercial airfare " });
     updateUnitExerciseAircraft(aircraftData[0]);
   };
 
@@ -160,23 +154,26 @@ function PickAddOns(props) {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label="Depart Date"
+            id="departure-date"
             defaultValue={dayjs(data.travelStartDate)}
             value={dayjs(data.travelStartDate)}
-            sx={{ backgroundColor: 'white' }}
+            sx={{ backgroundColor: "white" }}
             onChange={updateStartDate}
           />
           <span> </span>
           <DatePicker
             label="Return Date"
+            id="return-date"
             defaultValue={dayjs(data.travelEndDate)}
             value={dayjs(data.travelEndDate)}
-            sx={{ backgroundColor: 'white' }}
+            sx={{ backgroundColor: "white" }}
             onChange={updateEndDate}
           />
-          <Grid container spacing={2} alignItems="center">
+          <Grid id="input-slider" container spacing={2} alignItems="center">
             <Grid item>
-              <InputLabel id="demo-simple-select-label">Mil Air</InputLabel>
+              <InputLabel htmlFor="mil-air-input">Mil Air</InputLabel>
               <Input
+                id="mil-air-input"
                 value={aircraftData[0].governmentAirfareCount}
                 size="small"
                 onChange={handleMilInputChange}
@@ -199,9 +196,12 @@ function PickAddOns(props) {
               />
             </Grid>
             <Grid item>
-              <InputLabel id="demo-simple-select-label">Comm Air</InputLabel>
+              <InputLabel htmlFor="com-air-input" id="demo-simple-select-label">
+                Comm Air
+              </InputLabel>
               <Input
                 // value={value.com}
+                id="com-air-input"
                 value={aircraftData[0].commercialAirfareCount}
                 size="small"
                 onChange={handleComInputChange}
@@ -218,35 +218,40 @@ function PickAddOns(props) {
           <div>
             <br />
           </div>
-          <LocationField 
-            inputLabel='Departing Location'
-            name='departingLocation'
-            id='locationFrom'
+          <LocationField
+            inputLabel="Departing Location"
+            name="departingLocation"
+            id="locationFrom"
             onChange={changeDepartLocation}
             locationId={data.locationFrom}
           />
-          <LocationField 
-            inputLabel='Destination Location'
-            name='destination'
-            id='locationTo'
+          <LocationField
+            inputLabel="Destination Location"
+            name="destination"
+            id="locationTo"
             onChange={changeDestinationLocation}
             locationId={data.locationTo}
           />
           <div>
             <TextField
-              value={"$" + Number(aircraftData[0].commercialAirfareCost).toFixed(2)}
+              value={"$" + Number(flightCost).toFixed(2)}
               disabled
               InputLabelProps={{ shrink: true }}
-              id="filled-basic"
+              id="filled-basic-per"
               label="Cost Per Person"
               variant="filled"
             />
             <span> </span>
             <TextField
-              value={"$" + Number(aircraftData[0].commercialAirfareCost * aircraftData[0].commercialAirfareCount).toFixed(2)}
+              value={
+                "$" +
+                Number(
+                  flightCost * aircraftData[0].commercialAirfareCount
+                ).toFixed(2)
+              }
               disabled
               InputLabelProps={{ shrink: true }}
-              id="filled-basic"
+              id="filled-basic-total"
               label="Total Cost"
               variant="filled"
             />
@@ -254,17 +259,13 @@ function PickAddOns(props) {
           <LoadingButton
             loading={flightsloading}
             variant="contained"
-            loadingPosition="end"
+            loadingIndicator="Loading…"
             disabled={flightdisable}
-            onClick={() => setCount(count + 1)}
+            onClick={() => findFlights()}
           >
             <span>Find Flights</span>
           </LoadingButton>
-          <Button
-            onClick={handleOnSubmit}
-          >
-            Save
-          </Button>
+          <Button onClick={handleOnSubmit}>Save</Button>
           <FlightTable
             data={flightData}
             updateExerciseAircraft={updateExerciseAircraft}
@@ -272,7 +273,7 @@ function PickAddOns(props) {
         </LocalizationProvider>
       </Paper>
     </div>
-  )
+  );
 }
 
-export default PickAddOns
+export default PickAddOns;

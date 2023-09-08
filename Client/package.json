@@ -15,6 +15,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
+    "abort-controller": "^3.0.0",
     "axios": "^1.4.0",
     "dayjs": "^1.11.7",
     "http-proxy-middleware": "^2.0.6",
