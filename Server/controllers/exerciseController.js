@@ -82,6 +82,15 @@ const requestExerciseAircraft = async (req, res) => {
     }
 };
 
+const requestExerciseAircraftById = async (req, res) => {
+    const unitExerciseID = req.query.unitExerciseID
+    knex('exerciseaircraft')
+        .select("*")
+        .where({ unitExerciseID: unitExerciseID })
+        .then((data) => res.status(200).send(data))
+        .catch((err) => res.status(202).send(`${aircraftType} with a unit ID of ${unitExerciseID} could not be found. ${err}`))
+};
+
 const requestAllExercises = async (req, res) => {
     knex('exercises')
         .select('*')
@@ -230,8 +239,41 @@ const lookupUnitExercise = async (req, res) => {
         })
 };
 
+const updateExerciseAircraft = async (req, res) =>{
+    const { unitExerciseID } = req.body;
+    try {
+        knex('exerciseaircraft')
+        .where({ unitExerciseID: unitExerciseID })
+        .update(req.body, "*")
+        .then((result) => {
+            res.status(201).send(result)
+        })
+    } catch (err) {
+        res.status(500).send(`Could not update unitExerciseAircraft: ${err}`)
+    }
+};
+
 const addExerciseAircraft = async (req, res) => {
-    const { unitExerciseID, aircraftType, aircraftCount, personnelCount, commercialAirfareCount, commercialAirfareCost, governmentAirfareCount, commercialLodgingCount, commercialLodgingCost, governmentLodgingCount, governmentLodgingCost,fieldLodgingCount, lodgingPerDiem, mealPerDiem, mealProvidedCount, mealNotProvidedCount, rentalCount, rentalCost } = req.body
+    const { 
+        unitExerciseID, 
+        aircraftType, 
+        aircraftCount, 
+        personnelCount, 
+        commercialAirfareCount, 
+        commercialAirfareCost, 
+        governmentAirfareCount, 
+        commercialLodgingCount, 
+        commercialLodgingCost, 
+        governmentLodgingCount, 
+        governmentLodgingCost,
+        fieldLodgingCount, 
+        lodgingPerDiem, 
+        mealPerDiem, 
+        mealProvidedCount, 
+        mealNotProvidedCount, 
+        rentalCount, 
+        rentalCost 
+    } = req.body
     knex('exerciseaircraft')
         .select("*")
         .where({ unitExerciseID: unitExerciseID, aircraftType: aircraftType })
@@ -277,8 +319,10 @@ export {
     addExercise,
     saveUnitExercise,
     addExerciseAircraft,
+    updateExerciseAircraft,
     updateExercise,
     lookupUnitExercise,
     updateUnitExercise,
-    requestUnitExerciseByUnit
+    requestUnitExerciseByUnit,
+    requestExerciseAircraftById
  }

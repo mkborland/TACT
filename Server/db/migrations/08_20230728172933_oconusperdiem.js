@@ -15,7 +15,7 @@ export function up(knex) {
 
 /**
  * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
+ *  * @returns { Promise<void> }
  */
 export async function down(knex) {
      return await knex.schema.dropTableIfExists("oconusperdiem");

@@ -7,158 +7,106 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button, Typography } from "@mui/material";
-import TactApi from "../../api/TactApi.js";
-import React, { useEffect, useState } from "react";
-import CreateRow from './CreateRow.jsx';
-// hooks
-import { texts } from '../../hooks/texts'
-
+import React, { useMemo, useCallback, useRef } from "react";
+import CreateRow from "./CreateRow.jsx";
 // styles
-import '../../styles/PlanningToolPg2.css'
+import "../../styles/PlanningToolPg2.css";
 
-const dedupe = (input) => {
-  const result = [];
-  const temp = [];
-  input.forEach(i => {
-    if (!temp.includes(i.id)) {
-      temp.push(i.id);
-      result.push(i)
-    }
-  });
-  return result;
-}
-
-//each aircraft row will get a new
-const unitAircraftTemplate = { //will need multiple per unit?
-    unitExerciseID: undefined, //push and pull base info to fill this
-    aircraftType: undefined, //may be the UUID for the Aircraft table
-    aircraftCount: 0,
-    personnelCount: 0,
-    commercialAirfareCount: 0,
-    commercialAirfareCost: 0,
-    governmentAirfareCount: 0,
-    commercialLodgingCount: 0,
-    commercialLodgingCost: 0,
-    governmentLodgingCount: 0,
-    governmentLodgingCost: 0,
-    fieldLodgingCount: 0,
-    lodgingPerDiem: 0,
-    mealPerDiem: 0,
-    mealProvidedCount: 0,
-    mealNotProvidedCount: 0
-}
-
-const newUnitAircraftObj = (unitExerciseId) => {
-  const response = unitAircraftTemplate;
-  response.unitExerciseID = unitExerciseId;
-  return response;
-}
-
-//TODO: prepopulate Rows with data from the saved aircraft info if it already exists
+//Pivot on 30 Aug 2023
+// Allowing only one aircraft type to be entered for a specific unit
 
 function YourPlan(props) {
-    const { data, updateFileHandler, setSaved } = props
-    const { plans } = texts();
+  const {
+    data,
+    updateFileHandler,
+    setSaved,
+    aircraftData,
+    setAircraftData,
+    airframeList,
+  } = props;
+  const unitAircraftTable = useRef({});
 
-    const [airframeList, setAirframeList] = useState([]);
-    const [totalPersonnel, setTotalPersonnel] = useState(0);
-    const [rows, setRows] = useState([]);
-    const [totals, setTotals] = useState([]);
-    const [perAircraftTable, setPerAircraftTable] = useState([]); //contains the different numbers for each aircraft selected
-    const [unitAircraftTable, setUnitAircraftTable] = useState([]);
+  const aircraftSetter = useCallback((props) => {
+    const { key, value } = props;
+    const next = unitAircraftTable.current;
+    next[key] = value;
+    unitAircraftTable.current = next;
+  }, []);
 
-    useEffect(() => {
-      fetchAircraftData();
-    }, []);
-
-    //since the create rows makes a new element each time the number of aircraft is updated, 
-    //this dedupes the array so there is only one element per row
-    useEffect(() => {
-      setTotals(dedupe(perAircraftTable));
-
-    }, [perAircraftTable])
-
-    useEffect(() => {
-      let tempPersonnel = 0;
-      totals.forEach(t => {
-        tempPersonnel += t.personnel
+  const rows = useMemo(() => {
+    const result = [];
+    const newRowProps = {
+      airframeList,
+      setter: aircraftSetter,
+      rowData: {},
+    };
+    if (aircraftData && aircraftData.length > 0) {
+      //This will take the last entry from the array
+      aircraftData.forEach((aircraft, i) => {
+        newRowProps.rowData = aircraft;
+        newRowProps.newRecord = false;
       });
-      setTotalPersonnel(tempPersonnel)
-    }, [totals])
+    } else {
+      //there does not exist an entry for the specific Unit Exercise
+      const newRowData = {
+        unitExerciseID: data.unitExerciseID,
+        aircraftType: undefined,
+        aircraftCount: 0,
+        personnelCount: 0,
+      };
+      newRowProps.rowData = newRowData;
+      newRowProps.newRecord = true;
+    }
+    result.push(CreateRow(newRowProps));
+    unitAircraftTable.current = newRowProps.rowData;
+    return result;
+  }, [aircraftData, aircraftSetter, airframeList, data.unitExerciseID]);
 
-    const fetchAircraftData = () => {
-      TactApi.getAllAircraft().then((data) => {
-        setAirframeList(data);
-      });
-    };
+  const handleSaveClick = () => {
+    setSaved({ saved: true });
+    setAircraftData(unitAircraftTable.current);
+    updateFileHandler({
+      personnelSum: unitAircraftTable.current.personnelCount,
+    });
+  };
 
-    const handleAddAircraft = () => {
-      setSaved({saved: false, action: 'No Aircraft Selected'});
-      const newRowProps = {
-        rows,
-        airframeList,
-        setPerAircraftTable
-      }
-      setRows(prev => [...prev, CreateRow(newRowProps)]);
-    };
-
-    const saveUnitAircraft = () => {
-      unitAircraftTable.forEach((table) => {
-        TactApi.addExerciseAircraft(table)
-          .catch((err) => console.log('error in saving aircraft', err));
-      });
-    };
-
-    const handleSaveClick = () => {
-      setSaved({ saved: true });
-      totals.forEach((total) => {
-        const temp = newUnitAircraftObj(data.unitExerciseID);
-        temp.aircraftType = total.aircraft;
-        temp.aircraftCount = total.numberAircraft;
-        temp.personnelCount = total.personnel;
-        setUnitAircraftTable(prev => [...prev, temp]);
-      })
-      updateFileHandler({personnelSum: totalPersonnel});
-      saveUnitAircraft();
-    };
-
-    return (
-        <div className="form-container">
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700}} aria-label="customized table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>Airframe Types</StyledTableCell>
-                  <StyledTableCell align="center">
-                    Number of Airframes
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    Number of Personnel
-                  </StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>{rows}</TableBody>
-            </Table>
-            <span>
-              <Button onClick={handleAddAircraft}>Add Aircraft</Button>
-              <Button onClick={handleSaveClick}>Save</Button>
-              <Typography variant="body1">
-                Total Personnel: {totalPersonnel}
-              </Typography>
-            </span>
-          </TableContainer>
-        </div>
-    )
-};
+  return (
+    <div className="form-container">
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Airframe Types</StyledTableCell>
+              <StyledTableCell align="center">
+                Number of Airframes
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                Number of Personnel
+              </StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>{rows}</TableBody>
+        </Table>
+        <span>
+          {/* <Button onClick={handleAddAircraft}>Add Aircraft</Button> */}
+          <Button onClick={handleSaveClick}>Save</Button>
+          <Typography variant="body1">
+            Total Personnel: {unitAircraftTable.current.personnelCount}
+          </Typography>
+        </span>
+      </TableContainer>
+    </div>
+  );
+}
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
+    fontSize: 14,
   },
 }));
 
-export default YourPlan 
+export default YourPlan;
