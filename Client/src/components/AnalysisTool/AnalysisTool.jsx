@@ -11,7 +11,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
-import CurrencyFormat from 'react-currency-format';
 import { Bar, ArcElement, CategoryScale } from 'react-chartjs-2';
 import { Divider } from '@mui/material';
 //styles
@@ -71,8 +70,6 @@ function AnalysisTool(props) {
 
     const querySummaryData = async () => {
         setTotalsForFY(await TactApi.getSummaries(userEmail, dataViewSelected, dataOptionsSelected));
-        // const mm = await TactApi.getSummaries(userEmail, dataViewSelected, dataOptionsSelected);
-        // console.log(mm)
     };
 
     useEffect(() => {
@@ -167,7 +164,7 @@ function AnalysisTool(props) {
                 color: 'rgba(255, 255, 255, 1)', // Color changed to white
                 padding: { // Adding to seperate the Pie chart from the drop down menu
                        bottom:30,
-                       top:30,
+                       top:70,
                     }
             },
         },
@@ -203,6 +200,13 @@ function AnalysisTool(props) {
         ],
     };
 
+    // 'NumberFormat' instanciation to replace the 'CurrencyFormat'
+    let USDollar = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
+    // console.log(`The formated version of ${price} is ${USDollar.format(price)}`)
     const displayBarChartsAndReports = () => {
         let dataSetTravelComm = [];
         let dataSetTravelGov = [];
@@ -455,12 +459,12 @@ function AnalysisTool(props) {
                                                     }
                                                     {
                                                         <Typography gutterBottom key="11" variant="h6" component="div" align='right'>
-                                                            {<CurrencyFormat value={airframe.wingAcft.costTravel.costTravelComm} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
+                                                            {USDollar.format(airframe.wingAcft.costTravel.costTravelComm)}
                                                         </Typography>
                                                     }
                                                     {
                                                         <Typography gutterBottom key="12" variant="h6" component="div" align='right'>
-                                                            {<CurrencyFormat value={airframe.wingAcft.costTravel.costTravelGov} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
+                                                            {USDollar.format(airframe.wingAcft.costTravel.costTravelGov)}
                                                         </Typography>
                                                     }
                                                     {
@@ -475,17 +479,17 @@ function AnalysisTool(props) {
                                                     }
                                                     {
                                                         <Typography gutterBottom key="15" variant="h6" component="div" align='right'>
-                                                            {<CurrencyFormat value={airframe.wingAcft.onSiteCosts.lodging} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
+                                                           {USDollar.format(airframe.wingAcft.onSiteCosts.lodging)}
                                                         </Typography>
                                                     }
                                                     {
                                                         <Typography gutterBottom key="16" variant="h6" component="div" align='right'>
-                                                            {<CurrencyFormat value={airframe.wingAcft.onSiteCosts.meals} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
+                                                            {USDollar.format(airframe.wingAcft.onSiteCosts.meals)}
                                                         </Typography>
                                                     }
                                                     {
                                                         <Typography gutterBottom key="17" variant="h6" component="div" align='right'>
-                                                            {<CurrencyFormat value='00000' displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
+                                                            {USDollar.format('00000')}
                                                         </Typography>
                                                     }
                                                     <Divider sx={AnalysisToolStyle.DividerBarChart}
@@ -499,7 +503,7 @@ function AnalysisTool(props) {
                                                     }
                                                     {
                                                         <Typography gutterBottom key="19" variant="h6" component="div" align='right'>
-                                                            {<CurrencyFormat value={airframe.wingAcft.manpowerCost} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />}
+                                                            {USDollar.format(airframe.wingAcft.manpowerCost)}
                                                         </Typography>
                                                     }
                                                 </Grid>
@@ -566,10 +570,13 @@ function AnalysisTool(props) {
                             </Grid>
                             
                             <Grid item {...AnalysisToolStyle.gridItem}>
-                                {/* The card report has been adjusted properly to resemble bar report styling*/}
+                                {/* The pir chart card report has been adjusted properly to resemble bar report styling*/}
                                 <Card sx={AnalysisToolStyle.PieChartCardReport} variant='outlined' >
                                     <CardContent>
                                         <Grid container alig >
+                                            <Typography sx={AnalysisToolStyle.TypographyTitleCardReport} gutterBottom key="1" variant="h4" component="div" align='center'>
+                                                    Total FY Spending Per Airframe
+                                            </Typography>
                                             <Grid item {...AnalysisToolStyle.gridItem}>
                                                 {
                                                     totalsByAirframe.map((airframe) => {
@@ -585,7 +592,7 @@ function AnalysisTool(props) {
                                                     totalsByAirframe.map((airframe) => {
                                                         // Typography text alignment and font size added (right column)
                                                         return <Typography sx={AnalysisToolStyle.PieChartTypographyCardReportRight} gutterBottom key={airframe.id} variant="h5" component="div" align='right'>
-                                                            <CurrencyFormat value={airframe.value} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />
+                                                            {USDollar.format(airframe.value)}
                                                         </Typography>;
                                                     })
                                                 }
