@@ -7,12 +7,11 @@ services:
       POSTGRES_PORT: 5432
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_MULTIPLE_DATABASES: TACT_DB,keycloak_db
+      POSTGRES_DB: TACT_DB
     ports:
       - "5432:5432"
     volumes:
       - "./Server/db/postgres_db_creation:/docker-entrypoint-initdb.d"
-      - "./db_data_volume:/var/lib/postgresql/data"
     links:
       - server
   server:
@@ -42,14 +41,10 @@ services:
     environment:
       KEYCLOAK_ADMIN: kcadmin
       KEYCLOAK_ADMIN_PASSWORD: kcpasswd
-      KEYCLOAK_IMPORT: /opt/keycloak/data/import/keycloak-realm-config.json
-      KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://db:5432/keycloak_db
-      KC_DB_USERNAME: admin
-      KC_DB_PASSWORD: admin
+      KEYCLOAK_IMPORT: ./Auth/keycloak-export/keycloak-realm-config.json
     command:
       - start-dev
       - --http-port=8180
       - --import-realm
     volumes:
-      - ./Client/keycloak-export:/opt/keycloak/data/import
+      - ./Auth/keycloak-export:/opt/keycloak/data/import

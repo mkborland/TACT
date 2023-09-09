@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LoginCard from "./components/LoginCard/LoginCard.js";
+// import LoginCard from "./components/LoginCard/LoginCard.js";
 import SignUp from "./components/SignUp/SignUp.js";
 import PersistentDrawerLeft from "./components/MainPage/MainPage.js";
 import EditTables from "./components/EditTablesPage/EditTablesPage";
@@ -9,7 +9,7 @@ import DashboardPage from "./pages/DashboardPage";
 import NewExerciseForm from "./components/NewExerciseForm/NewExerciseForm";
 import PlanningTool from "./components/PlanningTool/PlanningTool";
 import AnalysisTool from "./components/AnalysisTool/AnalysisTool";
-import PrivateRoute from "./PrivateRoute";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 function App() {
   return (
