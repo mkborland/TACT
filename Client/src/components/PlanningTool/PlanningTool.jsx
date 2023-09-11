@@ -98,10 +98,6 @@ function PlanningTool(props) {
     setSaved({ saved: true });
   };
 
-  useEffect(() => {
-    if (saved.saved) updateUnitExercise();
-  }, [saved]);
-
   const { arrayInformationsStep } = texts();
 
   const updateFileHandler = (update) => {
@@ -147,6 +143,8 @@ function PlanningTool(props) {
       data={data}
       updateFileHandler={updateFileHandler}
       setSaved={setSaved}
+      aircraftData={aircraftData}
+      setAircraftData={setAircraftData}
     />,
     <YourPlan
       data={data}

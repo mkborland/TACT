@@ -1,4 +1,4 @@
-import baseApiUrl from "../../TactApiConfig.js"
+import baseApiUrl from "../../TactApiConfig.js";
 
 const UpdateUnitExercise = async (body, token = "") => {
   const endPoint = "/update_unit_exercise";
@@ -12,11 +12,10 @@ const UpdateUnitExercise = async (body, token = "") => {
   });
 
   if (!response.ok) {
-    console.log("Failed to connect to user db")
+    console.log("Failed to connect to user db");
   } else {
     return response;
   }
 };
-
 
 export default UpdateUnitExercise;
