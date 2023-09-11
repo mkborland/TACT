@@ -26,7 +26,7 @@ const generateExerciseLabels = (input) => {
 };
 
 function YourInfo(props) {
-  const { data, updateFileHandler } = props;
+  const { data, updateFileHandler, aircraftData, setAircraftData } = props;
   const [exercises, setExercises] = useState(undefined);
   const [defaultExerciseValue, setDefaultExerciseValue] = useState();
 
@@ -60,24 +60,32 @@ function YourInfo(props) {
     updateFileHandler({ exerciseID: e.value }); //fills in template based on key value pair
   };
 
+  const resetCommercialAirfareCost = () => {
+    const temp = aircraftData[0];
+    if (temp.unitExerciseID && temp.aircraftType) {
+      temp.commercialAirfareCost = 0;
+      setAircraftData([temp]);
+    }
+  };
+
   const verifyStartDateInputs = (e) => {
     updateFileHandler({ travelStartDate: e.$d });
-    updateFileHandler({ commercialAirfareCost: 0 });
+    resetCommercialAirfareCost();
   };
 
   const verifyEndDateInputs = (e) => {
     updateFileHandler({ travelEndDate: e.$d });
-    updateFileHandler({ commercialAirfareCost: 0 });
+    resetCommercialAirfareCost();
   };
 
   const changeDepartLocation = (e) => {
     updateFileHandler({ locationFrom: e.value });
-    updateFileHandler({ commercialAirfareCost: 0 });
+    resetCommercialAirfareCost();
   };
 
   const changeDestinationLocation = (e) => {
     updateFileHandler({ locationTo: e.value });
-    updateFileHandler({ commercialAirfareCost: 0 });
+    resetCommercialAirfareCost();
   };
 
   return (
