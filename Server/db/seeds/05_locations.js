@@ -7,15 +7,6 @@ export async function seed(knex) {
     await knex('locations').del()
     await knex('locations').insert([
       {
-        region: "test",
-        iata: "TST",
-        icao: "TEST",
-        airport: "Test Airport",
-        country: "Test Country"
-      }
-    ]);
-    await knex('locations').insert([
-      {
         region: "Ash Shariqah",
         iata: "SHJ",
         icao: "OMSJ",

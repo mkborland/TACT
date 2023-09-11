@@ -31,3 +31,4 @@ Server/package.json
 
 .vscode/*
 Server/.env
+Client/.env
