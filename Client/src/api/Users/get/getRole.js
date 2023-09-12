@@ -2,7 +2,6 @@ import baseApiUrl from "../../TactApiConfig.js";
 
 const getRole = async (ID, token = "") => {
   const endPoint = "/get_role";
-  console.log("getrole API", ID);
 
   try {
     const response = await fetch(`${baseApiUrl}${endPoint}?ID=${ID}`, {
