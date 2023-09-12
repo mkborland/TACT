@@ -3,13 +3,6 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import TactApi from "../../api/TactApi";
 
-const getUser = async (userEmail) => {
-  const response = await TactApi.getUser(userEmail);
-  const role = await TactApi.getRole(response.roleID);
-  response.roleName = role.roleName;
-  return response;
-};
-
 export default function PrivateRoute(props) {
   const { setUser } = props;
   const [keycloak, setKeycloak] = useState("");
@@ -18,9 +11,9 @@ export default function PrivateRoute(props) {
   const hasRun = useRef(false);
   const navigate = useNavigate();
 
-  const updateUser = (email) => {
+  const updateUser = async (email) => {
     if (email) {
-      getUser(email).then((newUser) => setUser(newUser));
+      await TactApi.getUser(email).then((newUser) => setUser(newUser));
     }
   };
 
