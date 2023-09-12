@@ -60,7 +60,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "center",
 }));
 
-export default function PersistentDrawerLeft() {
+export default function PersistentDrawerLeft(props) {
+  const { user } = props;
   // const theme = useTheme();
   const [open] = React.useState(true);
 
@@ -72,32 +73,35 @@ export default function PersistentDrawerLeft() {
   //   setOpen(false);
   // };
 
-  const {UserInfo} = useAppContext()
+  // const { UserInfo } = useAppContext();
   // const nav = useNavigate()
 
   const title = () => {
-    if(UserInfo !== undefined){
-      return `Welcome, ${UserInfo.userName} `
-    }else{
-      return ""
+    if (user) {
+      return `Welcome, ${user.firstName} ${user.lastName}`;
+    } else {
+      return "";
     }
-  }
+  };
 
   return (
-    <Box sx={{ display: "flex"}}>
+    <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}  sx={{backgroundColor: "#333333"}}>
-      </AppBar>
+      <AppBar
+        position="fixed"
+        open={open}
+        sx={{ backgroundColor: "#333333" }}
+      ></AppBar>
       <Drawer
-      // here is the styling for the left side drawer
+        // here is the styling for the left side drawer
         sx={{
           width: drawerWidth,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
-            borderRight : 7,
-            borderColor : '#eddc48',
+            borderRight: 7,
+            borderColor: "#eddc48",
             backgroundColor: "grey.200",
           },
         }}
@@ -105,7 +109,7 @@ export default function PersistentDrawerLeft() {
         anchor="left"
         open={open}
       >
-        <DrawerHeader >
+        <DrawerHeader>
           <img src="/tact_logo.png" alt="image" />
         </DrawerHeader>
         <List>
@@ -113,9 +117,15 @@ export default function PersistentDrawerLeft() {
         </List>
       </Drawer>
       <MainPage open={open}>
-      <Typography justifyContent="space-between" variant="h2" noWrap={true} component="div" align="left">
-            {title()}
-          </Typography>
+        <Typography
+          justifyContent="space-between"
+          variant="h2"
+          noWrap={true}
+          component="div"
+          align="left"
+        >
+          {title()}
+        </Typography>
         <DrawerHeader />
         <Outlet />
       </MainPage>
