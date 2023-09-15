@@ -7,7 +7,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 // styles
 import "../../styles/PlanningToolPg1.css";
-import TactApi from "../../api/TactApi";
 import { LocationField } from "./location-field";
 
 const defaultLabelValues = {
@@ -26,18 +25,13 @@ const generateExerciseLabels = (input) => {
 };
 
 function YourInfo(props) {
-  const { data, updateFileHandler, aircraftData, setAircraftData } = props;
-  const [exercises, setExercises] = useState(undefined);
+  const { data, updateFileHandler, aircraftData, setAircraftData, exercises } =
+    props;
   const [defaultExerciseValue, setDefaultExerciseValue] = useState();
 
-  const fetchAllExercises = async () => {
-    const response = await TactApi.getAllExercises();
-    setExercises(response);
-  };
-
   useEffect(() => {
-    fetchAllExercises();
-  }, []);
+    console.log("data should update", data);
+  }, [data]);
 
   const exerciseLabels = generateExerciseLabels(exercises);
 
@@ -57,12 +51,12 @@ function YourInfo(props) {
   }, [data, exercises, exerciseLabels]);
 
   const verifyExerciseInputs = (e) => {
-    updateFileHandler({ exerciseID: e.value }); //fills in template based on key value pair
+    updateFileHandler({ exerciseID: e.value });
   };
 
   const resetCommercialAirfareCost = () => {
     const temp = aircraftData[0];
-    if (temp.unitExerciseID && temp.aircraftType) {
+    if (temp?.unitExerciseID && temp?.aircraftType) {
       temp.commercialAirfareCost = 0;
       setAircraftData([temp]);
     }
@@ -108,7 +102,7 @@ function YourInfo(props) {
       </div>
       <div className="input-container">
         <div htmlFor="date-container" className="inputLabel">
-          Start / End Dates
+          Travel Start / End Dates
         </div>
         {/* use the DateRangePicker for this specific component  https://mui.com/x/react-date-pickers/date-range-picker/*/}
         <LocalizationProvider id="date-container" dateAdapter={AdapterDayjs}>

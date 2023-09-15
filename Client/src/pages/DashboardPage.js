@@ -65,7 +65,7 @@ export default function DashboardPage(props) {
     },
   ];
 
-  function Row(props: { row: ReturnType<typeof createData> }) {
+  function Row(props) {
     const { row } = props;
     const [open, setOpen] = useState(false);
 
