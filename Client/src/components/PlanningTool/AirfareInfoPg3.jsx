@@ -63,10 +63,11 @@ function PickAddOns(props) {
     width: 42px;
   `;
 
-  const updateExerciseAircraft = (e) => {
+  const updateExerciseAircraft = (props) => {
+    const { key, value } = props;
     setSaved({ saved: false, alert: "Please save updated data" });
     const temp = aircraftData[0];
-    temp[e.key] = e.value;
+    temp[key] = value;
     setAircraftData([temp]);
   };
 
