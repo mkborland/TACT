@@ -52,23 +52,22 @@ function PlanningTool(props) {
   });
   const [airframeList, setAirframeList] = useState([]);
 
-  const fetchInitialInfo = async () => {
-    const response1 = await TactApi.getAllExercises();
-    setExercises(response1);
-    const response2 = await TactApi.getAllAircraft();
-    setAirframeList(response2);
-    const response3 =
-      data?.unitExerciseID &&
-      (await GetExerciseAircraftById(data.unitExerciseID));
-    //currently the aircraftData comes as an array.
-    //TODO: make sure only one aircraftData per unitExerciseID
-    setAircraftData(response3);
-  };
-
   useEffect(() => {
+    const fetchInitialInfo = async () => {
+      const response1 = await TactApi.getAllExercises();
+      setExercises(response1);
+      const response2 = await TactApi.getAllAircraft();
+      setAirframeList(response2);
+      const response3 =
+        data?.unitExerciseID &&
+        (await GetExerciseAircraftById(data.unitExerciseID));
+      //currently the aircraftData comes as an array.
+      //TODO: make sure only one aircraftData per unitExerciseID
+      setAircraftData(response3);
+    };
     fetchInitialInfo();
     console.log("useEffect data", data);
-  }, [data]);
+  }, []);
 
   useEffect(() => {
     setUserInfo(user);
