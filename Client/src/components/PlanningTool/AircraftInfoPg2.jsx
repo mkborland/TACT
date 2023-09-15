@@ -31,6 +31,7 @@ function YourPlan(props) {
     const next = unitAircraftTable.current;
     next[key] = value;
     unitAircraftTable.current = next;
+    setSaved({ saved: false, alert: "Please save inputs to continue" });
   }, []);
 
   const rows = useMemo(() => {
