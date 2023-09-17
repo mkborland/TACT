@@ -14,7 +14,6 @@ import { useEffect, useState } from "react";
 import { texts } from "../../hooks/texts";
 import { useForm } from "../../hooks/useForm";
 import TactApi from "../../api/TactApi";
-import GetExerciseAircraftById from "../../api/ExerciseAircraft/get/getExerciseAircraftById";
 
 // --------- planning layout ------------
 //pg 1 (ex Info) -> drop down with made ex's, user name and unit
@@ -40,12 +39,20 @@ const unitExerciseTemplate = {
   unitCostSum: 0, //^^
 };
 
+const unitAircraftTemplate = {
+  unitExerciseID: undefined,
+  aircraftType: undefined,
+  aircraftCount: 0,
+  personnelCount: 0,
+  commercialAirfareCost: 0,
+};
+
 function PlanningTool(props) {
   const { user } = props;
   const [userInfo, setUserInfo] = useState();
   const [exercises, setExercises] = useState();
   const [data, setData] = useState(unitExerciseTemplate);
-  const [aircraftData, setAircraftData] = useState([]);
+  const [aircraftData, setAircraftData] = useState([unitAircraftTemplate]);
   const [saved, setSaved] = useState({
     saved: false,
     alert: "Nothing Selected",
@@ -58,15 +65,8 @@ function PlanningTool(props) {
       setExercises(response1);
       const response2 = await TactApi.getAllAircraft();
       setAirframeList(response2);
-      const response3 =
-        data?.unitExerciseID &&
-        (await GetExerciseAircraftById(data.unitExerciseID));
-      //currently the aircraftData comes as an array.
-      //TODO: make sure only one aircraftData per unitExerciseID
-      setAircraftData(response3);
     };
     fetchInitialInfo();
-    console.log("useEffect data", data);
   }, []);
 
   useEffect(() => {
@@ -78,13 +78,23 @@ function PlanningTool(props) {
     console.log("useEffect aircraft data", aircraftData);
   }, [aircraftData]);
 
+  useEffect(() => {
+    console.log("useEffect data", data);
+  }, [data]);
+
   //creates new mission in the DB with 'newMission' as the data obj
   const createUnitExercise = async (newMission) => {
-    setData(newMission);
-    await TactApi.saveUnitExercise(newMission).then((response) =>
-      setData(response)
-    );
-    setSaved({ saved: true });
+    setSaved({ saved: true }); // setData(newMission);
+    return await TactApi.saveUnitExercise(newMission).then((response) => {
+      setData(response);
+      return response;
+    });
+  };
+
+  const createUnitExerciseAircraft = (id) => {
+    const result = unitAircraftTemplate;
+    result.unitExerciseID = id;
+    setAircraftData([result]);
   };
 
   const updateUnitExercise = async () => {
@@ -112,8 +122,32 @@ function PlanningTool(props) {
     return update;
   };
 
+  const processNewUnitEx = (input) => {
+    const temp = unitExerciseTemplate;
+    temp.exerciseID = input.exerciseID;
+    temp.unit = userInfo.unit;
+    temp.userID = userInfo.userID;
+    const newData = findExistingDates(temp);
+    createUnitExercise(newData).then((result) =>
+      createUnitExerciseAircraft(result.unitExerciseID)
+    );
+  };
+
+  const processOldUnitEx = (input) => {
+    setData(input);
+    setSaved({ saved: true });
+    TactApi.getUnitExerciseAircraftById(input.unitExerciseID).then(
+      (response) => {
+        if (response && response.length > 0) {
+          setAircraftData(response);
+        } else {
+          createUnitExerciseAircraft(input.unitExerciseID);
+        }
+      }
+    );
+  };
+
   const updateFileHandler = (update) => {
-    console.log("update in handler", update);
     if (Object.keys(update).includes("exerciseID")) {
       //validate if there is an existing mission with that exId
       //if yes, then update the current 'data' with the db data
@@ -124,17 +158,9 @@ function PlanningTool(props) {
           unit: user.unit,
         }).then((response) => {
           if (response?.unitExerciseID === update.exerciseID) {
-            //unitEx already exisits
-            setData(response);
-            setSaved({ saved: true });
+            processOldUnitEx(response);
           } else {
-            //unitEx needs to be created
-            const temp = unitExerciseTemplate;
-            temp.exerciseID = update.exerciseID;
-            temp.unit = userInfo.unit;
-            temp.userID = userInfo.userID;
-            const newData = findExistingDates(temp);
-            createUnitExercise(newData);
+            processNewUnitEx(update);
           }
         });
       } catch (err) {
@@ -155,17 +181,16 @@ function PlanningTool(props) {
     }
   };
 
-  const updateUnitExerciseAircraft = async (input) => {
-    if (
-      aircraftData.length > 0 &&
-      aircraftData[0].unitExerciseID === input.unitExerciseID
-    ) {
-      await TactApi.updateExerciseAircraft(input);
-    } else {
-      await TactApi.addExerciseAircraft(input);
-    }
-    const response4 = await GetExerciseAircraftById(data.unitExerciseID);
-    setAircraftData(response4);
+  const updateUnitExerciseAircraft = async (_input) => {
+    await TactApi.getUnitExerciseAircraftById(
+      aircraftData[0]?.unitExerciseID
+    ).then((result) => {
+      if (result.length > 0) {
+        TactApi.updateExerciseAircraft(aircraftData[0]);
+      } else {
+        TactApi.addExerciseAircraft(aircraftData[0]);
+      }
+    });
   };
 
   // get the pages of the steps
@@ -184,8 +209,9 @@ function PlanningTool(props) {
       updateFileHandler={updateFileHandler}
       setSaved={setSaved}
       aircraftData={aircraftData}
-      setAircraftData={updateUnitExerciseAircraft}
+      setAircraftData={setAircraftData}
       airframeList={airframeList}
+      updateUnitExerciseAircraft={updateUnitExerciseAircraft}
     />,
     <PickAddOns
       data={data}

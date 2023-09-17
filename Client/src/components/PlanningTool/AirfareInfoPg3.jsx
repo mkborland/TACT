@@ -151,7 +151,7 @@ function PickAddOns(props) {
   const handleOnSubmit = () => {
     updateFileHandler({ unitCostSum: calculateUnitCostSum(aircraftData[0]) });
     setSaved({ saved: true, alert: "Saving commercial airfare " });
-    updateUnitExerciseAircraft(aircraftData[0]);
+    updateUnitExerciseAircraft();
   };
 
   return (
@@ -267,7 +267,7 @@ function PickAddOns(props) {
             variant="contained"
             loadingIndicator="Loading…"
             disabled={flightdisable}
-            onClick={() => findFlights()}
+            onClick={findFlights}
           >
             <span>Find Flights</span>
           </LoadingButton>
