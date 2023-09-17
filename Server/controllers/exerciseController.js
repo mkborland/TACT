@@ -341,30 +341,35 @@ const addExerciseAircraft = async (req, res) => {
   } = req.body;
   knex("exerciseaircraft")
     .select("*")
-    .where({ unitExerciseID: unitExerciseID, aircraftType: aircraftType })
+    //removing the aircraftType for now since each unit will typically only have one
+    // .where({ unitExerciseID: unitExerciseID, aircraftType: aircraftType })
+    .where({ unitExerciseID: unitExerciseID })
     .then((data) => {
       if (data.length === 0) {
         return knex("exerciseaircraft")
-          .insert({
-            unitExerciseID: unitExerciseID,
-            aircraftType: aircraftType,
-            aircraftCount: aircraftCount,
-            personnelCount: personnelCount,
-            commercialAirfareCount: commercialAirfareCount,
-            commercialAirfareCost: commercialAirfareCost,
-            governmentAirfareCount: governmentAirfareCount,
-            commercialLodgingCount: commercialLodgingCount,
-            commercialLodgingCost: commercialLodgingCost,
-            governmentLodgingCount: governmentLodgingCount,
-            governmentLodgingCost: governmentLodgingCost,
-            fieldLodgingCount: fieldLodgingCount,
-            lodgingPerDiem: lodgingPerDiem,
-            mealPerDiem: mealPerDiem,
-            mealProvidedCount: mealProvidedCount,
-            mealNotProvidedCount: mealNotProvidedCount,
-            rentalCount: rentalCount,
-            rentalCost: rentalCost,
-          })
+          .insert(
+            {
+              unitExerciseID: unitExerciseID,
+              aircraftType: aircraftType,
+              aircraftCount: aircraftCount,
+              personnelCount: personnelCount,
+              commercialAirfareCount: commercialAirfareCount,
+              commercialAirfareCost: commercialAirfareCost,
+              governmentAirfareCount: governmentAirfareCount,
+              commercialLodgingCount: commercialLodgingCount,
+              commercialLodgingCost: commercialLodgingCost,
+              governmentLodgingCount: governmentLodgingCount,
+              governmentLodgingCost: governmentLodgingCost,
+              fieldLodgingCount: fieldLodgingCount,
+              lodgingPerDiem: lodgingPerDiem,
+              mealPerDiem: mealPerDiem,
+              mealProvidedCount: mealProvidedCount,
+              mealNotProvidedCount: mealNotProvidedCount,
+              rentalCount: rentalCount,
+              rentalCost: rentalCost,
+            },
+            "*"
+          )
           .then(() => {
             res
               .status(201)

@@ -29,10 +29,6 @@ function YourInfo(props) {
     props;
   const [defaultExerciseValue, setDefaultExerciseValue] = useState();
 
-  useEffect(() => {
-    console.log("data should update", data);
-  }, [data]);
-
   const exerciseLabels = generateExerciseLabels(exercises);
 
   //IF the unitExercise already exist, this populates the table values with the
@@ -55,7 +51,7 @@ function YourInfo(props) {
   };
 
   const resetCommercialAirfareCost = () => {
-    const temp = aircraftData[0];
+    const temp = aircraftData ? aircraftData[0] : [];
     if (temp?.unitExerciseID && temp?.aircraftType) {
       temp.commercialAirfareCost = 0;
       setAircraftData([temp]);
