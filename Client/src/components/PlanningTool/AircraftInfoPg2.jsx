@@ -6,190 +6,122 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Button, TextField, Typography } from "@mui/material";
-import TactApi from "../../api/TactApi.js";
-import React, { useEffect, useState } from "react";
-// hooks
-import { texts } from '../../hooks/texts'
-
-// images
-import iconArcade from '../../assets/images/icon-arcade.svg'
-import iconAdvanced from '../../assets/images/icon-advanced.svg'
-import iconPro from '../../assets/images/icon-pro.svg'
-
+import { Button, Typography } from "@mui/material";
+import React, { useMemo, useState, useEffect } from "react";
+import CreateRow from "./CreateRow.jsx";
 // styles
-import '../../styles/PlanningToolPg2.css'
+import "../../styles/PlanningToolPg2.css";
 
-function YourPlan({ data, updateFileHandler }) {
-    const { plans } = texts();
+//Pivot on 30 Aug 2023
+// Allowing only one aircraft type to be entered for a specific unit
 
-    const unitAircraftTemplate = { //will need multiple per unit?
-        unitExerciseID: null, //push and pull base info to fill this
-        aircraftType: "F-22",
-        aircraftCount: 2,
-        personnelCount: 50,
-        commercialAirfareCount: 50,
-        commercialAirfareCost: "4000.00",
-        governmentAirfareCount: 0,
-        commercialLodgingCount: 20,
-        commercialLodgingCost: "2000.00",
-        governmentLodgingCount: 30,
-        governmentLodgingCost: "600.00",
-        fieldLodgingCount: 0,
-        lodgingPerDiem: "600.00",
-        mealPerDiem: "400.00",
-        mealProvidedCount: 0,
-        mealNotProvidedCount: 50
+function YourPlan(props) {
+  const {
+    data,
+    updateFileHandler,
+    setSaved,
+    aircraftData,
+    setAircraftData,
+    airframeList,
+    updateUnitExerciseAircraft,
+  } = props;
+  const [totalPersonnel, setTotalPersonnel] = useState();
+
+  useEffect(() => {
+    console.log("useeffect aircraftData", aircraftData);
+    if (aircraftData && aircraftData[0]?.personnelCount) {
+      setTotalPersonnel(aircraftData[0].personnelCount);
+    } else {
+      setTotalPersonnel(0);
     }
+  }, [aircraftData]);
 
-    const [airframeList, setAirframeList] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [totalPersonnel, setTotalPersonnel] = useState(0);
-    const [rows, setRows] = useState([
-        createRowData("KC-135", 0, 0),
-        createRowData("F-22", 0, 0),
-        createRowData("F-35", 0, 0),
-        // createRowData("A-10", 0, 0),
-        // createRowData("F-15C", 0, 0),
-        // createRowData("C-130", 0, 0),
-        // createRowData("C-17", 0, 0),
-        // createRowData("C-5", 0, 0),
-    ]);
+  const rows = useMemo(() => {
+    const result = [];
 
-    useEffect(() => {
-        TactApi.getAllAircraft().then((data) => {
-            setAirframeList(data);
-            setIsLoading(false);
-        });
-    }, []);
+    const aircraftSetter = (props) => {
+      const { key, value } = props;
+      const next = aircraftData[0];
+      next[key] = value;
+      setAircraftData([next]);
+      setSaved({ saved: false, alert: "Please save inputs to continue" });
+    };
 
-    const StyledTableCell = styled(TableCell)(({ theme }) => ({
-        [`&.${tableCellClasses.head}`]: {
-            backgroundColor: theme.palette.common.black,
-            color: theme.palette.common.white,
-        },
-        [`&.${tableCellClasses.body}`]: {
-            fontSize: 14,
-        },
-    }));
+    const newRowProps = {
+      airframeList,
+      setter: aircraftSetter,
+      rowData: {},
+    };
 
-    const StyledTableRow = styled(TableRow)(({ theme }) => ({
-        "&:nth-of-type(odd)": {
-            backgroundColor: theme.palette.action.hover,
-        },
-    // hide last border
-        "&:last-child td, &:last-child th": {
-        border: 0,
-        },
-    }));
-
-    function createRowData(airCraftType, airCraftAmount, airCraftPersonal) {
-        return { airCraftType, airCraftAmount, airCraftPersonal };
+    if (aircraftData && aircraftData.length > 0) {
+      //This will take the last entry from the array
+      newRowProps.rowData = aircraftData[aircraftData.length - 1];
+    } else {
+      //there does not exist an entry for the specific Unit Exercise
+      const newRowData = {
+        unitExerciseID: data.unitExerciseID,
+        aircraftType: undefined,
+        aircraftCount: 0,
+        personnelCount: 0,
+      };
+      newRowProps.rowData = newRowData;
+      newRowProps.newRecord = true;
     }
+    result.push(CreateRow(newRowProps));
+    return result;
+  }, [
+    aircraftData,
+    airframeList,
+    data.unitExerciseID,
+    setAircraftData,
+    setSaved,
+  ]);
 
-    const HandlePersonnelOnChange = (e) => {
-        let runningTotal = 0;
-        rows.forEach((row) => {
-            if (row.airCraftType === e.target.name) {
-                row.airCraftPersonal = e.target.value;
-            }
-        runningTotal += parseInt(row.airCraftPersonal);
-        });
-        setTotalPersonnel(runningTotal);
-    };
+  const handleSaveClick = () => {
+    setSaved({ saved: true });
+    updateFileHandler({
+      personnelSum: aircraftData[0].personnelCount,
+    });
+    updateUnitExerciseAircraft();
+  };
 
-    const HandleAircraftOnChange = (e) => {
-        let runningTotal = 0;
-        rows.forEach((row) => {
-            if (row.airCraftType === e.target.name) {
-                row.airCraftAmount = e.target.value;
-            if (!isLoading) {
-                airframeList.forEach((entry) => {
-                    if (
-                    entry.aircraftName === row.airCraftType &&
-                    parseInt(row.airCraftAmount) === entry.aircraftNumber
-                    ) {
-                    row.airCraftPersonal = entry.personnelReq;
-                    }
-                });
-            }
-        }
-            runningTotal += parseInt(row.airCraftPersonal);
-        });
-        setTotalPersonnel(runningTotal);
-    };
-
-
-    const HandleSaveClick = () => {
-        //save to template/db
-    };
-
-    return (
-        <div className="form-container">
-            <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700}} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Airframe Types</StyledTableCell>
-            <StyledTableCell align="center">
-              Number of Airframes
-            </StyledTableCell>
-            <StyledTableCell align="center">
-              Number of Personnel
-            </StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.airCraftType}>
-              <StyledTableCell component="th" scope="row">
-                {row.airCraftType}
+  return (
+    <div className="form-container">
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Airframe Types</StyledTableCell>
+              <StyledTableCell align="center">
+                Number of Airframes
               </StyledTableCell>
               <StyledTableCell align="center">
-                <TextField
-                  inputProps={{
-                    min: 0,
-                    max: 16,
-                    style: { textAlign: "center" },
-                  }}
-                  name={row.airCraftType}
-                  size="small"
-                  variant="outlined"
-                  type="number"
-                  onChange={(e) => {
-                    HandleAircraftOnChange(e);
-                  }}
-                  defaultValue={row.airCraftAmount}
-                  margin="none"
-                />
+                Number of Personnel
               </StyledTableCell>
-              <StyledTableCell align="center">
-                <TextField
-                  inputProps={{ min: 0, style: { textAlign: "center" } }}
-                  name={row.airCraftType}
-                  size="small"
-                  variant="outlined"
-                  type="number"
-                  onChange={(e) => {
-                    HandlePersonnelOnChange(e);
-                  }}
-                  defaultValue={row.airCraftPersonal}
-                  margin="none"
-                />
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <span>
-        <Button onClick={() => HandleSaveClick()}>Save</Button>
-        <Typography variant="body1">
-          Total Personnel: {totalPersonnel}
-        </Typography>
-      </span>
-    </TableContainer>
-        </div>
-    )
-    };
+            </TableRow>
+          </TableHead>
+          <TableBody>{rows}</TableBody>
+        </Table>
+        <span>
+          {/* <Button onClick={handleAddAircraft}>Add Aircraft</Button> */}
+          <Button onClick={handleSaveClick}>Save</Button>
+          <Typography variant="body1">
+            Total Personnel: {totalPersonnel}
+          </Typography>
+        </span>
+      </TableContainer>
+    </div>
+  );
+}
 
-export default YourPlan 
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+export default YourPlan;

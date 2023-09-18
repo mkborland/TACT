@@ -14,7 +14,7 @@ const SaveUnitExercise = async (body, token = "") => {
   if (!response.ok) {
     console.log("Failed to connect to user db")
   } else {
-    return response;
+    return response.json();
   }
 };
 

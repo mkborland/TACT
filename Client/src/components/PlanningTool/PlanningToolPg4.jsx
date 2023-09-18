@@ -83,21 +83,21 @@ const Lodging = ({data, updateFileHandler}) => {
     // if (isNaN(parseInt(numMealsProv))) {
     //   setnumMealsProv(0);
     // }
-  
+
     const buttonTing = async () => {
       const endPoint = "/get_rates";
       const params = `?year=${year}&city=${city}&state=${state}`;
       const response = await fetch(`${baseApiUrl}${endPoint}${params}`, {
         method: "GET",
       });
-  
+
       if (!response.ok) {
       } else {
         const result = await response.json();
         return result;
       }
     };
-  
+
     const card = (
       <React.Fragment>
         <CardContent>
@@ -207,7 +207,7 @@ const Lodging = ({data, updateFileHandler}) => {
         </CardActions>
       </React.Fragment>
     );
-  
+
     return (
       <div>
         <Card>{card}</Card>

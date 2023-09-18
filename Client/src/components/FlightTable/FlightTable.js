@@ -1,6 +1,4 @@
-// import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { useAppContext } from '../../context/AppContext.js';
+import React, { useState, useEffect } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -31,39 +29,41 @@ class simpleflightoffer {
 }
 
 const FlightTable = (props) => {
-  const { newExerciseAircraftObject, setNewExerciseAircraftObject } = useAppContext()
-  const newExerciseAircraftObject2 = newExerciseAircraftObject
+  const {
+    data,
+    updateExerciseAircraft
+  } = props
+
   const [simple_data, setSimple_Data] = useState([]);
 
 
   const selectButtonClick = (cost) => {
-    props.updateCost(cost)
-    newExerciseAircraftObject2.commercialAirfareCost = Number(cost)
-    setNewExerciseAircraftObject(newExerciseAircraftObject2)
+    updateExerciseAircraft({key: 'commercialAirfareCost', value: Number(cost)})
     setSimple_Data([])
   };
 
   useEffect(() => {
-    if (props.data === undefined) {
+    if (data === undefined) {
       setSimple_Data([])
     } else {
-      setSimple_Data(props.data.map(offer => {
+      setSimple_Data(data.map(offer => {
         return new simpleflightoffer(offer)
       }))
     }
-  }, [props.data]);
+  }, [data]);
 
+  if (simple_data.length >0 ) {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
             <TableCell>Flights</TableCell>
-            <TableCell align="right">Departure<br />Trip</TableCell>
-            <TableCell align="right">Departure<br />Stopovers</TableCell>
-            <TableCell align="right">Return<br />Trip</TableCell>
-            <TableCell align="right">Return<br />Stopovers</TableCell>
-            <TableCell align="right">Cost</TableCell>
+            <TableCell align="center">Departure<br />Trip</TableCell>
+            <TableCell align="center">Departure<br />Stopovers</TableCell>
+            <TableCell align="center">Return<br />Trip</TableCell>
+            <TableCell align="center">Return<br />Stopovers</TableCell>
+            <TableCell align="center">Cost</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -71,10 +71,11 @@ const FlightTable = (props) => {
             <TableRow
               key={offer.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            //   onClick={(e) => alert(offer.cost)}
             >
               <TableCell component="th" scope="offer">
-                <Button variant="contained" onClick={() => selectButtonClick(offer.cost)}>Select</Button>
+                <Button variant="contained" onClick={() => selectButtonClick(offer.cost)}>
+                  Select
+                </Button>
               </TableCell>
               <TableCell align="right">{offer.departureStartAirport}: {offer.departureStartTime}<br />{offer.departureEndAirport}: {offer.departureEndTime}</TableCell>
               <TableCell align="right">{offer.departureStopovers}</TableCell>
@@ -86,7 +87,11 @@ const FlightTable = (props) => {
         </TableBody>
       </Table>
     </TableContainer>
-  );
+  );    
+  } else {
+    return null;
+  }
+
 }
 
 export default FlightTable
