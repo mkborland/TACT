@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import UserActionItems from "../UserActionItems/UserActionItems.js";
-import { useAppContext } from "../../context/AppContext.js";
+// import { useAppContext } from "../../context/AppContext.js";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -80,7 +80,7 @@ export default function PersistentDrawerLeft(props) {
     if (user) {
       return `Welcome, ${user.firstName} ${user.lastName}`;
     } else {
-      return "";
+      return "Please Log In";
     }
   };
 
@@ -113,7 +113,7 @@ export default function PersistentDrawerLeft(props) {
           <img src="/tact_logo.png" alt="image" />
         </DrawerHeader>
         <List>
-          <UserActionItems />
+          <UserActionItems userInfo={user} />
         </List>
       </Drawer>
       <MainPage open={open}>
