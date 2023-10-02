@@ -45,6 +45,19 @@ const unitAircraftTemplate = {
   aircraftCount: 0,
   personnelCount: 0,
   commercialAirfareCost: 0,
+  commercialAirfareCount: 0,
+  commercialLodgingCount: 0,
+  commercialLodgingCost: 0,
+  governmentAirfareCount: 0,
+  governmentLodgingCount: 0,
+  governmentLodgingCost: 0,
+  fieldLodgingCount: 0,
+  mealProvidedCount: 0,
+  mealNotProvidedCount: 0,
+  lodgingPerDiem: 0,
+  mealPerDiem: 0,
+  rentalCount: 0,
+  rentalCost: 0,
 };
 
 function PlanningTool(props) {
@@ -84,7 +97,7 @@ function PlanningTool(props) {
 
   //creates new mission in the DB with 'newMission' as the data obj
   const createUnitExercise = async (newMission) => {
-    setSaved({ saved: true }); // setData(newMission);
+    setSaved({ saved: true });
     return await TactApi.saveUnitExercise(newMission).then((response) => {
       setData(response);
       return response;
@@ -157,7 +170,7 @@ function PlanningTool(props) {
           exerciseID: update.exerciseID,
           unit: user.unit,
         }).then((response) => {
-          if (response?.unitExerciseID === update.exerciseID) {
+          if (response?.exerciseID === update.exerciseID) {
             processOldUnitEx(response);
           } else {
             processNewUnitEx(update);
@@ -226,7 +239,8 @@ function PlanningTool(props) {
       updateFileHandler={updateFileHandler}
       setSaved={setSaved}
       aircraftData={aircraftData}
-      setAircraftData={updateUnitExerciseAircraft}
+      setAircraftData={setAircraftData}
+      updateUnitExerciseAircraft={updateUnitExerciseAircraft}
     />,
     <Thanks />,
   ];
@@ -321,4 +335,4 @@ function PlanningTool(props) {
   );
 }
 
-export default PlanningTool;
+export { PlanningTool, unitAircraftTemplate };

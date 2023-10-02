@@ -7,17 +7,17 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button, Typography } from "@mui/material";
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import CreateRow from "./CreateRow.jsx";
 // styles
 import "../../styles/PlanningToolPg2.css";
+import { dedupedAircraft } from "./utils.js";
 
 //Pivot on 30 Aug 2023
 // Allowing only one aircraft type to be entered for a specific unit
 
 function YourPlan(props) {
   const {
-    data,
     updateFileHandler,
     setSaved,
     aircraftData,
@@ -25,57 +25,54 @@ function YourPlan(props) {
     airframeList,
     updateUnitExerciseAircraft,
   } = props;
-  const [totalPersonnel, setTotalPersonnel] = useState();
+  const [numberLabels, setNumberLabels] = useState([]);
+  const [defaultValues, setDefaultValues] = useState({
+    aircraft: undefined,
+    numOfAircraft: undefined,
+    numOfPersonnel: 0,
+  });
+  const aircraftLabels = dedupedAircraft(airframeList);
 
   useEffect(() => {
-    console.log("useeffect aircraftData", aircraftData);
-    if (aircraftData && aircraftData[0]?.personnelCount) {
-      setTotalPersonnel(aircraftData[0].personnelCount);
-    } else {
-      setTotalPersonnel(0);
-    }
+    setDefaultValues(getDefaultValues(aircraftData[0]));
   }, [aircraftData]);
 
-  const rows = useMemo(() => {
-    const result = [];
-
-    const aircraftSetter = (props) => {
-      const { key, value } = props;
-      const next = aircraftData[0];
-      next[key] = value;
-      setAircraftData([next]);
-      setSaved({ saved: false, alert: "Please save inputs to continue" });
-    };
-
-    const newRowProps = {
-      airframeList,
-      setter: aircraftSetter,
-      rowData: {},
-    };
-
-    if (aircraftData && aircraftData.length > 0) {
-      //This will take the last entry from the array
-      newRowProps.rowData = aircraftData[aircraftData.length - 1];
-    } else {
-      //there does not exist an entry for the specific Unit Exercise
-      const newRowData = {
-        unitExerciseID: data.unitExerciseID,
-        aircraftType: undefined,
-        aircraftCount: 0,
-        personnelCount: 0,
+  const getNumberLabels = (numbers) => {
+    const temp = [];
+    numbers.forEach((num, i) => {
+      const labelObj = {
+        value: i,
+        label: num.label,
+        number: num.value,
       };
-      newRowProps.rowData = newRowData;
-      newRowProps.newRecord = true;
+      temp.push(labelObj);
+    });
+    return temp;
+  };
+
+  const getDefaultValues = (input) => {
+    const result = {
+      aircraft: undefined,
+      numOfAircraft: undefined,
+      numOfPersonnel: 0,
+    };
+    if (input.aircraftType) {
+      result.aircraft = aircraftLabels.findIndex(
+        (label) => label.label === input.aircraftType
+      );
     }
-    result.push(CreateRow(newRowProps));
+    if (input.aircraftCount > 0) {
+      const tempNumberLabels = getNumberLabels(
+        aircraftLabels[result.aircraft].numbers
+      );
+      setNumberLabels(tempNumberLabels);
+      result.numOfAircraft = tempNumberLabels.findIndex(
+        (label) => label.label === input.aircraftCount
+      );
+      result.numOfPersonnel = input.personnelCount;
+    }
     return result;
-  }, [
-    aircraftData,
-    airframeList,
-    data.unitExerciseID,
-    setAircraftData,
-    setSaved,
-  ]);
+  };
 
   const handleSaveClick = () => {
     setSaved({ saved: true });
@@ -100,13 +97,23 @@ function YourPlan(props) {
               </StyledTableCell>
             </TableRow>
           </TableHead>
-          <TableBody>{rows}</TableBody>
+          <TableBody>
+            <CreateRow
+              aircraftLabels={aircraftLabels}
+              numberLabels={numberLabels}
+              setNumberLabels={setNumberLabels}
+              defaultValues={defaultValues}
+              getNumberLabels={getNumberLabels}
+              setter={setAircraftData}
+              rowData={aircraftData[0]}
+            />
+          </TableBody>
         </Table>
         <span>
           {/* <Button onClick={handleAddAircraft}>Add Aircraft</Button> */}
           <Button onClick={handleSaveClick}>Save</Button>
           <Typography variant="body1">
-            Total Personnel: {totalPersonnel}
+            Total Personnel: {aircraftData[0].personnelCount}
           </Typography>
         </span>
       </TableContainer>
