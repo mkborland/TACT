@@ -47,7 +47,7 @@ const parsePerdiem = (props) => {
   console.log("parse perdiem", props);
   const { raw, perdiemCity, perdiemStartMonth, perDiemStopMonth } = props;
   //process the array of results to find the correct city
-  const result = { mealPerDiem: 0, lodgingPerDiem: 0 };
+  const result = { mealPerDiem: 0, lodgingPerDiem: 0, city: "Standard Rate" };
   let temp;
   let standardRate;
   //if there is only one element in the array => use that one element
@@ -67,12 +67,15 @@ const parsePerdiem = (props) => {
     );
     result.mealPerDiem = raw[0].meals;
     result.lodgingPerDiem = hotelPerdiem;
+    result.city = raw[0].city;
     return result;
   } else if (raw.length > 1) {
     raw.forEach((rate) => {
       const cities = rate.city.split("/");
       cities.forEach((city) => {
-        if (perdiemCity.includes(city)) temp = rate;
+        if (perdiemCity.includes(city)) {
+          temp = rate;
+        }
         if (city === "Standard Rate") standardRate = rate;
       });
     });
@@ -92,6 +95,7 @@ const parsePerdiem = (props) => {
       );
       result.mealPerDiem = temp.meals;
       result.lodgingPerDiem = hotelPerdiem;
+      result.city = temp.city;
     } else if (standardRate?.city && standardRate.meals) {
       console.log("using the standard rate");
       const hotelPerdiemStart = standardRate.months.month.find((month) => {
@@ -103,25 +107,21 @@ const parsePerdiem = (props) => {
       const hotelPerdiem = (hotelPerdiemStart + hotelPerdiemStop) / 2;
       result.mealPerDiem = standardRate.meals;
       result.lodgingPerDiem = hotelPerdiem;
+      result.city = standardRate.city;
     } else {
       //didn't find the city or standard rate
       console.log("did not find a city or standard rate for the perdiem");
       result.mealPerDiem = 0;
       result.lodgingPerDiem = 0;
+      result.city = "No city found";
     }
   }
   return result;
 };
 
 const Lodging = (props) => {
-  const {
-    data,
-    updateFileHandler,
-    setSaved,
-    aircraftData,
-    setAircraftData,
-    updateUnitExerciseAircraft,
-  } = props;
+  const { data, aircraftData, setAircraftData, updateUnitExerciseAircraft } =
+    props;
   const [startDate, setStartDate] = useState(); // {year, month}
   const [stopDate, setStopDate] = useState(); // {year, month}
   const [location, setLocation] = useState(); // {city, state, country}
@@ -129,6 +129,11 @@ const Lodging = (props) => {
   const [totalMealCost, setTotalMealCost] = useState(0);
   const [totalPerdiemCost, setTotalPerdiemCost] = useState(0);
   const [totalDays, setTotalDays] = useState(0);
+  const [perdiemCity, setPerdiemCity] = useState();
+
+  useEffect(() => {
+    calculateCost();
+  }, [aircraftData]);
 
   const initializeData = () => {
     if (!aircraftData[0].governmentLodgingCount) {
@@ -195,6 +200,7 @@ const Lodging = (props) => {
           perdiemStartMonth: startDate.month,
           perDiemStopMonth: stopDate.month,
         });
+        setPerdiemCity(result.city);
         setAircraftData([
           {
             ...aircraftData[0],
@@ -253,7 +259,6 @@ const Lodging = (props) => {
         },
       ]);
     }
-    // calculateCost();
   };
 
   const handleComLodge = (e) => {
@@ -284,7 +289,6 @@ const Lodging = (props) => {
         },
       ]);
     }
-    // aircraftData[0] && calculateCost();
   };
 
   const handleFieldLodge = (e) => {
@@ -316,7 +320,6 @@ const Lodging = (props) => {
         },
       ]);
     }
-    // aircraftData[0] && calculateCost();
   };
 
   const handleMealsProvided = (e) => {
@@ -336,7 +339,6 @@ const Lodging = (props) => {
     // aircraftData[0] && calculateCost();
   };
 
-  //TODO - refactor this to allow for not updating aircraftData
   const calculateCost = () => {
     const comLodgeCost =
       aircraftData[0].commercialLodgingCount *
@@ -346,7 +348,14 @@ const Lodging = (props) => {
       aircraftData[0].governmentLodgingCount *
       aircraftData[0].lodgingPerDiem *
       (totalDays - 1);
-    setTotalLodgingCost(comLodgeCost + govLodgeCost);
+    const lodging = comLodgeCost + govLodgeCost;
+    const meals =
+      totalDays *
+      aircraftData[0].mealNotProvidedCount *
+      aircraftData[0].mealPerDiem;
+    setTotalLodgingCost(lodging);
+    setTotalMealCost(meals);
+    setTotalPerdiemCost(lodging + meals);
     setAircraftData([
       {
         ...aircraftData[0],
@@ -354,12 +363,6 @@ const Lodging = (props) => {
         governmentLodgingCost: govLodgeCost,
       },
     ]);
-    setTotalMealCost(
-      totalDays *
-        aircraftData[0].mealNotProvidedCount *
-        aircraftData[0].mealPerDiem
-    );
-    setTotalPerdiemCost(totalLodgingCost + totalMealCost);
   };
 
   const handleSubmit = () => {
@@ -371,11 +374,12 @@ const Lodging = (props) => {
       <CardContent>
         <StyledTableRow key="totals-row">
           <StyledTableCell component="th" scope="row">
+            <Typography>Total Perdiem Cost</Typography>
             <TextField
               disabled
               id="totalPerdiemCost"
-              label="Total Perdiem Cost"
-              variant="outlined"
+              // label="Total Perdiem Cost"
+              // variant="filled"
               margin="normal"
               value={totalPerdiemCost.toLocaleString("en-US", {
                 style: "currency",
@@ -383,12 +387,15 @@ const Lodging = (props) => {
               })}
             />
           </StyledTableCell>
+
           <StyledTableCell component="th" scope="row">
+            <Typography>Total Travellers</Typography>
+
             <TextField
               disabled
               id="numPeopleTotal"
-              label="Total People"
-              variant="outlined"
+              // label="Total People"
+              // variant="outlined"
               margin="normal"
               value={data.personnelSum}
             />
@@ -424,6 +431,10 @@ const Lodging = (props) => {
         </StyledTableRow>
         <StyledTableRow key="meal-perdiem-row">
           <StyledTableCell component="th" scope="row">
+            <Typography>{`Perdiems for ${perdiemCity}`}</Typography>
+          </StyledTableCell>
+
+          <StyledTableCell component="th" scope="row">
             <TextField
               disabled
               id="mealCost"
@@ -450,50 +461,54 @@ const Lodging = (props) => {
             />
           </StyledTableCell>
         </StyledTableRow>
-        {/* <br /> */}
-
-        <br />
-        <TextField
-          // disabled
-          id="numGovLodge"
-          label="Government Lodging"
-          variant="outlined"
-          margin="normal"
-          type="number"
-          value={aircraftData[0].governmentLodgingCount}
-          onChange={handleGovLodge}
-        />
-        <br />
-        <TextField
-          id="numComLodge"
-          label="Commercial Lodging"
-          variant="outlined"
-          margin="normal"
-          type="number"
-          value={aircraftData[0].commercialLodgingCount}
-          onChange={handleComLodge}
-        />
-        <br />
-        <TextField
-          id="numFieldCon"
-          label="Field Conditions"
-          variant="outlined"
-          margin="normal"
-          type="number"
-          value={aircraftData[0].fieldLodgingCount}
-          onChange={handleFieldLodge}
-        />
-        <br />
-        <Typography>Government Meals Provided</Typography>
-        <TextField
-          id="numMealsProv"
-          // label="Government Meals Provided"
-          variant="outlined"
-          margin="normal"
-          type="number"
-          value={aircraftData[0].mealProvidedCount}
-          onChange={handleMealsProvided}
-        />
+        <StyledTableRow key="meal-perdiem-row">
+          <StyledTableCell component="th" scope="row">
+            <TextField
+              // disabled
+              id="numGovLodge"
+              label="Government Lodging"
+              variant="outlined"
+              margin="normal"
+              type="number"
+              value={aircraftData[0].governmentLodgingCount}
+              onChange={handleGovLodge}
+            />
+          </StyledTableCell>
+          <StyledTableCell component="th" scope="row">
+            <TextField
+              id="numComLodge"
+              label="Commercial Lodging"
+              variant="outlined"
+              margin="normal"
+              type="number"
+              value={aircraftData[0].commercialLodgingCount}
+              onChange={handleComLodge}
+            />
+          </StyledTableCell>
+          <StyledTableCell component="th" scope="row">
+            <TextField
+              id="numFieldCon"
+              label="Field Conditions"
+              variant="outlined"
+              margin="normal"
+              type="number"
+              value={aircraftData[0].fieldLodgingCount}
+              onChange={handleFieldLodge}
+            />
+          </StyledTableCell>
+          <StyledTableCell component="th" scope="row">
+            {/* <Typography>Government Meals Provided</Typography> */}
+            <TextField
+              id="numMealsProv"
+              label="Government Meals Provided"
+              variant="outlined"
+              margin="normal"
+              type="number"
+              value={aircraftData[0].mealProvidedCount}
+              onChange={handleMealsProvided}
+            />
+          </StyledTableCell>
+        </StyledTableRow>
       </CardContent>
       <CardActions>
         <Button onClick={handleSubmit} size="small">
