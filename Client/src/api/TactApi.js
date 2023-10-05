@@ -24,6 +24,7 @@ import getRole from "./Users/get/getRole.js";
 import GetExerciseAircraftById from "./ExerciseAircraft/get/getExerciseAircraftById.js";
 import getConus from "./PerDiem/get/get-conus.js";
 import getLocationByIata from "./Locations/get/get-location-by-iata.js";
+import getOconus from "./PerDiem/get/get-oconus.js";
 
 const TactApi = {
   getDashboard: GetDashboard,
@@ -52,5 +53,6 @@ const TactApi = {
   getSummaries: GetSummaries,
   getRole: getRole,
   getConus: getConus,
+  getOconus: getOconus,
 };
 export default TactApi;

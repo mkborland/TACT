@@ -29,12 +29,18 @@ const CreateRow = (props) => {
   };
 
   const handleNumberAircraftSelect = (e) => {
+    const mealsDif =
+      rowData.mealNotProvidedCount > e.number
+        ? e.number
+        : rowData.mealNotProvidedCount;
     //to the parent component
     setter([
       {
         ...rowData,
         aircraftCount: e.label,
         personnelCount: e.number,
+        mealProvidedCount: e.number - mealsDif,
+        mealNotProvidedCount: mealsDif,
         governmentAirfareCount: e.number - rowData.commercialAirfareCount,
         governmentLodgingCount:
           e.number - rowData.commercialLodgingCount - rowData.fieldLodgingCount,
@@ -47,11 +53,18 @@ const CreateRow = (props) => {
       ? 0
       : parseInt(e.target.value);
     if (value < 0) return;
+    const mealsDif =
+      rowData.mealNotProvidedCount > value
+        ? value
+        : rowData.mealNotProvidedCount;
     //to the parent component
+    console.log("mealsDif", mealsDif, rowData.mealNotProvidedCount);
     setter([
       {
         ...rowData,
         personnelCount: value,
+        mealProvidedCount: value - mealsDif,
+        mealNotProvidedCount: mealsDif,
         governmentAirfareCount: value - rowData.commercialAirfareCount,
         governmentLodgingCount:
           value - rowData.commercialLodgingCount - rowData.fieldLodgingCount,

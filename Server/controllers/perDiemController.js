@@ -37,7 +37,7 @@ const requestAllOconus = async (req, res) => {
 };
 
 const requestOconusCountry = async (req, res) => {
-  const country = req.query.country;
+  const country = req.query.country.toUpperCase();
   return knex("oconusperdiem")
     .select("*")
     .where({
