@@ -44,30 +44,16 @@ const generateLocationLabels = (inputs) => {
 
 export const LocationField = (props) => {
   const { inputLabel, name, id, onChange, locationId } = props;
-
-  const [locationValue, setLocationValue] = useState({
-    label: "Select...",
-    value: -1,
-  });
+  const [locationValue, setLocationValue] = useState();
   const [locationLabels, setLocationLabels] = useState();
-  const [locationArray, setLocationArray] = useState([
-    {
-      locationID: 0,
-      region: "Test Region",
-      iata: "TST",
-      icao: "KTST",
-      airport: "Test Airport",
-      country: "Test",
-    },
-  ]);
-
-  const fetchLocations = async () => {
-    await TactApi.getAllLocations().then((response) => {
-      setLocationArray(response);
-    });
-  };
+  const [locationArray, setLocationArray] = useState([]);
 
   useEffect(() => {
+    const fetchLocations = async () => {
+      await TactApi.getAllLocations().then((response) => {
+        setLocationArray(response);
+      });
+    };
     fetchLocations();
   }, []);
 
@@ -75,17 +61,24 @@ export const LocationField = (props) => {
     setLocationLabels(generateLocationLabels(locationArray));
   }, [locationArray]);
 
-  const findLabel = () => {
-    if (locationLabels) {
-      const result = locationLabels.find((label) => label.value === locationId);
-      return result;
-    }
-  };
-
   useEffect(() => {
+    const findLabel = () => {
+      if (locationLabels) {
+        const result = locationLabels.find(
+          (label) => label.value === locationId
+        );
+        return result;
+      }
+    };
+
     if (locationId && locationLabels && locationLabels.length > 3) {
       const test = findLabel();
       setLocationValue(test);
+    } else {
+      setLocationValue({
+        label: "Select...",
+        value: -1,
+      });
     }
   }, [locationId, locationLabels]);
 

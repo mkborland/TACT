@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button, Typography } from "@mui/material";
-import React, { useMemo, useCallback, useRef } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import CreateRow from "./CreateRow.jsx";
 // styles
 import "../../styles/PlanningToolPg2.css";
@@ -23,29 +23,39 @@ function YourPlan(props) {
     aircraftData,
     setAircraftData,
     airframeList,
+    updateUnitExerciseAircraft,
   } = props;
-  const unitAircraftTable = useRef({});
+  const [totalPersonnel, setTotalPersonnel] = useState();
 
-  const aircraftSetter = useCallback((props) => {
-    const { key, value } = props;
-    const next = unitAircraftTable.current;
-    next[key] = value;
-    unitAircraftTable.current = next;
-  }, []);
+  useEffect(() => {
+    console.log("useeffect aircraftData", aircraftData);
+    if (aircraftData && aircraftData[0]?.personnelCount) {
+      setTotalPersonnel(aircraftData[0].personnelCount);
+    } else {
+      setTotalPersonnel(0);
+    }
+  }, [aircraftData]);
 
   const rows = useMemo(() => {
     const result = [];
+
+    const aircraftSetter = (props) => {
+      const { key, value } = props;
+      const next = aircraftData[0];
+      next[key] = value;
+      setAircraftData([next]);
+      setSaved({ saved: false, alert: "Please save inputs to continue" });
+    };
+
     const newRowProps = {
       airframeList,
       setter: aircraftSetter,
       rowData: {},
     };
+
     if (aircraftData && aircraftData.length > 0) {
       //This will take the last entry from the array
-      aircraftData.forEach((aircraft, i) => {
-        newRowProps.rowData = aircraft;
-        newRowProps.newRecord = false;
-      });
+      newRowProps.rowData = aircraftData[aircraftData.length - 1];
     } else {
       //there does not exist an entry for the specific Unit Exercise
       const newRowData = {
@@ -58,16 +68,21 @@ function YourPlan(props) {
       newRowProps.newRecord = true;
     }
     result.push(CreateRow(newRowProps));
-    unitAircraftTable.current = newRowProps.rowData;
     return result;
-  }, [aircraftData, aircraftSetter, airframeList, data.unitExerciseID]);
+  }, [
+    aircraftData,
+    airframeList,
+    data.unitExerciseID,
+    setAircraftData,
+    setSaved,
+  ]);
 
   const handleSaveClick = () => {
     setSaved({ saved: true });
-    setAircraftData(unitAircraftTable.current);
     updateFileHandler({
-      personnelSum: unitAircraftTable.current.personnelCount,
+      personnelSum: aircraftData[0].personnelCount,
     });
+    updateUnitExerciseAircraft();
   };
 
   return (
@@ -91,7 +106,7 @@ function YourPlan(props) {
           {/* <Button onClick={handleAddAircraft}>Add Aircraft</Button> */}
           <Button onClick={handleSaveClick}>Save</Button>
           <Typography variant="body1">
-            Total Personnel: {unitAircraftTable.current.personnelCount}
+            Total Personnel: {totalPersonnel}
           </Typography>
         </span>
       </TableContainer>

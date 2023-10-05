@@ -1,6 +1,5 @@
-import { useAppContext } from "../../context/AppContext.js";
 import DefinedListItem from "../Util/DefinedListItem.js";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 import { Divider } from "@mui/material";
 
 //This file controls the list in the mainpage drawer and changes what is shown depending on user role
@@ -22,11 +21,11 @@ const ActionObject = [
   },
   {
     text: "Profile",
-    link: ManageUsersPage
+    link: ManageUsersPage,
   },
   {
     text: "Wing Planning Tool",
-    link: NewPlanningTool
+    link: NewPlanningTool,
   },
   {
     text: "Default Table",
@@ -34,24 +33,42 @@ const ActionObject = [
   },
   {
     text: "New Exercise",
-    link: newExerciseForm
+    link: newExerciseForm,
   },
   {
     text: "Analysis Tool",
-    link: NewAnalysisTool
+    link: NewAnalysisTool,
   },
 ];
 //list for general role
 const ActionObjectGeneral = [
+  {
+    text: "Dashboard",
+    link: NewDashboardPage,
+  },
+  {
+    text: "Wing Planning Tool",
+    link: NewPlanningTool,
+  },
   { text: "History", link: HistoryPage },
 ];
 
-const UserActionItems = () => {
-  const { UserInfo } = useAppContext();
-  if (UserInfo === undefined) {
-    return <></>;
+const UserActionItems = (props) => {
+  const { userInfo } = props;
+  console.log("userInfo", userInfo);
+  if (userInfo === undefined) {
+    return (
+      <>
+        {" "}
+        <DefinedListItem
+          text="Log Out"
+          icon={<LogoutIcon />}
+          link={LoginPage}
+        />
+      </>
+    );
   }
-  if (UserInfo.access === "admin") {
+  if (userInfo.roleName === "Admin") {
     return (
       <>
         {ActionObject.map((items) => {
@@ -64,10 +81,14 @@ const UserActionItems = () => {
           );
         })}
         <Divider />
-        <DefinedListItem text="Log Out" icon={<LogoutIcon />} link={LoginPage} />
+        <DefinedListItem
+          text="Log Out"
+          icon={<LogoutIcon />}
+          link={LoginPage}
+        />
       </>
     );
-  } else if (UserInfo.access === "general") {
+  } else if (userInfo.roleName === "User") {
     return (
       <>
         {ActionObjectGeneral.map((items) => {
@@ -79,7 +100,32 @@ const UserActionItems = () => {
             />
           );
         })}
-
+        <Divider />
+        <DefinedListItem
+          text="Log Out"
+          icon={<LogoutIcon />}
+          link={LoginPage}
+        />
+      </>
+    );
+  } else {
+    return (
+      <>
+        {ActionObjectGeneral.map((items) => {
+          return (
+            <DefinedListItem
+              key={items.text}
+              text={items.text}
+              link={items.link}
+            />
+          );
+        })}
+        <Divider />
+        <DefinedListItem
+          text="Log Out"
+          icon={<LogoutIcon />}
+          link={LoginPage}
+        />
       </>
     );
   }

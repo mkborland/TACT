@@ -20,6 +20,8 @@ import GetFYs from "./ExerciseAircraft/get/getFYs.js";
 import GetExerciseList from "./ExerciseAircraft/get/getExerciseList.js";
 import GetSummaries from "./ExerciseAircraft/get/getSummaries.js";
 import UpdateExerciseAircraft from "./ExerciseAircraft/post/UpdateExerciseAircraft.js";
+import getRole from "./Users/get/getRole.js";
+import GetExerciseAircraftById from "./ExerciseAircraft/get/getExerciseAircraftById.js";
 
 const TactApi = {
   getDashboard: GetDashboard,
@@ -34,6 +36,7 @@ const TactApi = {
   getUser: GetUser,
   updateUser: UpdateUser,
   getUnitExerciseByUnit: getUnitExerciseByUnit,
+  getUnitExerciseAircraftById: GetExerciseAircraftById,
   saveUnitExercise: SaveUnitExercise,
   updateUnitExercise: UpdateUnitExercise,
   getUnitExercise: GetUnitExercise,
@@ -44,5 +47,6 @@ const TactApi = {
   getFYs: GetFYs,
   getExerciseList: GetExerciseList,
   getSummaries: GetSummaries,
+  getRole: getRole,
 };
 export default TactApi;

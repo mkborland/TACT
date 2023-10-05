@@ -10,23 +10,51 @@ import NewExerciseForm from "./components/NewExerciseForm/NewExerciseForm";
 import PlanningTool from "./components/PlanningTool/PlanningTool";
 import AnalysisTool from "./components/AnalysisTool/AnalysisTool";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import { useState } from "react";
 
 function App() {
+  const [user, setUser] = useState();
+
   return (
     <div className="App">
       <div className="App-header">
         <BrowserRouter>
           <Routes>
-            <Route exact path="/" element={<PrivateRoute />} />
+            <Route
+              exact
+              path="/"
+              element={<PrivateRoute setUser={setUser} />}
+            />
             {/* <Route path="/" element={<LoginCard />} /> */}
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/Dashboard" element={<PersistentDrawerLeft />}>
-              <Route path="DashboardPage" element={<DashboardPage />} />
-              <Route path="PlanningToolPage" element={<PlanningTool />} />
-              <Route path="EditTablesPage" element={<EditTables />} />
-              <Route path="ManageUsersPage" element={<ManageUsers />} />
-              <Route path="NewExerciseForm" element={<NewExerciseForm />} />
-              <Route path="AnalysisToolPage" element={<AnalysisTool />} />
+            <Route
+              path="/Dashboard"
+              element={<PersistentDrawerLeft user={user} />}
+            >
+              <Route
+                path="DashboardPage"
+                element={<DashboardPage user={user} />}
+              />
+              <Route
+                path="PlanningToolPage"
+                element={<PlanningTool user={user} />}
+              />
+              <Route
+                path="EditTablesPage"
+                element={<EditTables user={user} />}
+              />
+              <Route
+                path="ManageUsersPage"
+                element={<ManageUsers user={user} />}
+              />
+              <Route
+                path="NewExerciseForm"
+                element={<NewExerciseForm user={user} />}
+              />
+              <Route
+                path="AnalysisToolPage"
+                element={<AnalysisTool user={user} />}
+              />
             </Route>
           </Routes>
         </BrowserRouter>

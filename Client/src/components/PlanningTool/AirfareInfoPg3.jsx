@@ -38,9 +38,6 @@ function PickAddOns(props) {
   // the default when page is loaded.
   // In the case that this was already built, and the user just wants to navigate
   // to the next page, then they should be able to do this
-  useEffect(() => {
-    setSaved({ saved: false, alert: "Getting Airfare Costs" });
-  });
 
   useEffect(() => {
     setInputs({
@@ -66,25 +63,44 @@ function PickAddOns(props) {
     width: 42px;
   `;
 
-  const handleSliderChange = (event, newValue) => {
+  const updateExerciseAircraft = (props) => {
+    const { key, value } = props;
+    setSaved({ saved: false, alert: "Please save updated data" });
     const temp = aircraftData[0];
-    temp.commercialAirfareCount = newValue;
-    temp.governmentAirfareCount = data.personnelSum - newValue;
+    temp[key] = value;
     setAircraftData([temp]);
+  };
+
+  const handleSliderChange = (event, newValue) => {
+    updateExerciseAircraft({ key: "commercialAirfareCount", value: newValue });
+    updateExerciseAircraft({
+      key: "governmentAirfareCount",
+      value: data.personnelSum - newValue,
+    });
   };
 
   const handleMilInputChange = (event) => {
-    const temp = aircraftData[0];
-    temp.commercialAirfareCount = data.personnelSum - event.target.value;
-    temp.governmentAirfareCount = event.target.value;
-    setAircraftData([temp]);
+    const newValue = event.target.value;
+    updateExerciseAircraft({
+      key: "commercialAirfareCount",
+      value: data.personnelSum - newValue,
+    });
+    updateExerciseAircraft({
+      key: "governmentAirfareCount",
+      value: newValue,
+    });
   };
 
   const handleComInputChange = (event) => {
-    const temp = aircraftData[0];
-    temp.commercialAirfareCount = event.target.value;
-    temp.governmentAirfareCount = data.personnelSum - event.target.value;
-    setAircraftData([temp]);
+    const newValue = event.target.value;
+    updateExerciseAircraft({
+      key: "commercialAirfareCount",
+      value: newValue,
+    });
+    updateExerciseAircraft({
+      key: "governmentAirfareCount",
+      value: data.personnelSum - newValue,
+    });
   };
 
   //For the flight finder
@@ -111,41 +127,31 @@ function PickAddOns(props) {
   const updateStartDate = (e) => {
     updateFileHandler({ travelStartDate: e.$d });
     setInputs({ ...inputs, departureDate: dayjs(e.$d).format("YYYY-MM-DD") });
-    updateFileHandler({ commercialAirfareCost: 0 });
-    setFlightCost(0);
+    updateExerciseAircraft({ key: "commercialAirfareCost", value: 0 });
   };
 
   const updateEndDate = (e) => {
     updateFileHandler({ travelEndDate: e.$d });
     setInputs({ ...inputs, returnDate: dayjs(e.$d).format("YYYY-MM-DD") });
-    updateFileHandler({ commercialAirfareCost: 0 });
-    setFlightCost(0);
+    updateExerciseAircraft({ key: "commercialAirfareCost", value: 0 });
   };
 
   const changeDepartLocation = (e) => {
     updateFileHandler({ locationFrom: e.value });
     setInputs({ ...inputs, locationDeparture: e.value });
-    updateFileHandler({ commercialAirfareCost: 0 });
-    setFlightCost(0);
+    updateExerciseAircraft({ key: "commercialAirfareCost", value: 0 });
   };
 
   const changeDestinationLocation = (e) => {
     updateFileHandler({ locationTo: e.value });
     setInputs({ ...inputs, locationArrival: e.value });
-    updateFileHandler({ commercialAirfareCost: 0 });
-    setFlightCost(0);
-  };
-
-  const updateExerciseAircraft = (e) => {
-    const temp = aircraftData[0];
-    temp[e.key] = e.value;
-    setAircraftData([temp]);
+    updateExerciseAircraft({ key: "commercialAirfareCost", value: 0 });
   };
 
   const handleOnSubmit = () => {
     updateFileHandler({ unitCostSum: calculateUnitCostSum(aircraftData[0]) });
     setSaved({ saved: true, alert: "Saving commercial airfare " });
-    updateUnitExerciseAircraft(aircraftData[0]);
+    updateUnitExerciseAircraft();
   };
 
   return (
@@ -261,7 +267,7 @@ function PickAddOns(props) {
             variant="contained"
             loadingIndicator="Loading…"
             disabled={flightdisable}
-            onClick={() => findFlights()}
+            onClick={findFlights}
           >
             <span>Find Flights</span>
           </LoadingButton>
