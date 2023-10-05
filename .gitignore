@@ -25,7 +25,10 @@ yarn-debug.log*
 yarn-error.log*
 Client/package-lock.json
 Server/package-lock.json
+Client/package.json
+Server/package.json
 .idea
 
 .vscode/*
 Server/.env
+Client/.env

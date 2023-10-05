@@ -1,109 +1,144 @@
-import * as React from 'react';
-import dayjs from 'dayjs';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
+import React, { useState, useEffect } from "react";
+import Select from "react-select";
+import dayjs from "dayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 // styles
-import '../../styles/PlanningToolPg1.css';
+import "../../styles/PlanningToolPg1.css";
+import { LocationField } from "./location-field";
 
-function YourInfo({ data, updateFileHandler }) {
-    // function to change the className of the input and
-    // label to warn that the client has not filled in that field
-    const verifyInputsInvalids = (e) => {
-        // e.target.classList.add('inputInvalid');
-        // e.target.labels[0].className = 'inputLabel beforeInputInvalid';
-    };
+const defaultLabelValues = {
+  exerciseLabels: [{ value: undefined, label: "Select Exercise" }],
+};
 
-    //function to bring back to normal the input
-    //that the client filled in correctly
-    const verifyInputs = (e) => {
-        updateFileHandler(e.target.id, e.target.value); //fills in template based on key value pair
-        console.log(e.target)
+const generateExerciseLabels = (input) => {
+  return input
+    ? input.map((i) => {
+        return {
+          value: i.exerciseID,
+          label: i.exerciseName,
+        };
+      })
+    : defaultLabelValues.exerciseLabels;
+};
 
-        // e.target.classList.remove("inputInvalid");
-        // e.target.labels[0].className = 'inputLabel';
+function YourInfo(props) {
+  const { data, updateFileHandler, aircraftData, setAircraftData, exercises } =
+    props;
+  const [defaultExerciseValue, setDefaultExerciseValue] = useState();
 
-    };
+  const exerciseLabels = generateExerciseLabels(exercises);
 
-    const [startDate, setStartDate] = React.useState(dayjs(new Date().toJSON().slice(0, 10)));
-    const [endDate, setEndDate] = React.useState(dayjs(new Date().toJSON().slice(0, 10)));
+  //IF the unitExercise already exist, this populates the table values with the
+  //pre-existing data
+  useEffect(() => {
+    data.exerciseID && exercises
+      ? setDefaultExerciseValue({
+          value: data.exerciseID,
+          label: exerciseLabels.find((label) => label.value === data.exerciseID)
+            .label,
+        })
+      : setDefaultExerciseValue({
+          label: "Select an Exercise",
+          value: -1,
+        });
+  }, [data, exercises, exerciseLabels]);
 
-    return (
-        <div className="form-container">
-            <div className="input-container">
-                <label htmlFor="name" className='inputLabel'>Exercise Name</label>
-                <input
-                    className="input"
-                    type="text"
-                    name="name"
-                    id="exerciseID"
-                    value={data.exerciseID || ""}  //where the text fields update based on data object (template)
-                    onChange={(e) => verifyInputs(e)}
-                    placeholder="Exercise Name will auto-convert to upper-case"
-                    onInvalid={verifyInputsInvalids}
-                    required
-                />
-            </div>
+  const verifyExerciseInputs = (e) => {
+    updateFileHandler({ exerciseID: e.value });
+  };
 
-            <div className="input-container">
-                <label htmlFor="dates" className='inputLabel'>Start / End Dates</label>
+  const resetCommercialAirfareCost = () => {
+    const temp = aircraftData ? aircraftData[0] : [];
+    if (temp?.unitExerciseID && temp?.aircraftType) {
+      temp.commercialAirfareCost = 0;
+      setAircraftData([temp]);
+    }
+  };
 
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DatePicker', 'DatePicker']}>
-                        <DatePicker
-                            label="Start Date"
-                            value={startDate}
-                            sx={{ backgroundColor: 'white' }}
-                            //onChange={(e) => verifyInputs(e)}
-                            onChange={(newValue) => setStartDate(newValue)}
-                            //onInvalid={verifyInputsInvalids}
-                            />
-                        <DatePicker
-                            label="End Date"
-                            value={endDate}
-                            sx={{ backgroundColor: 'white' }}
-                            // onChange={(e) => verifyInputs(e)}
-                            onChange={(newValue) => setEndDate(newValue)}
-                            // onInvalid={verifyInputsInvalids}
-                            />
-                    </DemoContainer>
-                </LocalizationProvider>
-            </div>
+  const verifyStartDateInputs = (e) => {
+    updateFileHandler({ travelStartDate: e.$d });
+    resetCommercialAirfareCost();
+  };
 
+  const verifyEndDateInputs = (e) => {
+    updateFileHandler({ travelEndDate: e.$d });
+    resetCommercialAirfareCost();
+  };
 
-            <div className="input-container">
-                <label htmlFor="departingLocation" className='inputLabel'>Departing Location</label>
-                <input
-                    className="input"
-                    type="text"
-                    name="departingLocation"
-                    id="locationFrom"
-                    value={data.locationFrom || ""}
-                    onChange={(e) => verifyInputs(e)}
-                    placeholder="e.g. March ARB, CA"
-                    onInvalid={verifyInputsInvalids}
-                    required
-                />
-            </div>
+  const changeDepartLocation = (e) => {
+    updateFileHandler({ locationFrom: e.value });
+    resetCommercialAirfareCost();
+  };
 
-            <div className="input-container">
-                <label htmlFor="destination" className='inputLabel'>Destination</label>
-                <input
-                    className="input"
-                    type="text"
-                    name="destination"
-                    id="locationTo"
-                    value={data.locationTo || ""}
-                    onChange={(e) => verifyInputs(e)}
-                    placeholder="Name of military installation, airfield, city, or region"
-                    onInvalid={verifyInputsInvalids}
-                    required
-                />
-            </div>
+  const changeDestinationLocation = (e) => {
+    updateFileHandler({ locationTo: e.value });
+    resetCommercialAirfareCost();
+  };
+
+  return (
+    <div className="form-container">
+      <div className="input-container">
+        <div htmlFor="exercise-name" className="inputLabel">
+          Exercise Name
         </div>
-    );
+        <Select
+          id="exercise-name"
+          className="input"
+          name="exercise-name"
+          placeholder={"Select an Exercise"}
+          value={defaultExerciseValue}
+          onChange={verifyExerciseInputs}
+          isSearchable
+          required
+          options={exerciseLabels}
+        />
+      </div>
+      <div className="input-container">
+        <div htmlFor="date-container" className="inputLabel">
+          Travel Start / End Dates
+        </div>
+        {/* use the DateRangePicker for this specific component  https://mui.com/x/react-date-pickers/date-range-picker/*/}
+        <LocalizationProvider id="date-container" dateAdapter={AdapterDayjs}>
+          <DemoContainer
+            id="date-container"
+            components={["DatePicker", "DatePicker"]}
+          >
+            <DatePicker
+              label="Depart Date"
+              defaultValue={dayjs(data.travelStartDate)}
+              value={dayjs(data.travelStartDate)}
+              sx={{ backgroundColor: "white" }}
+              onChange={verifyStartDateInputs}
+            />
+            <DatePicker
+              label="Return Date"
+              defaultValue={dayjs(data.travelEndDate)}
+              value={dayjs(data.travelEndDate)}
+              sx={{ backgroundColor: "white" }}
+              onChange={verifyEndDateInputs}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+      </div>
+      <LocationField
+        inputLabel="Departing Location"
+        name="departingLocation"
+        id="locationFrom"
+        onChange={changeDepartLocation}
+        locationId={data.locationFrom}
+      />
+      <LocationField
+        inputLabel="Destination Location"
+        name="destination"
+        id="locationTo"
+        onChange={changeDestinationLocation}
+        locationId={data.locationTo}
+      />
+    </div>
+  );
 }
 
 export default YourInfo;
