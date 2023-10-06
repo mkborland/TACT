@@ -1,5 +1,6 @@
-const requestRates = async (req, res) => {
-    //Anything older than 2021 gsa doesnt have data on
+import knex from "../db/db.js";
+
+const requestConus = async (req, res) => {
     const yearIn = req.query.year
     const cityIn = req.query.city
     const stateIn = req.query.state
@@ -32,4 +33,34 @@ const requestRates = async (req, res) => {
     }    
 }
 
-export { requestRates };
+const requestAllOconus = async (req, res) => {
+    return knex('oconusperdiem')
+        .select('*')
+        .then(data => res.status(200).json(data))
+};
+
+const requestOconusCountry = async (req, res) => {
+    const country = req.query.country
+    return knex('oconusperdiem')
+        .select('*')
+        .where({
+            country: country
+        })
+        .then(data => res.status(200).json(data))
+}
+
+const requestOconus = async (req, res) => {
+    //country is all caps
+    const country = req.query.country
+    //location first letter is caps rest is lower case
+    const location = req.query.location
+    return knex('oconusperdiem')
+        .select('*')
+        .where({
+            country: country,
+            location: location
+        })
+        .then(data => res.status(200).json(data))
+}
+
+export { requestConus, requestAllOconus, requestOconus, requestOconusCountry };
