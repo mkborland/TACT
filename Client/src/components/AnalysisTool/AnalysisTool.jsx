@@ -355,7 +355,7 @@ function AnalysisTool(props) {
                           },
                           padding: {
                             // Adding to separate the Pie chart from the drop down menu
-                            bottom: 5,
+                            bottom: 20,
                           },
                           color: "rgba(237, 220, 72, 0.8)", // color changed to 'white'
                         },
@@ -369,7 +369,7 @@ function AnalysisTool(props) {
                               size: 18,
                             },
                             color: "rgba(255, 255, 255, 1)",
-                            // padding:10
+                            padding:20
                           },
                         },
                         // width: 0.1,
@@ -399,19 +399,27 @@ function AnalysisTool(props) {
                           stacked: true,
                           ticks: {
                             color: "rgba(255, 255, 255, 0.6)",
-                          },
+                            font: {
+                              size: 24,
+                            }                          },
                           grid: {
                             color: "rgba(255, 255, 255, 0.1)",
-                          },
+                            font: {
+                              size: 24,
+                            }                          },
                         },
                         y: {
                           stacked: true,
                           ticks: {
                             color: "rgba(255, 255, 255, 0.6)",
-                          },
+                            font: {
+                              size: 24,
+                            }                          },
                           grid: {
                             color: "rgba(255, 255, 255, 0.1)",
-                          },
+                            font: {
+                              size: 24,
+                            }                          },
                         },
                       },
                     }}
