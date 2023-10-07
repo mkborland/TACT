@@ -30,7 +30,6 @@ export default function PrivateRoute() {
         .then(function (authenticated) {
           setKeycloak(key); // <-- uncommenting this line does a redirect loop
           setAuthenticated(key.authenticated);
-          alert(authenticated ? "authenticated" : "not authenticated");
           setIsLoading(false);
           return navigate("/Dashboard");
         })

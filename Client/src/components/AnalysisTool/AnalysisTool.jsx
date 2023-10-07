@@ -34,10 +34,11 @@ function AnalysisTool(props) {
   const [dataOptionsList, setDataOptionsList] = useState([
     { id: 0, value: "2019" },
   ]);
-  const dropdownOptionByFY = "by FY";
-  const dropdownOptionByExercise = "by Exercise";
+  const dropdownOptionByFY = "FY";
+  const dropdownOptionByExercise = "Exercise";
 
   let totalsByAirframe = [];
+  let totalsByAirframePie = [];
 
   // Hard-coded for now, 'til the Login functionality is complete and user data is passed into the Analysis logic as Props.
   const userEmail = user ? user.email : "admin@gmail.com";
@@ -106,7 +107,8 @@ function AnalysisTool(props) {
   }, [dataOptionsSelected.value]);
 
   const handleDataViewChange = (event) => {
-    setDataViewSelected(event.target.value);
+    const temp = event.target.value.split(' ');
+    setDataViewSelected(temp[1]);
   };
 
   const handleDataOptionsChange = (event) => {
@@ -132,29 +134,49 @@ function AnalysisTool(props) {
     setDataOptionsSelected(param);
   };
 
-  let j = 0;
+  // 'NumberFormat' instanciation to replace the 'CurrencyFormat'
+  let USDollar = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+    minimumFractionDigits: 0,
+  });
+
+  let ctr = 0;
   let manpowerTotal = 0;
   let airframeLabels = [];
   let airframeValues = [];
   totalsForFY.map((rec) => {
     if (rec.acftTotals) {
-      manpowerTotal = rec.acftTotals.totalManpowerCost;
+      manpowerTotal = USDollar.format(rec.acftTotals.totalManpowerCost);
     } else if (rec.wingAcft) {
       totalsByAirframe.push({
-        id: j,
+        id: ctr,
+        airframe: rec.wingAcft.aircraftType,
+        tailQty: rec.wingAcft.aircraftQty,
+        unit: rec.wingAcft.unit,
+        totalCost: USDollar.format(rec.wingAcft.manpowerCost),
+          perTailCost: USDollar.format(rec.wingAcft.costPerAircraft),
+      });
+      totalsByAirframePie.push({
+        id: ctr,
         label: rec.wingAcft.aircraftType,
-        value: rec.wingAcft.manpowerCost,
+        //        value: rec.wingAcft.costPerAircraft,
+        value: Math.round(rec.wingAcft.costPerAircraft),
+        // value: USDollar.format(rec.wingAcft.costPerAircraft),
       });
       airframeLabels.push(rec.wingAcft.aircraftType);
-      airframeValues.push(rec.wingAcft.manpowerCost);
+      airframeValues.push(USDollar.format(rec.wingAcft.costPerAircraft));
     } else {
       totalsByAirframe.push({ id: 0, label: "undef", value: 0 });
+      totalsByAirframePie.push({ id: 0, label: "undef", value: 0 });
     }
 
-    j++;
+    ctr++;
   });
 
   const options = {
+    maintainAspectRatio: false,
     responsive: true,
     cutout: "5%",
     plugins: {
@@ -172,7 +194,7 @@ function AnalysisTool(props) {
       },
       title: {
         display: true,
-        text: `Total FY Spending, per Airframe:`,
+        text: `Total ${dataViewSelected} Spending, ${dataOptionsSelected.value}, Per-Tail:`,
         font: {
           size: 20,
           weight: 1, // Font weight is adjusted
@@ -193,7 +215,7 @@ function AnalysisTool(props) {
     datasets: [
       {
         label: "$",
-        data: totalsByAirframe,
+        data: totalsByAirframePie,
         // data: [23, 44, 122, 412,76], // for testing purposes!
         backgroundColor: [
           "rgba(255, 99, 132, 0.45)", // from 0.2 to 0.45 to make it more less transparent
@@ -216,11 +238,15 @@ function AnalysisTool(props) {
     ],
   };
 
-  // 'NumberFormat' instanciation to replace the 'CurrencyFormat'
-  let USDollar = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
+  const ColoredLine = () => (
+    <hr
+      style={{
+        // color: 'red',
+        // backgroundColor: 'red',
+        height: 1
+      }}
+    />
+  );
 
   // console.log(`The formated version of ${price} is ${USDollar.format(price)}`)
   const displayBarChartsAndReports = () => {
@@ -237,9 +263,7 @@ function AnalysisTool(props) {
           dataSetTravelGov = [airframe.wingAcft.costTravel.costTravelGov];
           dataSetLodging = [airframe.wingAcft.onSiteCosts.lodging];
           dataSetMeals = [airframe.wingAcft.onSiteCosts.meals];
-          dataSetPerDiem = [
-            5000, // ADD PER DIEM HERE!!!!!!!!!!!!!!!!!!
-          ];
+          dataSetPerDiem = [airframe.wingAcft.onSiteCosts.perdiem];
           costLabels = ["Travel Costs   |   On-Site Costs"];
 
           // JSX for the charts and reports.
@@ -250,10 +274,11 @@ function AnalysisTool(props) {
               </Box>
 
               <Grid container alignItems="center">
-                <Grid item xs={7} padding={1}>
-                  {" "}
+                <Grid item xs={6} padding={3}>
+                  {/* {" "} */}
                   {/*The padding is decreased, and extra small (xs) screen changed from 6 to 7 to increase the bar chart size*/}
                   <Bar
+                    // minHeight={"900px"}
                     data={{
                       labels: costLabels,
                       datasets: [
@@ -300,26 +325,33 @@ function AnalysisTool(props) {
                       ],
                     }}
                     options={{
+                      maintainAspectRatio: false,
                       responsive: true,
                       plugins: {
                         title: {
                           display: true,
                           text:
                             "Total FY Spending, " +
-                            airframe.wingAcft.aircraftType +
+                            dataViewSelected +
                             ", " +
+                            dataOptionsSelected.value +
+                            ", " +
+                            airframe.wingAcft.aircraftType +
+                            " (" +
+                            airframe.wingAcft.unit +
+                            "), " +
                             airframe.wingAcft.travelDuration +
                             " Days" +
                             ", " +
                             airframe.wingAcft.personnel +
-                            " Pers",
+                            " PAX",
                           font: {
-                            size: 20,
-                            weight: 1, // Font weight is adjusted
+                            size: 24,
+                            weight: "bold", // Font weight is adjusted
                           },
                           padding: {
-                            // Adding to seperate the Pie chart from the drop down menu
-                            bottom: 30,
+                            // Adding to separate the Pie chart from the drop down menu
+                            // bottom: 30,
                           },
                           color: "rgba(255, 255, 255, 1)", // color changed to 'white'
                         },
@@ -330,7 +362,7 @@ function AnalysisTool(props) {
                           // adding label to address the style more specific
                           labels: {
                             font: {
-                              size: 15,
+                              size: 20,
                             },
                             color: "rgba(255, 255, 255, 1)",
                             // padding:10
@@ -349,10 +381,7 @@ function AnalysisTool(props) {
                                 label += ": ";
                               }
                               if (context.parsed.y !== null) {
-                                label += new Intl.NumberFormat("en-US", {
-                                  style: "currency",
-                                  currency: "USD",
-                                }).format(context.parsed.y);
+                                label += USDollar.format(context.parsed.y);
                               }
                               return label;
                             },
@@ -384,8 +413,8 @@ function AnalysisTool(props) {
                     }}
                   />
                 </Grid>
-                <Grid item xs={5} padding={3}>
-                  {/* Boarder color changed to 'white' */}
+                <Grid item xs={6} padding={3}>
+                  {/* Border color changed to 'white' */}
                   <Card
                     sx={AnalysisToolStyle.BarChartCardReport}
                     variant="outlined"
@@ -401,11 +430,13 @@ function AnalysisTool(props) {
                           component="div"
                           align="center"
                         >
-                          Total FY Spending, {airframe.wingAcft.aircraftType}
-                          {", "}
+                          Total {dataViewSelected} Spending, {dataOptionsSelected.value}, {airframe.wingAcft.aircraftType}
+                          {" ("}
+                          {airframe.wingAcft.unit}
+                          {"), "}
                           {airframe.wingAcft.travelDuration} Days
                           {", "}
-                          {airframe.wingAcft.personnel} Pers
+                          {airframe.wingAcft.personnel} PAX
                         </Typography>
 
                         <Grid item {...AnalysisToolStyle.gridItem}>
@@ -753,9 +784,91 @@ function AnalysisTool(props) {
                         component="div"
                         align="center"
                       >
-                        Total FY Spending Per Airframe
+                        Total {dataViewSelected} Spending, {dataOptionsSelected.value}, Per-Tail
                       </Typography>
-                      <Grid item {...AnalysisToolStyle.gridItem}>
+
+                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeSmall}>
+                        <Typography
+                          sx={
+                            AnalysisToolStyle.PieChartTypographyCardReportLeft
+                          }
+                          color='rgba(72, 223, 237, 0.8)'
+                          fontWeight='600'
+                          gutterBottom
+                          key='0'
+                          variant="h6"
+                          component="div"
+                          align="right"
+                        >
+                          Acft<ColoredLine />
+                        </Typography>
+                      </Grid>
+                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeSmall}>
+                        <Typography
+                          sx={
+                            AnalysisToolStyle.PieChartTypographyCardReportLeft
+                          }
+                          color='rgba(72, 223, 237, 0.8)'
+                          fontWeight='600'
+                          gutterBottom
+                          key='0'
+                          variant="h6"
+                          component="div"
+                          align="right"
+                        >
+                          Qty<ColoredLine />
+                        </Typography>
+                      </Grid>
+                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeLarge}>
+                        <Typography
+                          sx={
+                            AnalysisToolStyle.PieChartTypographyCardReportLeft
+                          }
+                          color='rgba(72, 223, 237, 0.8)'
+                          fontWeight='600'
+                          gutterBottom
+                          key='0'
+                          variant="h6"
+                          component="div"
+                          align="right"
+                        >
+                          Unit<ColoredLine />
+                        </Typography>
+                      </Grid>
+                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeLarge}>
+                        <Typography
+                          sx={
+                            AnalysisToolStyle.PieChartTypographyCardReportLeft
+                          }
+                          color='rgba(72, 223, 237, 0.8)'
+                          fontWeight='600'
+                          gutterBottom
+                          key='0'
+                          variant="h6"
+                          component="div"
+                          align="right"
+                        >
+                          Cost<ColoredLine />
+                        </Typography>
+                      </Grid>
+                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeLarge}>
+                        <Typography
+                          sx={
+                            AnalysisToolStyle.PieChartTypographyCardReportLeft
+                          }
+                          color='rgba(72, 223, 237, 0.8)'
+                          fontWeight='600'
+                          gutterBottom
+                          key='0'
+                          variant="h6"
+                          component="div"
+                          align="right"
+                        >
+                          Per-Tail<ColoredLine />
+                        </Typography>
+                      </Grid>
+
+                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeSmall}>
                         {totalsByAirframe.map((airframe) => {
                           // Typography text alignment and font size added (left column)
                           return (
@@ -765,16 +878,73 @@ function AnalysisTool(props) {
                               }
                               gutterBottom
                               key={airframe.id}
-                              variant="h5"
+                              variant="h6"
                               component="div"
                               align="right"
                             >
-                              {airframe.label}
+                              {airframe.airframe}
                             </Typography>
                           );
                         })}
                       </Grid>
-                      <Grid item {...AnalysisToolStyle.gridItem}>
+                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeSmall}>
+                        {totalsByAirframe.map((airframe) => {
+                          // Typography text alignment and font size added (left column)
+                          return (
+                            <Typography
+                              sx={
+                                AnalysisToolStyle.PieChartTypographyCardReportLeft
+                              }
+                              gutterBottom
+                              key={airframe.id}
+                              variant="h6"
+                              component="div"
+                              align="right"
+                            >
+                              {airframe.tailQty}
+                            </Typography>
+                          );
+                        })}
+                      </Grid>
+                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeLarge}>
+                        {totalsByAirframe.map((airframe) => {
+                          // Typography text alignment and font size added (left column)
+                          return (
+                            <Typography
+                              sx={
+                                AnalysisToolStyle.PieChartTypographyCardReportLeft
+                              }
+                              gutterBottom
+                              key={airframe.id}
+                              variant="h6"
+                              component="div"
+                              align="right"
+                            >
+                              {airframe.unit}
+                            </Typography>
+                          );
+                        })}
+                      </Grid>
+                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeLarge}>
+                        {totalsByAirframe.map((airframe) => {
+                          // Typography text alignment and font size added (left column)
+                          return (
+                            <Typography
+                              sx={
+                                AnalysisToolStyle.PieChartTypographyCardReportLeft
+                              }
+                              gutterBottom
+                              key={airframe.id}
+                              variant="h6"
+                              component="div"
+                              align="right"
+                            >
+                              {airframe.totalCost}
+                            </Typography>
+                          );
+                        })}
+                      </Grid>
+                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeLarge}>
                         {totalsByAirframe.map((airframe) => {
                           // Typography text alignment and font size added (right column)
                           return (
@@ -784,11 +954,11 @@ function AnalysisTool(props) {
                               }
                               gutterBottom
                               key={airframe.id}
-                              variant="h5"
+                              variant="h6"
                               component="div"
                               align="right"
                             >
-                              {USDollar.format(airframe.value)}
+                              {airframe.perTailCost}
                             </Typography>
                           );
                         })}

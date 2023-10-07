@@ -14,13 +14,14 @@ const requestCostSummaries = async (req, res) => {
     const roleUser = 54321;
     let role = '';
 
-    const dropdownOptionByFY = 'by FY';
-    const dropdownOptionByExercise = 'by Exercise';
-    const dropdownOptionByCapability = 'by Capability';
-    const dropdownOptionByUnit = 'by Unit';
+    const dropdownOptionByFY = 'FY';
+    const dropdownOptionByExercise = 'Exercise';
+    const dropdownOptionByCapability = 'Capability';
+    const dropdownOptionByUnit = 'Unit';
     console.log(`dropdownOption: ${req.query.dropdownOption}`);
     console.log(`param1: ${JSON.stringify(req.query.param1)}`);
     console.log(`param2: ${JSON.stringify(req.query.param2)}`);
+    console.log(`email : ${JSON.stringify(req.query.email)}`);
     const emailAddy = req.query.email;
     const dropdownOption = req.query.dropdownOption;
     const id = req.query.param1;
@@ -68,7 +69,7 @@ const requestCostSummaries = async (req, res) => {
                 // query unitexercises now.
                 if (exerciseData.length > 0) {
                     exerciseaircraftData = await knex
-                        .select('e.exerciseName', 'ea.*', 'ue.travelStartDate', 'ue.travelEndDate')
+                        .select('e.exerciseName', 'ea.*', 'ue.unit', 'ue.travelStartDate', 'ue.travelEndDate')
                         .from('exerciseaircraft AS ea')
                         .leftJoin('unitexercises AS ue', 'ue.unitExerciseID', 'ea.unitExerciseID')
                         .leftJoin('exercises AS e', 'e.exerciseID', 'ue.exerciseID')
@@ -97,7 +98,7 @@ const requestCostSummaries = async (req, res) => {
                 // query unitexercises now.
                 if (id !== 'undefined') {
                     exerciseaircraftData = await knex
-                        .select('e.exerciseName', 'ea.*', 'ue.travelStartDate', 'ue.travelEndDate')
+                        .select('e.exerciseName', 'ea.*', 'ue.unit', 'ue.travelStartDate', 'ue.travelEndDate')
                         .from('exerciseaircraft AS ea')
                         .leftJoin('unitexercises AS ue', 'ue.unitExerciseID', 'ea.unitExerciseID')
                         .leftJoin('exercises AS e', 'e.exerciseID', 'ue.exerciseID')
@@ -128,7 +129,6 @@ const requestCostSummaries = async (req, res) => {
     }
 
     exerciseaircraftData.map((airframeData) => {
-
         // First calculate the amount of exercise days, including the first travel day; by converting the dates to timestamps, subtracting them out, then converting the resulting timestamp to a number of days.
         endDateTemp = new Date(airframeData.travelEndDate).getTime();
         startDateTemp = new Date(airframeData.travelStartDate).getTime();
@@ -151,14 +151,17 @@ const requestCostSummaries = async (req, res) => {
         totals.push(
             {
                 'wingAcft': {
+                    'unit': airframeData.unit,
                     'aircraftType': airframeData.aircraftType,
+                    'aircraftQty': airframeData.aircraftCount,
                     // ADD THE HEAD COUNT HERE.
                     'daysSupported': travelDuration,
-                    'personnel' : personnel, // personnel count is added 
+                    'personnel' : personnel, // personnel count is added
                     'onSiteCosts': {
                         'lodging': lodging,
                         'meals': meals,
-                        // ADD PER-DIEM HERE.                                    'perdiem': '',
+                        // ADD DYNAMICALLY-POPULATED PER-DIEM HERE.
+                        'perdiem': 5000,
                     },
                     'costTravel': {
                         costTravelComm,
