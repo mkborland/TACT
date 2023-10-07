@@ -3,7 +3,8 @@ const AnalysisToolStyle ={
     // Styles for grid items (charts & cards)
     gridItem:{
         xs: 6,          // Width on extra-small screens
-        padding:3,      // Padding for grid items
+        padding:6,      // Padding for grid items
+        height: '100%',
     },
 
     // Styles for grid items (per-airframe card)

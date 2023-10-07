@@ -156,7 +156,7 @@ function AnalysisTool(props) {
         tailQty: rec.wingAcft.aircraftQty,
         unit: rec.wingAcft.unit,
         totalCost: USDollar.format(rec.wingAcft.manpowerCost),
-          perTailCost: USDollar.format(rec.wingAcft.costPerAircraft),
+        perTailCost: USDollar.format(rec.wingAcft.costPerAircraft),
       });
       totalsByAirframePie.push({
         id: ctr,
@@ -186,24 +186,24 @@ function AnalysisTool(props) {
         // adding label to address the style more specific
         labels: {
           font: {
-            size: 16,
+            size: 18,
           },
           color: "rgba(255, 255, 255, 1)",
-          padding: 15,
-        },
+          padding: 10,
+          },
       },
       title: {
         display: true,
         text: `Total ${dataViewSelected} Spending, ${dataOptionsSelected.value}, Per-Tail:`,
         font: {
-          size: 20,
-          weight: 1, // Font weight is adjusted
+          size: 22,
+          weight: 'bold', // Font weight is adjusted
         },
-        color: "rgba(255, 255, 255, 1)", // Color changed to white
+        color: "rgba(237, 220, 72, 0.8)", // Color changed to white
         padding: {
-          // Adding to seperate the Pie chart from the drop down menu
-          bottom: 30,
-          top: 70,
+          // Adding to separate the Pie chart from the drop down menu
+          bottom: 5,
+          top: 0,
         },
       },
     },
@@ -274,11 +274,15 @@ function AnalysisTool(props) {
               </Box>
 
               <Grid container alignItems="center">
-                <Grid item xs={6} padding={3}>
+                <Grid item {...AnalysisToolStyle.gridItem}>
+                  {/* <Grid item xs={6} padding={3} height={'100%'}> */}
+
+
                   {/* {" "} */}
                   {/*The padding is decreased, and extra small (xs) screen changed from 6 to 7 to increase the bar chart size*/}
                   <Bar
-                    // minHeight={"900px"}
+                    // height={'100%'}
+                    // width={'100%'}
                     data={{
                       labels: costLabels,
                       datasets: [
@@ -346,14 +350,14 @@ function AnalysisTool(props) {
                             airframe.wingAcft.personnel +
                             " PAX",
                           font: {
-                            size: 24,
+                            size: 22,
                             weight: "bold", // Font weight is adjusted
                           },
                           padding: {
                             // Adding to separate the Pie chart from the drop down menu
-                            // bottom: 30,
+                            bottom: 5,
                           },
-                          color: "rgba(255, 255, 255, 1)", // color changed to 'white'
+                          color: "rgba(237, 220, 72, 0.8)", // color changed to 'white'
                         },
 
                         legend: {
@@ -362,13 +366,13 @@ function AnalysisTool(props) {
                           // adding label to address the style more specific
                           labels: {
                             font: {
-                              size: 20,
+                              size: 18,
                             },
                             color: "rgba(255, 255, 255, 1)",
                             // padding:10
                           },
                         },
-                        width: 0.1,
+                        // width: 0.1,
                         tooltip: {
                           callbacks: {
                             title: function (tooltipItems, data) {
@@ -413,7 +417,9 @@ function AnalysisTool(props) {
                     }}
                   />
                 </Grid>
-                <Grid item xs={6} padding={3}>
+
+                <Grid {...AnalysisToolStyle.gridItem}>
+                  {/* <Grid item xs={6} padding={3}> */}
                   {/* Border color changed to 'white' */}
                   <Card
                     sx={AnalysisToolStyle.BarChartCardReport}
@@ -714,8 +720,10 @@ function AnalysisTool(props) {
   if (totalsByAirframe) {
     return (
       <ThemeProvider theme={theme}>
-        <div key="22" className="header-and-form-container">
-          <Grid container alignItems="flex-end" spacing={2} padding={0.1}>
+        <div key="22" className="jjjj">
+        {/* <div key="22" className="header-and-form-container"> */}
+        <Grid container alignItems="flex-end" spacing={1} padding={5.0}>
+        {/* <Grid container alignItems="flex-end" spacing={2} padding={0.1}> */}
             <Grid item xs={6}>
               <FormControl
                 variant="outlined"
@@ -763,8 +771,12 @@ function AnalysisTool(props) {
               </FormControl>
             </Grid>
 
-            <Grid container alignItems="center" spacing={2}>
-              <Grid item {...AnalysisToolStyle.gridItem}>
+            <Grid item xs={12}>
+              <ColoredLine />
+            </Grid>
+            <Grid container alignItems="stretch">
+              {/* <Grid container alignItems="center" spacing={2}> */}
+              <Grid item xs={6} padding={6}>
                 <Pie data={display} options={options} />
               </Grid>
 
