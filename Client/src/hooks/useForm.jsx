@@ -1,34 +1,31 @@
 // react
 import { useState } from "react";
 
-import Lodging from "../components/PlanningTool/PlanningToolPg4.jsx"
+// import Lodging from "../components/PlanningTool/PlanningToolPg4.jsx";
 
 // function to switch the current page for the client to the next step when some button is clicked
 export function useForm(steps, data, saved) {
-    const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
 
-    // function to change current step when submit button is clicked
-    const changeStep = (i, e) => {
-        if(e) e.preventDefault()
+  // function to change current step when submit button is clicked
+  const changeStep = (i, e) => {
+    if (e) e.preventDefault();
 
-        if(i < 0 || i >= steps.length) return
+    if (i < 0 || i >= steps.length) return;
 
-        if (saved.saved) {
-            setCurrentStep(i)
-        } else {
-            alert(saved.alert);
-        }
-            
+    if (saved.saved) {
+      setCurrentStep(i);
+    } else {
+      alert(saved.alert);
     }
+  };
 
-    steps[3] = <Lodging data={data} changeStep={changeStep}/>
+  // steps[3] = <Lodging data={data} changeStep={changeStep}/>
 
-    return {
-        currentStep,
-        currentComponent: steps[currentStep],
-        changeStep,
-        isFarstStep: currentStep === 0 ? true : false
-    }
-
+  return {
+    currentStep,
+    currentComponent: steps[currentStep],
+    changeStep,
+    isFarstStep: currentStep === 0 ? true : false,
+  };
 }
-

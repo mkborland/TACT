@@ -7,7 +7,7 @@ import EditTables from "./components/EditTablesPage/EditTablesPage";
 import ManageUsers from "./components/ManageUsersPage/ManageUsersPage";
 import DashboardPage from "./pages/DashboardPage";
 import NewExerciseForm from "./components/NewExerciseForm/NewExerciseForm";
-import PlanningTool from "./components/PlanningTool/PlanningTool";
+import { PlanningTool } from "./components/PlanningTool/PlanningTool";
 import AnalysisTool from "./components/AnalysisTool/AnalysisTool";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import { useState } from "react";

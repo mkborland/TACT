@@ -1,13 +1,14 @@
 import express from "express";
-import { 
-    requestLocation,
-    populateRecommended,
-    requestMilitaryBases,
-    requestCivilianAirports,
-    requestDualUseAirports,
-    requestAllLocations,
-    requestLocationById,
- } from "../controllers/locationController.js";
+import {
+  requestLocation,
+  populateRecommended,
+  requestMilitaryBases,
+  requestCivilianAirports,
+  requestDualUseAirports,
+  requestAllLocations,
+  requestLocationById,
+  requestLocationByIata,
+} from "../controllers/locationController.js";
 
 const router = express.Router();
 
@@ -24,5 +25,7 @@ router.route("/get_dual_airports").get(requestDualUseAirports);
 router.route("/get_all_locations").get(requestAllLocations);
 
 router.route("/get_location_by_id").get(requestLocationById);
+
+router.route("/get_location_by_iata").get(requestLocationByIata);
 
 export default router;

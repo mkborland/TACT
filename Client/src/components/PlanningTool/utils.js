@@ -47,3 +47,20 @@ export function calculateUnitCostSum(input) {
   result += input.rentalCost ? input.rentalCost * input.rentalCount : 0;
   return result;
 }
+
+export const convertToCurrency = (input, decimals = 0) => {
+  const currencyParams = {
+    locales: "en-US",
+    options: {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    },
+  };
+
+  return Math.round(input).toLocaleString(
+    currencyParams.locales,
+    currencyParams.options
+  );
+};
