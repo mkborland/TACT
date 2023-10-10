@@ -110,6 +110,7 @@ const CreateRow = (props) => {
           value={rowData.personnelCount}
           onChange={handlePersonnelChange}
           margin="none"
+          sx={{ backgroundColor: "white" }}
         />
       </StyledTableCell>
     </StyledTableRow>

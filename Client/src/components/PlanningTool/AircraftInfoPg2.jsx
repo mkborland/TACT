@@ -2,10 +2,10 @@ import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
+// import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+// import Paper from "@mui/material/Paper";
 import { Button, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import CreateRow from "./CreateRow.jsx";
@@ -84,39 +84,45 @@ function YourPlan(props) {
 
   return (
     <div className="form-container">
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Airframe Types</StyledTableCell>
-              <StyledTableCell align="center">
-                Number of Airframes
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                Number of Personnel
-              </StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <CreateRow
-              aircraftLabels={aircraftLabels}
-              numberLabels={numberLabels}
-              setNumberLabels={setNumberLabels}
-              defaultValues={defaultValues}
-              getNumberLabels={getNumberLabels}
-              setter={setAircraftData}
-              rowData={aircraftData[0]}
-            />
-          </TableBody>
-        </Table>
-        <span>
-          {/* <Button onClick={handleAddAircraft}>Add Aircraft</Button> */}
-          <Button onClick={handleSaveClick}>Save</Button>
-          <Typography variant="body1">
-            Total Personnel: {aircraftData[0].personnelCount}
-          </Typography>
-        </span>
-      </TableContainer>
+      {/* <TableContainer component={Paper}> */}
+      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell>Airframe Types</StyledTableCell>
+            <StyledTableCell align="center">
+              Number of Airframes
+            </StyledTableCell>
+            <StyledTableCell align="center">
+              Number of Personnel
+            </StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <CreateRow
+            aircraftLabels={aircraftLabels}
+            numberLabels={numberLabels}
+            setNumberLabels={setNumberLabels}
+            defaultValues={defaultValues}
+            getNumberLabels={getNumberLabels}
+            setter={setAircraftData}
+            rowData={aircraftData[0]}
+          />
+        </TableBody>
+      </Table>
+      <span>
+        {/* <Button onClick={handleAddAircraft}>Add Aircraft</Button> */}
+        <Button
+          variant="outlined"
+          sx={{ backgroundColor: "white" }}
+          onClick={handleSaveClick}
+        >
+          Save
+        </Button>
+        {/* <Typography variant="body1">
+          Total Personnel: {aircraftData[0].personnelCount}
+        </Typography> */}
+      </span>
+      {/* </TableContainer> */}
     </div>
   );
 }

@@ -13,7 +13,8 @@ import TableRow from "@mui/material/TableRow";
 //styles
 import "../../styles/PlanningToolPg4.css";
 import { statesObj } from "../Util/states";
-import { Typography } from "@mui/material";
+import { Paper, TableContainer, TableHead, Typography } from "@mui/material";
+import { convertToCurrency } from "./utils";
 
 //perdiem data = []{
 //   city, ex "Denver / Aurora"
@@ -40,6 +41,11 @@ import { Typography } from "@mui/material";
 // }
 
 const getPerDiem = async (params) => {
+  if (params.country === "none") {
+    console.log("None for country");
+    return;
+  }
+
   if (params.country === "United States") {
     const stateAbbv = statesObj.find((state) => {
       return state.name === params.state;
@@ -71,6 +77,7 @@ const parseOcousPerdiem = (props) => {
     raw.forEach((rate) => {
       if (rate.location.includes(perdiemCity)) {
         temp = rate;
+        return;
       }
       if (rate.location === "Standard Rate") standardRate = rate;
     });
@@ -175,6 +182,7 @@ const Lodging = (props) => {
     props;
   const [startDate, setStartDate] = useState(); // {year, month}
   const [stopDate, setStopDate] = useState(); // {year, month}
+  //TODO set location to a default value to process when there is none selected from previous steps
   const [location, setLocation] = useState(); // {city, state, country}
   const [totalLodgingCost, setTotalLodgingCost] = useState(0);
   const [totalMealCost, setTotalMealCost] = useState(0);
@@ -224,8 +232,10 @@ const Lodging = (props) => {
     }
 
     setTotalDays(
-      (new Date(data.travelEndDate) - new Date(data.travelStartDate)) /
-        (1000 * 60 * 60 * 24)
+      Math.round(
+        (new Date(data.travelEndDate) - new Date(data.travelStartDate)) /
+          (1000 * 60 * 60 * 24)
+      )
     );
 
     setStartDate({
@@ -238,19 +248,28 @@ const Lodging = (props) => {
       month: parseInt(data.travelEndDate.slice(5, 7)),
     });
 
-    TactApi.getLocationByIata(data.locationTo).then((result) => {
-      console.log("location To", result);
-      setLocation({
-        city: result.airport,
-        state: result.region,
-        country: result.country,
+    if (data?.location) {
+      TactApi.getLocationByIata(data.locationTo).then((result) => {
+        console.log("location To", result);
+        setLocation({
+          city: result.airport,
+          state: result.region,
+          country: result.country,
+        });
       });
-    });
+    } else {
+      setLocation({
+        city: "none",
+        state: "none",
+        country: "none",
+      });
+    }
 
     calculateCost();
     console.log("intitial data:", startDate, stopDate, location);
   };
 
+  const [perdiemCity, setPerdiemCity] = useState("Not Defined");
   useEffect(() => {
     console.log("prior to getting perdiem", startDate, location);
     if (startDate && location) {
@@ -268,11 +287,20 @@ const Lodging = (props) => {
           perDiemStopMonth: stopDate.month,
         };
         let result = {};
-        if (params.country === "United States") {
+        if (params.country === "none") {
+          setPerdiemCity("No Location Selected");
+          result = {
+            mealPerDiem: 0,
+            lodgingPerDiem: 0,
+            city: "No Location Selected",
+          };
+        } else if (params.country === "United States") {
           result = parsePerdiem(perdiemParams);
+          setPerdiemCity(result.city);
         } else {
           perdiemParams.perdiemCity = location.state;
           result = parseOcousPerdiem(perdiemParams);
+          setPerdiemCity(result.city);
         }
         setAircraftData([
           {
@@ -436,9 +464,24 @@ const Lodging = (props) => {
   const card = (
     <div>
       <CardContent>
+        <TableContainer component={Paper}>
+          <TableHead>{`Perdiem for ${perdiemCity}`}</TableHead>
+        </TableContainer>
         <StyledTableRow key="totals-row">
           <StyledTableCell component="th" scope="row">
             <Typography>{`Totals`}</Typography>
+          </StyledTableCell>
+          <StyledTableCell component="th" scope="row">
+            <Typography>Days</Typography>
+
+            <TextField
+              disabled
+              id="numPeopleTotal"
+              // label="Total People"
+              // variant="outlined"
+              margin="normal"
+              value={totalDays}
+            />
           </StyledTableCell>
           <StyledTableCell component="th" scope="row">
             <Typography>Personnel</Typography>
@@ -460,10 +503,7 @@ const Lodging = (props) => {
               // label="Total Perdiem Cost"
               // variant="filled"
               margin="normal"
-              value={totalPerdiemCost.toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD",
-              })}
+              value={convertToCurrency(totalPerdiemCost)}
             />
           </StyledTableCell>
           <StyledTableCell component="th" scope="row">
@@ -475,19 +515,15 @@ const Lodging = (props) => {
               // label="Meals Total Cost"
               variant="outlined"
               margin="normal"
-              value={(totalPerdiemCost / data.personnelSum).toLocaleString(
-                "en-US",
-                {
-                  style: "currency",
-                  currency: "USD",
-                }
-              )}
+              value={convertToCurrency(totalPerdiemCost / data.personnelSum)}
             />
           </StyledTableCell>
         </StyledTableRow>
         <StyledTableRow key="lodging-row">
+          <StyledTableCell component="th" scope="row" />
+
           <StyledTableCell component="th" scope="row">
-            <Typography>{`Lodging`}</Typography>
+            <Typography>Lodging</Typography>
           </StyledTableCell>
           <StyledTableCell component="th" scope="row">
             <Typography>Perdiem</Typography>
@@ -497,10 +533,7 @@ const Lodging = (props) => {
               // label="Lodging Perdiem"
               variant="outlined"
               margin="normal"
-              value={aircraftData[0].lodgingPerDiem.toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD",
-              })}
+              value={convertToCurrency(aircraftData[0].lodgingPerDiem)}
             />
           </StyledTableCell>
           <StyledTableCell component="th" scope="row">
@@ -512,10 +545,7 @@ const Lodging = (props) => {
               // label="Lodging Total Cost"
               variant="outlined"
               margin="normal"
-              value={totalLodgingCost.toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD",
-              })}
+              value={convertToCurrency(totalLodgingCost)}
             />
           </StyledTableCell>
           <StyledTableCell component="th" scope="row">
@@ -527,19 +557,14 @@ const Lodging = (props) => {
               // label="Meals Total Cost"
               variant="outlined"
               margin="normal"
-              value={(totalLodgingCost / data.personnelSum).toLocaleString(
-                "en-US",
-                {
-                  style: "currency",
-                  currency: "USD",
-                }
-              )}
+              value={convertToCurrency(totalLodgingCost / data.personnelSum)}
             />
           </StyledTableCell>
         </StyledTableRow>
         <StyledTableRow key="meal-perdiem-row">
+          <StyledTableCell component="th" scope="row" />
           <StyledTableCell component="th" scope="row">
-            <Typography>{`Meals`}</Typography>
+            <Typography>Meals</Typography>
           </StyledTableCell>
 
           <StyledTableCell component="th" scope="row">
@@ -551,10 +576,7 @@ const Lodging = (props) => {
               // label="Meal Perdiem"
               variant="outlined"
               margin="normal"
-              value={aircraftData[0].mealPerDiem?.toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD",
-              })}
+              value={convertToCurrency(aircraftData[0].mealPerDiem)}
             />
           </StyledTableCell>
           <StyledTableCell component="th" scope="row">
@@ -566,10 +588,7 @@ const Lodging = (props) => {
               // label="Meals Total Cost"
               variant="outlined"
               margin="normal"
-              value={totalMealCost?.toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD",
-              })}
+              value={convertToCurrency(totalMealCost)}
             />
           </StyledTableCell>
           <StyledTableCell component="th" scope="row">
@@ -581,65 +600,60 @@ const Lodging = (props) => {
               // label="Meals Total Cost"
               variant="outlined"
               margin="normal"
-              value={(totalMealCost / data.personnelSum).toLocaleString(
-                "en-US",
-                {
-                  style: "currency",
-                  currency: "USD",
-                }
-              )}
-            />
-          </StyledTableCell>
-        </StyledTableRow>
-        <StyledTableRow key="perdiem-inputs-row">
-          <StyledTableCell component="th" scope="row">
-            <TextField
-              // disabled
-              id="numGovLodge"
-              label="Government Lodging"
-              variant="outlined"
-              margin="normal"
-              type="number"
-              value={aircraftData[0].governmentLodgingCount}
-              onChange={handleGovLodge}
-            />
-          </StyledTableCell>
-          <StyledTableCell component="th" scope="row">
-            <TextField
-              id="numComLodge"
-              label="Commercial Lodging"
-              variant="outlined"
-              margin="normal"
-              type="number"
-              value={aircraftData[0].commercialLodgingCount}
-              onChange={handleComLodge}
-            />
-          </StyledTableCell>
-          <StyledTableCell component="th" scope="row">
-            <TextField
-              id="numFieldCon"
-              label="Field Conditions"
-              variant="outlined"
-              margin="normal"
-              type="number"
-              value={aircraftData[0].fieldLodgingCount}
-              onChange={handleFieldLodge}
-            />
-          </StyledTableCell>
-          <StyledTableCell component="th" scope="row">
-            {/* <Typography>Government Meals Provided</Typography> */}
-            <TextField
-              id="numMealsProv"
-              label="Government Meals Provided"
-              variant="outlined"
-              margin="normal"
-              type="number"
-              value={aircraftData[0].mealProvidedCount}
-              onChange={handleMealsProvided}
+              value={convertToCurrency(totalMealCost / data.personnelSum)}
             />
           </StyledTableCell>
         </StyledTableRow>
       </CardContent>
+      <StyledTableRow key="perdiem-inputs-row">
+        <StyledTableCell component="th" scope="row">
+          <TextField
+            // disabled
+            id="numGovLodge"
+            label="Government Lodging"
+            variant="outlined"
+            margin="normal"
+            type="number"
+            value={aircraftData[0].governmentLodgingCount}
+            onChange={handleGovLodge}
+          />
+        </StyledTableCell>
+        <StyledTableCell component="th" scope="row">
+          <TextField
+            id="numComLodge"
+            label="Commercial Lodging"
+            variant="outlined"
+            margin="normal"
+            type="number"
+            value={aircraftData[0].commercialLodgingCount}
+            onChange={handleComLodge}
+          />
+        </StyledTableCell>
+        <StyledTableCell component="th" scope="row">
+          <TextField
+            id="numFieldCon"
+            label="Field Conditions"
+            variant="outlined"
+            margin="normal"
+            type="number"
+            value={aircraftData[0].fieldLodgingCount}
+            onChange={handleFieldLodge}
+          />
+        </StyledTableCell>
+        <StyledTableCell component="th" scope="row">
+          {/* <Typography>Government Meals Provided</Typography> */}
+          <TextField
+            id="numMealsProv"
+            label="Government Meals Provided"
+            variant="outlined"
+            margin="normal"
+            type="number"
+            value={aircraftData[0].mealProvidedCount}
+            onChange={handleMealsProvided}
+          />
+        </StyledTableCell>
+      </StyledTableRow>
+
       <CardActions>
         <Button onClick={handleSubmit} size="small">
           Submit
