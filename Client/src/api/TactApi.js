@@ -22,6 +22,9 @@ import GetSummaries from "./ExerciseAircraft/get/getSummaries.js";
 import UpdateExerciseAircraft from "./ExerciseAircraft/post/UpdateExerciseAircraft.js";
 import getRole from "./Users/get/getRole.js";
 import GetExerciseAircraftById from "./ExerciseAircraft/get/getExerciseAircraftById.js";
+import getConus from "./PerDiem/get/get-conus.js";
+import getLocationByIata from "./Locations/get/get-location-by-iata.js";
+import getOconus from "./PerDiem/get/get-oconus.js";
 
 const TactApi = {
   getDashboard: GetDashboard,
@@ -44,9 +47,12 @@ const TactApi = {
   updateExerciseAircraft: UpdateExerciseAircraft,
   getAllLocations: GetAllLocations,
   getLocationById: GetLocationById,
+  getLocationByIata: getLocationByIata,
   getFYs: GetFYs,
   getExerciseList: GetExerciseList,
   getSummaries: GetSummaries,
   getRole: getRole,
+  getConus: getConus,
+  getOconus: getOconus,
 };
 export default TactApi;

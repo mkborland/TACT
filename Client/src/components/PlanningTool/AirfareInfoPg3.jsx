@@ -121,9 +121,8 @@ function PickAddOns(props) {
       });
   };
 
-  //TODO for each of the data elements that change
-  // also need to update the inputs and invalidate the
-  // current cost per person since the values will have changed
+  //TODO add a date checker prior to calling API for finding flights
+  //TODO add option to exit the flight finder since it takes so long
   const updateStartDate = (e) => {
     updateFileHandler({ travelStartDate: e.$d });
     setInputs({ ...inputs, departureDate: dayjs(e.$d).format("YYYY-MM-DD") });
@@ -271,7 +270,9 @@ function PickAddOns(props) {
           >
             <span>Find Flights</span>
           </LoadingButton>
-          <Button onClick={handleOnSubmit}>Save</Button>
+          <Button variant="outlined" onClick={handleOnSubmit}>
+            Save
+          </Button>
           <FlightTable
             data={flightData}
             updateExerciseAircraft={updateExerciseAircraft}
