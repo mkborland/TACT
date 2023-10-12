@@ -167,7 +167,7 @@ function AnalysisTool(props) {
         id: ctr,
         label: rec.wingAcft.aircraftType,
         //        value: rec.wingAcft.costPerAircraft,
-        value: Math.round(rec.wingAcft.costPerAircraft),
+        value: Math.round(rec.wingAcft.manpowerCost),
         // value: USDollar.format(rec.wingAcft.costPerAircraft),
       });
       airframeLabels.push(rec.wingAcft.aircraftType);
@@ -199,7 +199,7 @@ function AnalysisTool(props) {
       },
       title: {
         display: true,
-        text: `Total ${dataViewSelected} Spending, ${dataOptionsSelected.value}, Per-Tail:`,
+        text: `Total ${dataViewSelected} Spending, ${dataOptionsSelected.value}:`,
         font: {
           size: 22,
           weight: 'bold', // Font weight is adjusted
@@ -255,7 +255,7 @@ function AnalysisTool(props) {
     let dataSetTravelGov = [];
     let dataSetLodging = [];
     let dataSetMeals = [];
-    let dataSetPerDiem = [];
+    let dataSetTotalPerDiem = [];
     let costLabels = [];
 
     // Looping through each record to display a bar chart & card for each.
@@ -266,8 +266,7 @@ function AnalysisTool(props) {
           dataSetTravelGov = [airframe.wingAcft.costTravel.costTravelGov];
           dataSetLodging = [airframe.wingAcft.onSiteCosts.lodging];
           dataSetMeals = [airframe.wingAcft.onSiteCosts.meals];
-          dataSetPerDiem = [airframe.wingAcft.onSiteCosts.perdiem];
-          costLabels = ["Travel Costs   |   On-Site Costs"];
+          costLabels = ["Travel Costs              Per-Diem"];
 
           // JSX for the charts and reports.
           return (
@@ -313,14 +312,6 @@ function AnalysisTool(props) {
                           data: dataSetMeals,
                           backgroundColor: "rgba(75, 192, 192, 0.45)",
                           borderColor: "rgba(75, 192, 192, 1)",
-                          borderWidth: 2.5,
-                          stack: "Stack 1",
-                        },
-                        {
-                          label: "Per-Diem",
-                          data: dataSetPerDiem,
-                          backgroundColor: "rgba(153, 102, 255, 0.45)",
-                          borderColor: "rgba(153, 102, 255, 1)",
                           borderWidth: 2.5,
                           stack: "Stack 1",
                         },
@@ -447,8 +438,9 @@ function AnalysisTool(props) {
                           {", "}
                           {airframe.wingAcft.personnel} PAX
                         </Typography>
-
-                        <Grid item {...AnalysisToolStyle.gridItem}>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemHeader}>
                           {
                             <Typography
                               sx={
@@ -463,40 +455,114 @@ function AnalysisTool(props) {
                               Travel Costs
                             </Typography>
                           }
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
                             <Typography
                               gutterBottom
                               key="3"
                               variant="h6"
                               component="div"
-                              align="center"
+                              align="right"
                             >
                               Commercial:
                             </Typography>
                           }
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
+                          {
+                            <Typography
+                              gutterBottom
+                              key="11"
+                              variant="h6"
+                              component="div"
+                              align="right"
+                            >
+                              {USDollar.format(
+                                airframe.wingAcft.costTravel.costTravelComm
+                              )}
+                            </Typography>
+                          }
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
                             <Typography
                               gutterBottom
                               key="20"
                               variant="h6"
                               component="div"
-                              align="center"
+                              align="right"
                             >
                               Government:
                             </Typography>
                           }
+                          <Divider
+                            sx={AnalysisToolStyle.DividerBarChart}
+                            variant="fullWidth"
+                          />
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
                             <Typography
-                              sx={{ paddingTop: "9px" }}
                               gutterBottom
-                              key="21"
-                              variant="h5"
+                              key="12"
+                              variant="h6"
                               component="div"
-                              align="center"
+                              align="right"
                             >
-                              <br />
+                              {USDollar.format(
+                                airframe.wingAcft.costTravel.costTravelGov
+                              )}
                             </Typography>
                           }
+                          <Divider
+                            sx={AnalysisToolStyle.DividerBarChart}
+                            variant="fullWidth"
+                          />
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
+                          {
+                            <Typography
+                              gutterBottom
+                              key="20"
+                              variant="h6"
+                              component="div"
+                              align="right"
+                            >
+                              Total Travel Costs:
+                            </Typography>
+                          }
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
+                          {
+                            <Typography
+                              gutterBottom
+                              key="12"
+                              variant="h6"
+                              component="div"
+                              align="right"
+                            >
+                              {USDollar.format(
+                                airframe.wingAcft.costTravel.costTravel
+                              )}
+                            </Typography>
+                          }
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemHeader}>
                           {
                             <Typography
                               sx={
@@ -508,40 +574,210 @@ function AnalysisTool(props) {
                               component="div"
                               align="right"
                             >
-                              On-Site Costs
+                              Per-Diem
                             </Typography>
                           }
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
                             <Typography
                               gutterBottom
                               key="5"
                               variant="h6"
                               component="div"
-                              align="center"
+                              align="right"
                             >
                               Lodging:
                             </Typography>
                           }
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
+                          {
+                            <Typography
+                              gutterBottom
+                              key="15"
+                              variant="h6"
+                              component="div"
+                              align="right"
+                            >
+                              {USDollar.format(
+                                airframe.wingAcft.onSiteCosts.lodging
+                              )}
+                            </Typography>
+                          }
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
                             <Typography
                               gutterBottom
                               key="6"
                               variant="h6"
                               component="div"
-                              align="center"
+                              align="right"
                             >
                               Meals:
                             </Typography>
                           }
+                          <Divider
+                            sx={AnalysisToolStyle.DividerBarChart}
+                            variant="fullWidth"
+                          />
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
+                          {
+                            <Typography
+                              gutterBottom
+                              key="16"
+                              variant="h6"
+                              component="div"
+                              align="right"
+                            >
+                              {USDollar.format(
+                                airframe.wingAcft.onSiteCosts.meals
+                              )}
+                            </Typography>
+                          }
+                          <Divider
+                            sx={AnalysisToolStyle.DividerBarChart}
+                            variant="fullWidth"
+                          />
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
                             <Typography
                               gutterBottom
                               key="7"
                               variant="h6"
                               component="div"
+                              align="right"
+                            >
+                              Total Per-Diem:
+                            </Typography>
+                          }
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
+                          {
+                            <Typography
+                              gutterBottom
+                              key="17"
+                              variant="h6"
+                              component="div"
+                              align="right"
+                            >
+                              {USDollar.format(airframe.wingAcft.onSiteCosts.totalPerDiem)}
+                            </Typography>
+                          }
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemHeader}>
+                          {
+                            <Typography
+                              sx={
+                                AnalysisToolStyle.TypographySubtitleCardReport
+                              }
+                              gutterBottom
+                              key="4"
+                              variant="h5"
+                              component="div"
+                              align="right"
+                            >
+                              Totals
+                            </Typography>
+                          }
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
+                          {
+                            <Typography
+                              gutterBottom
+                              key="9"
+                              variant="h6"
+                              component="div"
+                              align="right"
+                            >
+                              Cost-Per-Aircraft:
+                            </Typography>
+                          }
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
+                          {
+                            <Typography
+                              gutterBottom
+                              key="19"
+                              variant="h6"
+                              component="div"
+                              align="right"
+                            >
+                              {USDollar.format(airframe.wingAcft.costPerAircraft)}
+                            </Typography>
+                          }
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
+                          {
+                            <Typography
+                            sx={
+                              AnalysisToolStyle.TypographyTotalsHeaderCardReport}
+                              gutterBottom
+                              key="9"
+                              variant="h6"
+                              component="div"
+                              align="right"
+                            >
+                              Total {dataViewSelected} Spending:
+                            </Typography>
+                          }
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
+                          {
+                            <Typography
+                            sx={
+                              AnalysisToolStyle.TypographyTotalsValueCardReport}
+                              gutterBottom
+                              key="19"
+                              variant="h6"
+                              component="div"
+                              align="right"
+                            >
+                              {USDollar.format(airframe.wingAcft.manpowerCost)}
+                            </Typography>
+                          }
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
+                        </Grid>
+
+
+
+
+
+                        {/*
+                          {
+                            <Typography
+                              sx={{ paddingTop: "9px" }}
+                              gutterBottom
+                              key="21"
+                              variant="h5"
+                              component="div"
                               align="center"
                             >
-                              Per-Diem:
+                              <br />
                             </Typography>
                           }
                           <Divider
@@ -559,18 +795,9 @@ function AnalysisTool(props) {
                               <br />
                             </Typography>
                           }
-                          {
-                            <Typography
-                              gutterBottom
-                              key="9"
-                              variant="h6"
-                              component="div"
-                              align="center"
-                            >
-                              Total:
-                            </Typography>
-                          }
                         </Grid>
+
+
                         <Grid
                           item
                           {...AnalysisToolStyle.gridItem}
@@ -585,32 +812,6 @@ function AnalysisTool(props) {
                               align="right"
                             >
                               <br />
-                            </Typography>
-                          }
-                          {
-                            <Typography
-                              gutterBottom
-                              key="11"
-                              variant="h6"
-                              component="div"
-                              align="right"
-                            >
-                              {USDollar.format(
-                                airframe.wingAcft.costTravel.costTravelComm
-                              )}
-                            </Typography>
-                          }
-                          {
-                            <Typography
-                              gutterBottom
-                              key="12"
-                              variant="h6"
-                              component="div"
-                              align="right"
-                            >
-                              {USDollar.format(
-                                airframe.wingAcft.costTravel.costTravelGov
-                              )}
                             </Typography>
                           }
                           {
@@ -635,43 +836,6 @@ function AnalysisTool(props) {
                               <br />
                             </Typography>
                           }
-                          {
-                            <Typography
-                              gutterBottom
-                              key="15"
-                              variant="h6"
-                              component="div"
-                              align="right"
-                            >
-                              {USDollar.format(
-                                airframe.wingAcft.onSiteCosts.lodging
-                              )}
-                            </Typography>
-                          }
-                          {
-                            <Typography
-                              gutterBottom
-                              key="16"
-                              variant="h6"
-                              component="div"
-                              align="right"
-                            >
-                              {USDollar.format(
-                                airframe.wingAcft.onSiteCosts.meals
-                              )}
-                            </Typography>
-                          }
-                          {
-                            <Typography
-                              gutterBottom
-                              key="17"
-                              variant="h6"
-                              component="div"
-                              align="right"
-                            >
-                              {USDollar.format(airframe.wingAcft.onSiteCosts.perdiem)}
-                            </Typography>
-                          }
                           <Divider
                             sx={AnalysisToolStyle.DividerBarChart}
                             variant="fullWidth"
@@ -688,18 +852,11 @@ function AnalysisTool(props) {
                               <br />
                             </Typography>
                           }
-                          {
-                            <Typography
-                              gutterBottom
-                              key="19"
-                              variant="h6"
-                              component="div"
-                              align="right"
-                            >
-                              {USDollar.format(airframe.wingAcft.manpowerCost)}
-                            </Typography>
-                          }
-                        </Grid>
+                        </Grid> */}
+
+
+
+
                       </Grid>
                     </CardContent>
                   </Card>
@@ -796,7 +953,7 @@ function AnalysisTool(props) {
                         component="div"
                         align="center"
                       >
-                        Total {dataViewSelected} Spending, {dataOptionsSelected.value}, Per-Tail
+                        Total {dataViewSelected} Spending, {dataOptionsSelected.value}
                       </Typography>
 
                       <Grid item {...AnalysisToolStyle.gridItemPerAirframeSmall}>

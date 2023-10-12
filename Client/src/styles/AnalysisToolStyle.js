@@ -3,7 +3,27 @@ const AnalysisToolStyle ={
     // Styles for grid items (charts & cards)
     gridItem:{
         xs: 6,          // Width on extra-small screens
-        padding:6,      // Padding for grid items
+        padding: 6,      // Padding for grid items
+        height: '100%',
+    },
+
+    gridSubItem:{
+        xs: 4,          // Width on extra-small screens
+        padding: .1,      // Padding for grid items
+        height: '100%',
+    },
+
+    gridSubItemFiller:{
+        xs: 2,          // Width on extra-small screens
+        padding: .1,      // Padding for grid items
+        height: '100%',
+    },
+
+    // Styles for grid items (charts & cards)
+    gridSubItemHeader:{
+        xs: 10,          // Width on extra-small screens
+        padding: .1,      // Padding for grid items
+        paddingTop: 6,
         height: '100%',
     },
 
@@ -92,6 +112,22 @@ const AnalysisToolStyle ={
     TypographySubtitleCardReport:{
         color: 'rgba(72, 223, 237, 0.8)',    // Text color
         textAlign: 'left',                   // Text alignment
+        fontSize: 20,                        // Font size
+        fontWeight: 600,                     // Font weight
+    },
+
+    // Styles for subtitle in card report
+    TypographyTotalsHeaderCardReport:{
+        color: 'rgba(237, 220, 72, 0.8)',    // Text color
+        textAlign: 'right',                   // Text alignment
+        fontSize: 20,                        // Font size
+        fontWeight: 600,                     // Font weight
+    },
+
+    // Styles for subtitle in card report
+    TypographyTotalsValueCardReport:{
+        color: 'rgba(237, 220, 72, 0.8)',    // Text color
+        textAlign: 'right',                   // Text alignment
         fontSize: 20,                        // Font size
         fontWeight: 600,                     // Font weight
     },

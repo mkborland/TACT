@@ -134,12 +134,10 @@ const requestCostSummaries = async (req, res) => {
         startDateTemp = new Date(airframeData.travelStartDate).getTime();
         travelDuration = ((endDateTemp - startDateTemp) / (1000 * 60 * 60 * 24)) + 1;
 
-        // Now calculate total manpower cost, which includes lodging/per-diem/meals times X number of days.  DON'T FORGET TO INCLUDE PER-DIEM, WHICH IS CURRENTLY MISSING FROM THIS TBL!!!
+        // Now calculate total manpower cost, which includes lodging/meals times X number of days.
         const lodging = Number(airframeData.commercialLodgingCost) + Number(airframeData.governmentLodgingCost) + Number(airframeData.lodgingPerDiem);
 
         const meals = Number(airframeData.mealPerDiem);
-
-        //                    const perDiem = ????????????????;
 
         // Now calculate costPerHead, which we're interpreting to just include travel costs for all personnel.  Per specs, gov't travel is $0.
         const costTravelComm = Number(airframeData.commercialAirfareCost);
@@ -160,12 +158,12 @@ const requestCostSummaries = async (req, res) => {
                     'onSiteCosts': {
                         'lodging': lodging,
                         'meals': meals,
-                        // ADD DYNAMICALLY-POPULATED PER-DIEM HERE.
-                        'perdiem': 5000,
+                        'totalPerDiem': lodging + meals,
                     },
                     'costTravel': {
                         costTravelComm,
                         costTravelGov,
+                        costTravel,
                     },
                     'manpowerCost': manpowerCost,
                     'costPerAircraft': manpowerCost / airframeData.aircraftCount,
@@ -176,7 +174,6 @@ const requestCostSummaries = async (req, res) => {
         totalDaysSupported += travelDuration;
         totalCostLodging += lodging;
         totalCostMeals += meals;
-        //                        totalCostPerDiem += perDiem;
         totalCostTravel += costTravel;
 
         totalManpowerCost += manpowerCost;
