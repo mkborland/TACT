@@ -14,13 +14,14 @@ const requestCostSummaries = async (req, res) => {
     const roleUser = 54321;
     let role = '';
 
-    const dropdownOptionByFY = 'by FY';
-    const dropdownOptionByExercise = 'by Exercise';
-    const dropdownOptionByCapability = 'by Capability';
-    const dropdownOptionByUnit = 'by Unit';
+    const dropdownOptionByFY = 'FY';
+    const dropdownOptionByExercise = 'Exercise';
+    const dropdownOptionByCapability = 'Capability';
+    const dropdownOptionByUnit = 'Unit';
     console.log(`dropdownOption: ${req.query.dropdownOption}`);
     console.log(`param1: ${JSON.stringify(req.query.param1)}`);
     console.log(`param2: ${JSON.stringify(req.query.param2)}`);
+    console.log(`email : ${JSON.stringify(req.query.email)}`);
     const emailAddy = req.query.email;
     const dropdownOption = req.query.dropdownOption;
     const id = req.query.param1;
@@ -68,7 +69,7 @@ const requestCostSummaries = async (req, res) => {
                 // query unitexercises now.
                 if (exerciseData.length > 0) {
                     exerciseaircraftData = await knex
-                        .select('e.exerciseName', 'ea.*', 'ue.travelStartDate', 'ue.travelEndDate')
+                        .select('e.exerciseName', 'ea.*', 'ue.unit', 'ue.travelStartDate', 'ue.travelEndDate')
                         .from('exerciseaircraft AS ea')
                         .leftJoin('unitexercises AS ue', 'ue.unitExerciseID', 'ea.unitExerciseID')
                         .leftJoin('exercises AS e', 'e.exerciseID', 'ue.exerciseID')
@@ -97,7 +98,7 @@ const requestCostSummaries = async (req, res) => {
                 // query unitexercises now.
                 if (id !== 'undefined') {
                     exerciseaircraftData = await knex
-                        .select('e.exerciseName', 'ea.*', 'ue.travelStartDate', 'ue.travelEndDate')
+                        .select('e.exerciseName', 'ea.*', 'ue.unit', 'ue.travelStartDate', 'ue.travelEndDate')
                         .from('exerciseaircraft AS ea')
                         .leftJoin('unitexercises AS ue', 'ue.unitExerciseID', 'ea.unitExerciseID')
                         .leftJoin('exercises AS e', 'e.exerciseID', 'ue.exerciseID')
@@ -128,18 +129,15 @@ const requestCostSummaries = async (req, res) => {
     }
 
     exerciseaircraftData.map((airframeData) => {
-
         // First calculate the amount of exercise days, including the first travel day; by converting the dates to timestamps, subtracting them out, then converting the resulting timestamp to a number of days.
         endDateTemp = new Date(airframeData.travelEndDate).getTime();
         startDateTemp = new Date(airframeData.travelStartDate).getTime();
         travelDuration = ((endDateTemp - startDateTemp) / (1000 * 60 * 60 * 24)) + 1;
 
-        // Now calculate total manpower cost, which includes lodging/per-diem/meals times X number of days.  DON'T FORGET TO INCLUDE PER-DIEM, WHICH IS CURRENTLY MISSING FROM THIS TBL!!!
+        // Now calculate total manpower cost, which includes lodging/meals times X number of days.
         const lodging = Number(airframeData.commercialLodgingCost) + Number(airframeData.governmentLodgingCost) + Number(airframeData.lodgingPerDiem);
 
         const meals = Number(airframeData.mealPerDiem);
-
-        //                    const perDiem = ????????????????;
 
         // Now calculate costPerHead, which we're interpreting to just include travel costs for all personnel.  Per specs, gov't travel is $0.
         const costTravelComm = Number(airframeData.commercialAirfareCost);
@@ -151,18 +149,21 @@ const requestCostSummaries = async (req, res) => {
         totals.push(
             {
                 'wingAcft': {
+                    'unit': airframeData.unit,
                     'aircraftType': airframeData.aircraftType,
+                    'aircraftQty': airframeData.aircraftCount,
                     // ADD THE HEAD COUNT HERE.
                     'daysSupported': travelDuration,
-                    'personnel' : personnel, // personnel count is added 
+                    'personnel' : personnel, // personnel count is added
                     'onSiteCosts': {
                         'lodging': lodging,
                         'meals': meals,
-                        // ADD PER-DIEM HERE.                                    'perdiem': '',
+                        'totalPerDiem': lodging + meals,
                     },
                     'costTravel': {
                         costTravelComm,
                         costTravelGov,
+                        costTravel,
                     },
                     'manpowerCost': manpowerCost,
                     'costPerAircraft': manpowerCost / airframeData.aircraftCount,
@@ -173,7 +174,6 @@ const requestCostSummaries = async (req, res) => {
         totalDaysSupported += travelDuration;
         totalCostLodging += lodging;
         totalCostMeals += meals;
-        //                        totalCostPerDiem += perDiem;
         totalCostTravel += costTravel;
 
         totalManpowerCost += manpowerCost;

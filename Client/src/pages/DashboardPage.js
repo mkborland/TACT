@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect, useCallback } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { DateTimeAdapter } from "../helper";
 
 import TactApi from "../api/TactApi.js";
@@ -15,9 +15,6 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-
-import { DataGrid } from "@mui/x-data-grid";
-import { DataGridPro } from "@mui/x-data-grid-pro";
 
 export default function DashboardPage(props) {
   const { user } = props;
@@ -40,30 +37,6 @@ export default function DashboardPage(props) {
   console.log(exerciseList);
   console.log(unitExerciseList);
   console.log(isLoading);
-
-  const columns = [
-    {
-      field: "exerciseID",
-      headerName: "ID",
-      headerClassName: "dashboard-table-header",
-      width: 90,
-      editable: false,
-    },
-    {
-      field: "exerciseName",
-      headerName: "Exercise Name",
-      headerClassName: "dashboard-table-header",
-      width: 150,
-      editable: false,
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      headerClassName: "dashboard-table-header",
-      width: 150,
-      editable: false,
-    },
-  ];
 
   function Row(props) {
     const { row } = props;

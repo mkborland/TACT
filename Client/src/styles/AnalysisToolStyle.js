@@ -1,15 +1,47 @@
 const AnalysisToolStyle ={
 
-    // Styles for grid items
+    // Styles for grid items (charts & cards)
     gridItem:{
         xs: 6,          // Width on extra-small screens
-        padding:5,      // Padding for grid items
+        padding: 6,      // Padding for grid items
+        height: '100%',
+    },
+
+    gridSubItem:{
+        xs: 4,          // Width on extra-small screens
+        padding: .1,      // Padding for grid items
+        height: '100%',
+    },
+
+    gridSubItemFiller:{
+        xs: 2,          // Width on extra-small screens
+        padding: .1,      // Padding for grid items
+        height: '100%',
+    },
+
+    // Styles for grid items (charts & cards)
+    gridSubItemHeader:{
+        xs: 10,          // Width on extra-small screens
+        padding: .1,      // Padding for grid items
+        paddingTop: 6,
+        height: '100%',
+    },
+
+    // Styles for grid items (per-airframe card)
+    gridItemPerAirframeLarge:{
+        xs: 2.66,          // Width on extra-small screens
+        padding:1,      // Padding for grid items
+    },
+
+    // Styles for grid items (per-airframe card)
+    gridItemPerAirframeSmall:{
+        xs: 2,          // Width on extra-small screens
+        padding:1,      // Padding for grid items
     },
 
     // Styles for dropdown form control
     DropdownFormControl:{
         marginTop: 2,   // Margin spacing
-        width: 300,     // Width of the form control
     },
 
 
@@ -22,13 +54,13 @@ const AnalysisToolStyle ={
 
     // Styles for pie chart report card
     PieChartCardReport:{
-        width: '85%',           // Width of the card
-        marginLeft: '18%',      // Left margin
+        width: '100%',           // Width of the card
+        marginLeft: '1%',      // Left margin
         border: 1,              // Border width
         borderColor: 'white',   // Border color
         },
 
-        
+
     // Styles for typography in pie chart report card (left-aligned)
     PieChartTypographyCardReportLeft:{
         textAlign: 'center',    // Text alignment
@@ -59,10 +91,12 @@ const AnalysisToolStyle ={
 
     // Styles for bar chart report card
     BarChartCardReport:{
+        width: '100%',           // Width of the card
+        marginLeft: '1%',      // Left margin
         border: 1,              // Border width
         borderColor: 'white',   // Border color
     },
-    
+
 
     // Styles for title in card report
     TypographyTitleCardReport:{
@@ -78,6 +112,22 @@ const AnalysisToolStyle ={
     TypographySubtitleCardReport:{
         color: 'rgba(72, 223, 237, 0.8)',    // Text color
         textAlign: 'left',                   // Text alignment
+        fontSize: 20,                        // Font size
+        fontWeight: 600,                     // Font weight
+    },
+
+    // Styles for subtitle in card report
+    TypographyTotalsHeaderCardReport:{
+        color: 'rgba(237, 220, 72, 0.8)',    // Text color
+        textAlign: 'right',                   // Text alignment
+        fontSize: 20,                        // Font size
+        fontWeight: 600,                     // Font weight
+    },
+
+    // Styles for subtitle in card report
+    TypographyTotalsValueCardReport:{
+        color: 'rgba(237, 220, 72, 0.8)',    // Text color
+        textAlign: 'right',                   // Text alignment
         fontSize: 20,                        // Font size
         fontWeight: 600,                     // Font weight
     },
