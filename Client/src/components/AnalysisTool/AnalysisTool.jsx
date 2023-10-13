@@ -3,7 +3,6 @@ import { ThemeProvider } from "@mui/material/styles";
 import { createTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
 import {
   Select,
   MenuItem,
@@ -12,12 +11,11 @@ import {
   FormHelperText,
 } from "@mui/material";
 import "chart.js/auto";
-import { Pie, Doughnut } from "react-chartjs-2";
+import { Pie } from "react-chartjs-2";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
-import { Bar, ArcElement, CategoryScale } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import { Divider } from "@mui/material";
 import AnalysisToolStyle from "../../styles/AnalysisToolStyle";
 
@@ -28,7 +26,7 @@ import TactApi from "../../api/TactApi";
 const theme = createTheme(AnalysisToolTheme("dark"));
 function AnalysisTool(props) {
   const { user } = props;
-  const [userInfo, setUserInfo] = useState();
+  const userEmail = user.email;
   const [dataOptionsList, setDataOptionsList] = useState([
     { id: 0, value: "2019" },
   ]);
@@ -37,15 +35,6 @@ function AnalysisTool(props) {
 
   let totalsByAirframe = [];
   let totalsByAirframePie = [];
-
-  // Hard-coded for now, 'til the Login functionality is complete and user data is passed into the Analysis logic as Props.
-  const userEmail = user ? user.email : "admin@gmail.com";
-  //TODO: The userID should be passed from main application,
-  //this needs to be updated once that is figured out
-  const fetchUserInfo = async () => {
-    const response = await TactApi.getUser(userEmail);
-    setUserInfo(response);
-  };
 
   // These are the options available in the first dropdown on the left.
   const viewingOptionsDataView = [
@@ -60,10 +49,6 @@ function AnalysisTool(props) {
     value: "2019",
   });
   const [totalsForFY, setTotalsForFY] = useState([]);
-
-  useEffect(() => {
-    fetchUserInfo();
-  }, []);
 
   // Call API then set the state hooks to populate the second dropdown list when "by FY" is selected.
   const queryDropdownByFY = async () => {
@@ -110,7 +95,7 @@ function AnalysisTool(props) {
 
   // We'll track "FY/Exercise" instead of "by FY/by Exercise" so we can dual-use this variable as some of our headers.
   const handleDataViewChange = (event) => {
-    const temp = event.target.value.split(' ');
+    const temp = event.target.value.split(" ");
     setDataViewSelected(temp[1]);
   };
 
@@ -125,7 +110,7 @@ function AnalysisTool(props) {
         break;
       case dropdownOptionByExercise:
         // Need to correlate the exercise name selected from the dropdown with its ID so we can pass the ID to the Summary API.
-        dataOptionsList.map((exerciseNames) => {
+        dataOptionsList.forEach((exerciseNames) => {
           if (exerciseNames.value === event.target.value) {
             param = { id: ctr, value: exerciseNames.value };
           }
@@ -151,7 +136,7 @@ function AnalysisTool(props) {
   let manpowerTotal = 0;
   let airframeLabels = [];
   let airframeValues = [];
-  totalsForFY.map((rec) => {
+  totalsForFY.forEach((rec) => {
     if (rec.acftTotals) {
       manpowerTotal = USDollar.format(rec.acftTotals.totalManpowerCost);
     } else if (rec.wingAcft) {
@@ -202,7 +187,7 @@ function AnalysisTool(props) {
         text: `Total ${dataViewSelected} Spending, ${dataOptionsSelected.value}:`,
         font: {
           size: 22,
-          weight: 'bold', // Font weight is adjusted
+          weight: "bold", // Font weight is adjusted
         },
         color: "rgba(237, 220, 72, 0.8)", // Color changed to white
         padding: {
@@ -245,9 +230,7 @@ function AnalysisTool(props) {
   };
 
   // Settings for the horizontal lines.
-  const ColoredLine = () => (
-    <hr style={{ height: 1 }} />
-  );
+  const ColoredLine = () => <hr style={{ height: 1 }} />;
 
   // JSX for the bar charts & cards.
   const displayBarChartsAndReports = () => {
@@ -255,7 +238,6 @@ function AnalysisTool(props) {
     let dataSetTravelGov = [];
     let dataSetLodging = [];
     let dataSetMeals = [];
-    let dataSetTotalPerDiem = [];
     let costLabels = [];
 
     // Looping through each record to display a bar chart & card for each.
@@ -276,7 +258,6 @@ function AnalysisTool(props) {
               </Box>
 
               <Grid container alignItems="center">
-
                 {/* Bar charts. */}
                 <Grid item {...AnalysisToolStyle.gridItem}>
                   <Bar
@@ -356,7 +337,7 @@ function AnalysisTool(props) {
                               size: 18,
                             },
                             color: "rgba(255, 255, 255, 1)",
-                            padding: 20
+                            padding: 20,
                           },
                         },
                         tooltip: {
@@ -385,13 +366,13 @@ function AnalysisTool(props) {
                             color: "rgba(255, 255, 255, 0.6)",
                             font: {
                               size: 24,
-                            }
+                            },
                           },
                           grid: {
                             color: "rgba(255, 255, 255, 0.1)",
                             font: {
                               size: 24,
-                            }
+                            },
                           },
                         },
                         y: {
@@ -400,13 +381,13 @@ function AnalysisTool(props) {
                             color: "rgba(255, 255, 255, 0.6)",
                             font: {
                               size: 24,
-                            }
+                            },
                           },
                           grid: {
                             color: "rgba(255, 255, 255, 0.1)",
                             font: {
                               size: 24,
-                            }
+                            },
                           },
                         },
                       },
@@ -430,7 +411,9 @@ function AnalysisTool(props) {
                           component="div"
                           align="center"
                         >
-                          Total {dataViewSelected} Spending, {dataOptionsSelected.value}, {airframe.wingAcft.aircraftType}
+                          Total {dataViewSelected} Spending,{" "}
+                          {dataOptionsSelected.value},{" "}
+                          {airframe.wingAcft.aircraftType}
                           {" ("}
                           {airframe.wingAcft.unit}
                           {"), "}
@@ -438,8 +421,10 @@ function AnalysisTool(props) {
                           {", "}
                           {airframe.wingAcft.personnel} PAX
                         </Typography>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
                         <Grid item {...AnalysisToolStyle.gridSubItemHeader}>
                           {
                             <Typography
@@ -456,8 +441,10 @@ function AnalysisTool(props) {
                             </Typography>
                           }
                         </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
                         <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
                             <Typography
@@ -486,10 +473,14 @@ function AnalysisTool(props) {
                             </Typography>
                           }
                         </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
                         <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
                             <Typography
@@ -526,10 +517,14 @@ function AnalysisTool(props) {
                             variant="fullWidth"
                           />
                         </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
                         <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
                             <Typography
@@ -558,10 +553,14 @@ function AnalysisTool(props) {
                             </Typography>
                           }
                         </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
                         <Grid item {...AnalysisToolStyle.gridSubItemHeader}>
                           {
                             <Typography
@@ -578,8 +577,10 @@ function AnalysisTool(props) {
                             </Typography>
                           }
                         </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
                         <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
                             <Typography
@@ -608,10 +609,14 @@ function AnalysisTool(props) {
                             </Typography>
                           }
                         </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
                         <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
                             <Typography
@@ -648,10 +653,14 @@ function AnalysisTool(props) {
                             variant="fullWidth"
                           />
                         </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
                         <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
                             <Typography
@@ -674,14 +683,20 @@ function AnalysisTool(props) {
                               component="div"
                               align="right"
                             >
-                              {USDollar.format(airframe.wingAcft.onSiteCosts.totalPerDiem)}
+                              {USDollar.format(
+                                airframe.wingAcft.onSiteCosts.totalPerDiem
+                              )}
                             </Typography>
                           }
                         </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
                         <Grid item {...AnalysisToolStyle.gridSubItemHeader}>
                           {
                             <Typography
@@ -698,8 +713,10 @@ function AnalysisTool(props) {
                             </Typography>
                           }
                         </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
                         <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
                             <Typography
@@ -722,19 +739,26 @@ function AnalysisTool(props) {
                               component="div"
                               align="right"
                             >
-                              {USDollar.format(airframe.wingAcft.costPerAircraft)}
+                              {USDollar.format(
+                                airframe.wingAcft.costPerAircraft
+                              )}
                             </Typography>
                           }
                         </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
                         <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
                             <Typography
-                            sx={
-                              AnalysisToolStyle.TypographyTotalsHeaderCardReport}
+                              sx={
+                                AnalysisToolStyle.TypographyTotalsHeaderCardReport
+                              }
                               gutterBottom
                               key="9"
                               variant="h6"
@@ -748,8 +772,9 @@ function AnalysisTool(props) {
                         <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
                             <Typography
-                            sx={
-                              AnalysisToolStyle.TypographyTotalsValueCardReport}
+                              sx={
+                                AnalysisToolStyle.TypographyTotalsValueCardReport
+                              }
                               gutterBottom
                               key="19"
                               variant="h6"
@@ -760,12 +785,10 @@ function AnalysisTool(props) {
                             </Typography>
                           }
                         </Grid>
-                        <Grid item {...AnalysisToolStyle.gridSubItemFiller}>
-                        </Grid>
-
-
-
-
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
 
                         {/*
                           {
@@ -853,10 +876,6 @@ function AnalysisTool(props) {
                             </Typography>
                           }
                         </Grid> */}
-
-
-
-
                       </Grid>
                     </CardContent>
                   </Card>
@@ -875,7 +894,6 @@ function AnalysisTool(props) {
       <ThemeProvider theme={theme}>
         <div key="22" className="jjjj">
           <Grid container alignItems="flex-end" spacing={1} padding={5.0}>
-
             {/* First dropdown. */}
             <Grid item xs={6}>
               <FormControl
@@ -931,7 +949,6 @@ function AnalysisTool(props) {
             </Grid>
 
             <Grid container alignItems="stretch">
-
               {/* Pie chart. */}
               <Grid item xs={6} padding={6}>
                 <Pie data={display} options={options} />
@@ -953,91 +970,115 @@ function AnalysisTool(props) {
                         component="div"
                         align="center"
                       >
-                        Total {dataViewSelected} Spending, {dataOptionsSelected.value}
+                        Total {dataViewSelected} Spending,{" "}
+                        {dataOptionsSelected.value}
                       </Typography>
 
-                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeSmall}>
+                      <Grid
+                        item
+                        {...AnalysisToolStyle.gridItemPerAirframeSmall}
+                      >
                         <Typography
                           sx={
                             AnalysisToolStyle.PieChartTypographyCardReportLeft
                           }
-                          color='rgba(72, 223, 237, 0.8)'
-                          fontWeight='600'
+                          color="rgba(72, 223, 237, 0.8)"
+                          fontWeight="600"
                           gutterBottom
-                          key='0'
+                          key="0"
                           variant="h6"
                           component="div"
                           align="right"
                         >
-                          Acft<ColoredLine />
+                          Acft
+                          <ColoredLine />
                         </Typography>
                       </Grid>
-                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeSmall}>
+                      <Grid
+                        item
+                        {...AnalysisToolStyle.gridItemPerAirframeSmall}
+                      >
                         <Typography
                           sx={
                             AnalysisToolStyle.PieChartTypographyCardReportLeft
                           }
-                          color='rgba(72, 223, 237, 0.8)'
-                          fontWeight='600'
+                          color="rgba(72, 223, 237, 0.8)"
+                          fontWeight="600"
                           gutterBottom
-                          key='0'
+                          key="0"
                           variant="h6"
                           component="div"
                           align="right"
                         >
-                          Qty<ColoredLine />
+                          Qty
+                          <ColoredLine />
                         </Typography>
                       </Grid>
-                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeLarge}>
+                      <Grid
+                        item
+                        {...AnalysisToolStyle.gridItemPerAirframeLarge}
+                      >
                         <Typography
                           sx={
                             AnalysisToolStyle.PieChartTypographyCardReportLeft
                           }
-                          color='rgba(72, 223, 237, 0.8)'
-                          fontWeight='600'
+                          color="rgba(72, 223, 237, 0.8)"
+                          fontWeight="600"
                           gutterBottom
-                          key='0'
+                          key="0"
                           variant="h6"
                           component="div"
                           align="right"
                         >
-                          Unit<ColoredLine />
+                          Unit
+                          <ColoredLine />
                         </Typography>
                       </Grid>
-                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeLarge}>
+                      <Grid
+                        item
+                        {...AnalysisToolStyle.gridItemPerAirframeLarge}
+                      >
                         <Typography
                           sx={
                             AnalysisToolStyle.PieChartTypographyCardReportLeft
                           }
-                          color='rgba(72, 223, 237, 0.8)'
-                          fontWeight='600'
+                          color="rgba(72, 223, 237, 0.8)"
+                          fontWeight="600"
                           gutterBottom
-                          key='0'
+                          key="0"
                           variant="h6"
                           component="div"
                           align="right"
                         >
-                          Cost<ColoredLine />
+                          Cost
+                          <ColoredLine />
                         </Typography>
                       </Grid>
-                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeLarge}>
+                      <Grid
+                        item
+                        {...AnalysisToolStyle.gridItemPerAirframeLarge}
+                      >
                         <Typography
                           sx={
                             AnalysisToolStyle.PieChartTypographyCardReportLeft
                           }
-                          color='rgba(72, 223, 237, 0.8)'
-                          fontWeight='600'
+                          color="rgba(72, 223, 237, 0.8)"
+                          fontWeight="600"
                           gutterBottom
-                          key='0'
+                          key="0"
                           variant="h6"
                           component="div"
                           align="right"
                         >
-                          Per-Tail<ColoredLine />
+                          Per-Tail
+                          <ColoredLine />
                         </Typography>
                       </Grid>
 
-                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeSmall}>
+                      <Grid
+                        item
+                        {...AnalysisToolStyle.gridItemPerAirframeSmall}
+                      >
                         {totalsByAirframe.map((airframe) => {
                           return (
                             <Typography
@@ -1055,7 +1096,10 @@ function AnalysisTool(props) {
                           );
                         })}
                       </Grid>
-                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeSmall}>
+                      <Grid
+                        item
+                        {...AnalysisToolStyle.gridItemPerAirframeSmall}
+                      >
                         {totalsByAirframe.map((airframe) => {
                           return (
                             <Typography
@@ -1073,7 +1117,10 @@ function AnalysisTool(props) {
                           );
                         })}
                       </Grid>
-                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeLarge}>
+                      <Grid
+                        item
+                        {...AnalysisToolStyle.gridItemPerAirframeLarge}
+                      >
                         {totalsByAirframe.map((airframe) => {
                           return (
                             <Typography
@@ -1091,7 +1138,10 @@ function AnalysisTool(props) {
                           );
                         })}
                       </Grid>
-                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeLarge}>
+                      <Grid
+                        item
+                        {...AnalysisToolStyle.gridItemPerAirframeLarge}
+                      >
                         {totalsByAirframe.map((airframe) => {
                           return (
                             <Typography
@@ -1109,7 +1159,10 @@ function AnalysisTool(props) {
                           );
                         })}
                       </Grid>
-                      <Grid item {...AnalysisToolStyle.gridItemPerAirframeLarge}>
+                      <Grid
+                        item
+                        {...AnalysisToolStyle.gridItemPerAirframeLarge}
+                      >
                         {totalsByAirframe.map((airframe) => {
                           return (
                             <Typography
