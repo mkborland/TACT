@@ -135,17 +135,20 @@ const requestCostSummaries = async (req, res) => {
         travelDuration = ((endDateTemp - startDateTemp) / (1000 * 60 * 60 * 24)) + 1;
 
         // Now calculate total manpower cost, which includes lodging/meals times X number of days.
-        const lodging = Number(airframeData.commercialLodgingCost) + Number(airframeData.governmentLodgingCost) + Number(airframeData.lodgingPerDiem);
+        const lodging = Number(airframeData.commercialLodgingCost) + Number(airframeData.governmentLodgingCost);
 
-        const meals = Number(airframeData.mealPerDiem);
+        const meals = (Number(airframeData.mealPerDiem) * Number(airframeData.mealNotProvidedCount) * travelDuration);
+
+        const totalRentalCost = Number(airframeData.rentalCost);
 
         // Now calculate costPerHead, which we're interpreting to just include travel costs for all personnel.  Per specs, gov't travel is $0.
-        const costTravelComm = Number(airframeData.commercialAirfareCost);
-        const costTravelGov = 50000; // Hard-coded per specs, but modified to be $50k instead of $0 for better-looking reports.
+        const costTravelComm = (Number(airframeData.commercialAirfareCost) * Number(airframeData.commercialAirfareCount));
+        const costTravelGov = 0;
         const costTravel = (Number(costTravelComm) + Number(costTravelGov));
-        const manpowerCost = lodging + meals + costTravel;
+        const manpowerCost = lodging + meals + totalRentalCost + costTravel;
         const personnel = airframeData.personnelCount;
         // Now build the return JSON like this; the "perAirframe" section will repeat for each airframe.
+
         totals.push(
             {
                 'wingAcft': {
@@ -158,7 +161,8 @@ const requestCostSummaries = async (req, res) => {
                     'onSiteCosts': {
                         'lodging': lodging,
                         'meals': meals,
-                        'totalPerDiem': lodging + meals,
+                        'rentalCars': totalRentalCost,
+                        'totalPerDiem': lodging + meals + totalRentalCost,
                     },
                     'costTravel': {
                         costTravelComm,
