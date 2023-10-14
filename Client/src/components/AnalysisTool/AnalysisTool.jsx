@@ -238,6 +238,7 @@ function AnalysisTool(props) {
     let dataSetTravelGov = [];
     let dataSetLodging = [];
     let dataSetMeals = [];
+    let dataSetRentals = [];
     let costLabels = [];
 
     // Looping through each record to display a bar chart & card for each.
@@ -248,6 +249,7 @@ function AnalysisTool(props) {
           dataSetTravelGov = [airframe.wingAcft.costTravel.costTravelGov];
           dataSetLodging = [airframe.wingAcft.onSiteCosts.lodging];
           dataSetMeals = [airframe.wingAcft.onSiteCosts.meals];
+          dataSetRentals = [airframe.wingAcft.onSiteCosts.rentalCars];
           costLabels = ["Travel Costs              Per-Diem"];
 
           // JSX for the charts and reports.
@@ -293,6 +295,14 @@ function AnalysisTool(props) {
                           data: dataSetMeals,
                           backgroundColor: "rgba(75, 192, 192, 0.45)",
                           borderColor: "rgba(75, 192, 192, 1)",
+                          borderWidth: 2.5,
+                          stack: "Stack 1",
+                        },
+                        {
+                          label: "Rental Vehicles",
+                          data: dataSetRentals,
+                          backgroundColor: "rgba(153, 102, 255, 0.45)",
+                          borderColor: "rgba(153, 102, 255, 0.45)",
                           borderWidth: 2.5,
                           stack: "Stack 1",
                         },
@@ -413,6 +423,7 @@ function AnalysisTool(props) {
                         >
                           Total {dataViewSelected} Spending,{" "}
                           {dataOptionsSelected.value},{" "}
+                          {airframe.wingAcft.aircraftQty}{"x "}
                           {airframe.wingAcft.aircraftType}
                           {" ("}
                           {airframe.wingAcft.unit}
@@ -629,10 +640,6 @@ function AnalysisTool(props) {
                               Meals:
                             </Typography>
                           }
-                          <Divider
-                            sx={AnalysisToolStyle.DividerBarChart}
-                            variant="fullWidth"
-                          />
                         </Grid>
                         <Grid item {...AnalysisToolStyle.gridSubItem}>
                           {
@@ -648,10 +655,54 @@ function AnalysisTool(props) {
                               )}
                             </Typography>
                           }
+                        </Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
+                        <Grid
+                          item
+                          {...AnalysisToolStyle.gridSubItemFiller}
+                        ></Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
+                          {
+                            <Typography
+                              gutterBottom
+                              key="6"
+                              variant="h6"
+                              component="div"
+                              align="right"
+                            >
+                              Rental Vehicles:
+                            </Typography>
+                          }
                           <Divider
                             sx={AnalysisToolStyle.DividerBarChart}
                             variant="fullWidth"
                           />
+                        </Grid>
+                        <Grid item {...AnalysisToolStyle.gridSubItem}>
+                          {
+                            <Typography
+                              gutterBottom
+                              key="16"
+                              variant="h6"
+                              component="div"
+                              align="right"
+                            >
+                              {USDollar.format(
+                                airframe.wingAcft.onSiteCosts.rentalCars
+                              )}
+                            </Typography>
+                          }
+                          <Divider
+                            sx={AnalysisToolStyle.DividerBarChart}
+                            variant="fullWidth"
+                          />
+                          <Grid
+                            item
+                            {...AnalysisToolStyle.gridSubItemFiller}
+                          ></Grid>
                         </Grid>
                         <Grid
                           item
