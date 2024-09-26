@@ -1,4 +1,4 @@
-import baseApiUrl from "../../TactApiConfig.js"
+import baseApiUrl from "../../TactApiConfig.js";
 
 const AddExerciseAircraft = async (body, token = "") => {
   const endPoint = "/add_exercise_aircraft";
@@ -12,11 +12,10 @@ const AddExerciseAircraft = async (body, token = "") => {
   });
 
   if (!response.ok) {
-    console.log("Failed to connect to user db")
+    console.log("Failed to connect to user db");
   } else {
     return response;
   }
 };
-
 
 export default AddExerciseAircraft;

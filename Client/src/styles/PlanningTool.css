@@ -37,7 +37,7 @@
     width: 2rem;
     height: 2rem;
 
-    transition: all 0.2s ease-in-out;
+    /* transition: all 0.2s ease-in-out; */
 }
 
 .step-informations .current-step {

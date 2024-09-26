@@ -20,7 +20,7 @@ export function up(knex) {
 export function down(knex) {
     // i dont think i need this but leaving just in case
     // return knex.schema.alterTable("roles", (table) => {
-    //     table.dropPrimary("authKey");
+        // table.dropPrimary("authKey");
     // }).then(() => {
     return knex.schema.dropTableIfExists("roles");
     // });

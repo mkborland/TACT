@@ -11,13 +11,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "amadeus": "^8.0.0",
+    "amadeus": "^8.1.0",
     "bcrypt": "^5.1.0",
     "chalk": "^5.2.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "knex": "^2.5.1",
+    "node-fetch": "^3.3.2",
     "nodemon": "^2.0.22",
     "pg": "^8.11.1"
   }
